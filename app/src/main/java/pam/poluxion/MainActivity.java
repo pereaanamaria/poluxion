@@ -6,6 +6,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Address;
@@ -14,6 +16,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,7 +38,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import pam.poluxion.models.FirebaseHelper;
 import pam.poluxion.models.Weather;
+import pam.poluxion.widgets.ArcProgress;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -43,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+    private static final String Api_Maps = BuildConfig.MapsApiKey;
 
     private static final float DEFAULT_ZOOM = 15f;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
@@ -51,14 +57,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private LatLng current;    //current position of the device
 
-    public static TextView locationTV, temperatureTV, nrAqiTV, pressureTV;
+    public static TextView locationTV, temperatureTV, nrAqiTV, pressureTV,arcProgressTV;
+    public static ArcProgress arcProgressBar;
 
-    private LinearLayout sliderDots;
+    private LinearLayout sliderDots, splash, all;
     private ImageView[] dots;
     private int[] layouts = {R.layout.activity_main,R.layout.activity_tracker,R.layout.activity_settings};
 
     private Weather weather;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +76,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         temperatureTV = (TextView) findViewById(R.id.temperature);
         nrAqiTV = (TextView) findViewById(R.id.nrAQI);
         pressureTV = (TextView) findViewById(R.id.pressure);
+
+        arcProgressBar = (ArcProgress) findViewById(R.id.arc_progress);
+        arcProgressTV = (TextView) findViewById(R.id.arc_progressTV);
+
+
+        splash = (LinearLayout) findViewById(R.id.layout_splash);
+        all = (LinearLayout) findViewById(R.id.layout_all);
 
         /*if(Build.VERSION.SDK_INT>=19) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -146,17 +159,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Address obj = addresses.get(0);
             String add = obj.getLocality() + ", " + obj.getCountryName();
 
-            weather = new Weather(obj.getLocality(),obj.getCountryName(),this);
+            weather = new Weather(obj.getLocality(),obj.getCountryName());
 
             try {
                 //Toast.makeText(MainActivity.this, weather.getKey(), Toast.LENGTH_SHORT).show();
-                weather.getAQI();
-                weather.getPressure();
+                weather.getAQIData();
+                weather.getPressureData();
+                weather.getTemperatureData();
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        crossfade();
+                    }
+                }, 4000);   //4 seconds
             } catch (Exception e) {
                 Toast.makeText(MainActivity.this, "Could not get key", Toast.LENGTH_SHORT).show();
             }
-            temperatureTV.setText(weather.getTemperature());
-
 
             Log.v("IGA", "Address" + add);
 
@@ -186,6 +205,35 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             e.printStackTrace();
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void crossfade() {
+
+        // Set the content view to 0% opacity but visible, so that it is visible
+        // (but fully transparent) during the animation.
+        all.setAlpha(0f);
+        all.setVisibility(View.VISIBLE);
+
+        // Animate the content view to 100% opacity, and clear any animation
+        // listener set on the view.
+        all.animate()
+                .alpha(1f)
+                .setDuration(1000)
+                .setListener(null);
+
+        // Animate the loading view to 0% opacity. After the animation ends,
+        // set its visibility to GONE as an optimization step (it won't
+        // participate in layout passes, etc.)
+        splash.animate()
+                .alpha(0f)
+                .setDuration(1000)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        splash.setVisibility(View.GONE);
+                    }
+                });
+
     }
 
     //the map is being moved according to the current position of the device

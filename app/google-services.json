@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "629532513826",
+    "firebase_url": "https://poluxion-90559.firebaseio.com",
+    "project_id": "poluxion-90559",
+    "storage_bucket": "poluxion-90559.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:629532513826:android:dd6193d950c70eff371c7b",
+        "android_client_info": {
+          "package_name": "pam.poluxion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "629532513826-e443mege9m25hatkmbl1s22odjcut550.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDl8g7V5isp6d_d650wxtNK_HHP-kIVlxI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "629532513826-e443mege9m25hatkmbl1s22odjcut550.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -56,6 +56,7 @@ public class ArcProgress extends View {
     private final float default_arc_angle = 360 * 0.8f;
     private float default_text_size;
     private final int min_size;
+    private String status;
 
     private static final String INSTANCE_STATE = "saved_instance";
     private static final String INSTANCE_STROKE_WIDTH = "stroke_width";
@@ -101,8 +102,8 @@ public class ArcProgress extends View {
 
     protected void initByAttributes(TypedArray attributes) {
         finishedStrokeColor = attributes.getColor(R.styleable.ArcProgress_arc_finished_color, default_finished_color);
-        unfinishedStrokeColor = attributes.getColor(R.styleable.ArcProgress_arc_unfinished_color, default_unfinished_color);
         textColor = attributes.getColor(R.styleable.ArcProgress_arc_text_color, default_text_color);
+        unfinishedStrokeColor = attributes.getColor(R.styleable.ArcProgress_arc_unfinished_color, default_unfinished_color);
         textSize = attributes.getDimension(R.styleable.ArcProgress_arc_text_size, default_text_size);
         arcAngle = attributes.getFloat(R.styleable.ArcProgress_arc_angle, default_arc_angle);
         setMax(attributes.getInt(R.styleable.ArcProgress_arc_max, default_max));

@@ -14,15 +14,49 @@
         android:gravity="center">
 
         <LinearLayout
+            android:id="@+id/layout_splash"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="200dp"
+            android:background="@color/colorAccent"
+            android:visibility="visible">
+
+            <ImageView
+                android:layout_width="235dp"
+                android:layout_height="235dp"
+                android:layout_gravity="center"
+                android:background="@color/colorAccent"
+                android:layout_marginBottom="25dp"
+                android:src="@drawable/air_quality1" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:text="@string/app_name"
+                android:scaleX="1.2"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimaryDarker"
+                android:textSize="50sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/layout_all"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="invisible">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0sp"
-                android:layout_margin="25sp"
+                android:layout_marginRight="25sp"
+                android:layout_marginLeft="25sp"
+                android:layout_marginTop="25sp"
                 android:layout_weight="2"
                 android:orientation="horizontal">
 
@@ -183,9 +217,19 @@
                 android:layout_width="158dp"
                 android:layout_height="158dp"
                 android:layout_gravity="center"
-                android:layout_marginBottom="15dp"
-                custom:arc_bottom_text="Very Good"
-                custom:arc_progress="85" />
+                custom:arc_bottom_text=""
+                custom:arc_progress="0" />
+            <TextView
+                android:id="@+id/arc_progressTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginLeft="25dp"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="13sp" />
 
             <fragment
                 android:id="@+id/map"
@@ -218,10 +262,10 @@
                             android:layout_width="0dp"
                             android:layout_height="20dp"
                             android:layout_weight="0.2"
-                            android:background="@color/colorAccent"
-                            android:shadowColor="@color/colorPrimaryDark"
+                            android:background="@drawable/btn_slider"
+                            android:shadowColor="@color/colorPrimaryDarker"
                             android:text="@string/pm10"
-                            android:textColor="@color/colorPrimaryDark"
+                            android:textColor="@color/colorPrimaryDarker"
                             android:textSize="12sp" />
 
                         <Button
@@ -229,10 +273,10 @@
                             android:layout_width="0dp"
                             android:layout_height="20dp"
                             android:layout_weight="0.2"
-                            android:background="@color/colorAccent"
-                            android:shadowColor="@color/colorPrimaryDark"
+                            android:background="@drawable/btn_slider"
+                            android:shadowColor="@color/colorPrimaryDarker"
                             android:text="@string/pm2_5"
-                            android:textColor="@color/colorPrimaryDark"
+                            android:textColor="@color/colorPrimaryDarker"
                             android:textSize="12sp" />
 
                         <Button
@@ -240,10 +284,11 @@
                             android:layout_width="0dp"
                             android:layout_height="20dp"
                             android:layout_weight="0.2"
-                            android:background="@color/colorAccent"
-                            android:shadowColor="@color/colorPrimaryDark"
+                            android:background="@drawable/btn_slider"
+                            android:checked="false"
+                            android:shadowColor="@color/colorPrimaryDarker"
                             android:text="@string/pm1"
-                            android:textColor="@color/colorPrimaryDark"
+                            android:textColor="@color/colorPrimaryDarker"
                             android:textSize="12sp" />
 
                         <Button
@@ -251,10 +296,10 @@
                             android:layout_width="0dp"
                             android:layout_height="20dp"
                             android:layout_weight="0.2"
-                            android:background="@color/colorAccent"
-                            android:shadowColor="@color/colorPrimaryDark"
+                            android:background="@drawable/btn_slider"
+                            android:shadowColor="@color/colorPrimaryDarker"
                             android:text="@string/no2"
-                            android:textColor="@color/colorPrimaryDark"
+                            android:textColor="@color/colorPrimaryDarker"
                             android:textSize="12sp" />
 
                         <Button
@@ -262,10 +307,10 @@
                             android:layout_width="0dp"
                             android:layout_height="20dp"
                             android:layout_weight="0.2"
-                            android:background="@color/colorAccent"
-                            android:shadowColor="@color/colorPrimaryDark"
+                            android:background="@drawable/btn_slider"
+                            android:shadowColor="@color/colorPrimaryDarker"
                             android:text="@string/nh3"
-                            android:textColor="@color/colorPrimaryDark"
+                            android:textColor="@color/colorPrimaryDarker"
                             android:textSize="12sp" />
 
                     </LinearLayout>
@@ -280,10 +325,10 @@
                             android:layout_width="0dp"
                             android:layout_height="20dp"
                             android:layout_weight="0.16"
-                            android:background="@color/colorAccent"
-                            android:shadowColor="@color/colorPrimaryDark"
+                            android:background="@drawable/btn_slider"
+                            android:shadowColor="@color/colorPrimaryDarker"
                             android:text="@string/co"
-                            android:textColor="@color/colorPrimaryDark"
+                            android:textColor="@color/colorPrimaryDarker"
                             android:textSize="12sp" />
 
                         <Button
@@ -291,10 +336,10 @@
                             android:layout_width="0dp"
                             android:layout_height="20dp"
                             android:layout_weight="0.16"
-                            android:background="@color/colorAccent"
-                            android:shadowColor="@color/colorPrimaryDark"
+                            android:background="@drawable/btn_slider"
+                            android:shadowColor="@color/colorPrimaryDarker"
                             android:text="@string/co2"
-                            android:textColor="@color/colorPrimaryDark"
+                            android:textColor="@color/colorPrimaryDarker"
                             android:textSize="12sp" />
 
                         <Button
@@ -302,10 +347,10 @@
                             android:layout_width="0dp"
                             android:layout_height="20dp"
                             android:layout_weight="0.16"
-                            android:background="@color/colorAccent"
-                            android:shadowColor="@color/colorPrimaryDark"
+                            android:background="@drawable/btn_slider"
+                            android:shadowColor="@color/colorPrimaryDarker"
                             android:text="@string/o3"
-                            android:textColor="@color/colorPrimaryDark"
+                            android:textColor="@color/colorPrimaryDarker"
                             android:textSize="12sp" />
 
                         <Button
@@ -313,10 +358,10 @@
                             android:layout_width="0dp"
                             android:layout_height="20dp"
                             android:layout_weight="0.16"
-                            android:background="@color/colorAccent"
-                            android:shadowColor="@color/colorPrimaryDark"
+                            android:background="@drawable/btn_slider"
+                            android:shadowColor="@color/colorPrimaryDarker"
                             android:text="@string/so2"
-                            android:textColor="@color/colorPrimaryDark"
+                            android:textColor="@color/colorPrimaryDarker"
                             android:textSize="12sp" />
 
                         <Button
@@ -324,10 +369,10 @@
                             android:layout_width="0dp"
                             android:layout_height="20dp"
                             android:layout_weight="0.16"
-                            android:background="@color/colorAccent"
-                            android:shadowColor="@color/colorPrimaryDark"
+                            android:background="@drawable/btn_slider"
+                            android:shadowColor="@color/colorPrimaryDarker"
                             android:text="@string/voc"
-                            android:textColor="@color/colorPrimaryDark"
+                            android:textColor="@color/colorPrimaryDarker"
                             android:textSize="12sp" />
 
                         <Button
@@ -335,24 +380,41 @@
                             android:layout_width="0dp"
                             android:layout_height="20dp"
                             android:layout_weight="0.16"
-                            android:background="@color/colorAccent"
-                            android:shadowColor="@color/colorPrimaryDark"
+                            android:background="@drawable/btn_slider"
+                            android:shadowColor="@color/colorPrimaryDarker"
                             android:text="@string/pb"
-                            android:textColor="@color/colorPrimaryDark"
+                            android:textColor="@color/colorPrimaryDarker"
                             android:textSize="12sp" />
 
                     </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/measurement"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:orientation="horizontal"
                         android:layout_margin="25sp"
-                        android:gravity="center"
-                        android:text="7.6 μ/m³"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:textSize="35sp"
-                        android:textStyle="bold" />
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/measurement"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="end"
+                            android:text=""
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="35sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="start"
+                            android:text="@string/um3"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="35sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
 
