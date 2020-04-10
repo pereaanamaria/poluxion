@@ -18,6 +18,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -38,7 +39,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import pam.poluxion.models.FirebaseHelper;
 import pam.poluxion.models.Weather;
 import pam.poluxion.widgets.ArcProgress;
 
@@ -59,10 +59,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public static TextView locationTV, temperatureTV, nrAqiTV, pressureTV,arcProgressTV;
     public static ArcProgress arcProgressBar;
+    public static Button pm10Btn, pm25Btn, pm1Btn, no2Btn, nh3Btn, coBtn, co2Btn, o3Btn, so2Btn, vocBtn, pbBtn;
+    public static TextView measurementTV, unitsTV;
 
-    private LinearLayout sliderDots, splash, all;
+    private LinearLayout sliderDots, splash,all;
+    public static LinearLayout btnSlider;
     private ImageView[] dots;
     private int[] layouts = {R.layout.activity_main,R.layout.activity_tracker,R.layout.activity_settings};
+
 
     private Weather weather;
     @Override
@@ -76,13 +80,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         temperatureTV = (TextView) findViewById(R.id.temperature);
         nrAqiTV = (TextView) findViewById(R.id.nrAQI);
         pressureTV = (TextView) findViewById(R.id.pressure);
+        measurementTV = (TextView) findViewById(R.id.measurement);
+        unitsTV = (TextView) findViewById(R.id.units);
 
         arcProgressBar = (ArcProgress) findViewById(R.id.arc_progress);
         arcProgressTV = (TextView) findViewById(R.id.arc_progressTV);
 
+        pm10Btn = (Button) findViewById(R.id.pm10);
+        pm25Btn = (Button) findViewById(R.id.pm2_5);
+        pm1Btn = (Button) findViewById(R.id.pm1);
+        no2Btn = (Button) findViewById(R.id.no2);
+        nh3Btn = (Button) findViewById(R.id.nh3);
+        coBtn = (Button) findViewById(R.id.co);
+        co2Btn = (Button) findViewById(R.id.co2);
+        o3Btn = (Button) findViewById(R.id.o3);
+        so2Btn = (Button) findViewById(R.id.so2);
+        vocBtn = (Button) findViewById(R.id.voc);
+        pbBtn = (Button) findViewById(R.id.pb);
 
         splash = (LinearLayout) findViewById(R.id.layout_splash);
         all = (LinearLayout) findViewById(R.id.layout_all);
+        btnSlider = (LinearLayout) findViewById(R.id.btnSlider);
 
         /*if(Build.VERSION.SDK_INT>=19) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -135,9 +153,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             Location currentLocation = (Location) task.getResult();
 
                             current = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                            getAddress(currentLocation.getLatitude(), currentLocation.getLongitude());
                             moveCamera(current,DEFAULT_ZOOM);
-
+                            getAddress(currentLocation.getLatitude(), currentLocation.getLongitude());
                         } else {
                             Log.d(TAG, "onComplete: current location is null");
                             Toast.makeText(MainActivity.this, "Unable to get location", Toast.LENGTH_SHORT).show();
@@ -162,46 +179,36 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             weather = new Weather(obj.getLocality(),obj.getCountryName());
 
             try {
-                //Toast.makeText(MainActivity.this, weather.getKey(), Toast.LENGTH_SHORT).show();
                 weather.getAQIData();
                 weather.getPressureData();
                 weather.getTemperatureData();
+                weather.getNO2Data();
+                weather.getO3Data();
+                weather.getPM10Data();
+                weather.getPM25Data();
+                weather.getPM1Data();
+                weather.getNH3Data();
+                weather.getCO2Data();
+                weather.getCOData();
+                weather.getSO2Data();
+                weather.getVOCData();
+                weather.getPbData();
 
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     public void run() {
                         crossfade();
                     }
-                }, 4000);   //4 seconds
+                }, 7000);   //7 seconds
+
             } catch (Exception e) {
                 Toast.makeText(MainActivity.this, "Could not get key", Toast.LENGTH_SHORT).show();
             }
 
             Log.v("IGA", "Address" + add);
 
-            /*urlSearch = "http://dataservice.accuweather.com/locations/v1/cities/search?apikey=xhBwZVKeHlKIRrXCgwoVQoZF8ZWytkTa&q=" + obj.getLocality() + "%2C" + obj.getCountryName() + "&details=true&alias=always";
-
-            URL url  = new URL(urlSearch);
-
-            URLConnection urlC = url.openConnection();
-            // Copy resource to local file, use remote file
-            // if no local file name specified
-            InputStream is = url.openStream();
-
-            FileOutputStream fos = new FileOutputStream("weatherUnits//trial.JSON");
-
-            int oneChar, count=0;
-            while ((oneChar=is.read()) != -1)
-            {
-                fos.write(oneChar);
-                count++;
-            }
-            is.close();
-            fos.close();*/
-
             locationTV.setText(add);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -218,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // listener set on the view.
         all.animate()
                 .alpha(1f)
-                .setDuration(1000)
+                .setDuration(2000)
                 .setListener(null);
 
         // Animate the loading view to 0% opacity. After the animation ends,
@@ -226,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // participate in layout passes, etc.)
         splash.animate()
                 .alpha(0f)
-                .setDuration(1000)
+                .setDuration(2000)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
