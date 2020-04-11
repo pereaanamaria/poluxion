@@ -21,11 +21,11 @@ public class Weather {
     private int AQI, temperature;
     private double pressure, NO2, O3, PM10, SO2, PM25, VOC, PM1, CO, CO2, Pb, NH3;
 
-    public Weather(String locality, String country) {
+    public Weather(String locality, String country, Context context) {
         this.locality = locality;
         this.country = country;
 
-        FBHelper = new FirebaseHelper(this);
+        FBHelper = new FirebaseHelper(this, context);
 
         searchUrl = "https://api.waqi.info/feed/"+locality+"/?token="+AqicnApi;
         //searchUrl = "https://api.waqi.info/feed/Melbourne/?token="+AqicnApi;

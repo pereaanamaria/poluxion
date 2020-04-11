@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         splash = (LinearLayout) findViewById(R.id.layout_splash);
         all = (LinearLayout) findViewById(R.id.layout_all);
         btnSlider = (LinearLayout) findViewById(R.id.btnSlider);
+        btnSlider.setFadingEdgeLength(500);
 
         /*if(Build.VERSION.SDK_INT>=19) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -176,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Address obj = addresses.get(0);
             String add = obj.getLocality() + ", " + obj.getCountryName();
 
-            weather = new Weather(obj.getLocality(),obj.getCountryName());
+            weather = new Weather(obj.getLocality(),obj.getCountryName(),this);
 
             try {
                 weather.getAQIData();
@@ -199,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     public void run() {
                         crossfade();
                     }
-                }, 7000);   //7 seconds
+                }, 5000);   //5 seconds
 
             } catch (Exception e) {
                 Toast.makeText(MainActivity.this, "Could not get key", Toast.LENGTH_SHORT).show();

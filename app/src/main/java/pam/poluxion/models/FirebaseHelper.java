@@ -1,5 +1,6 @@
 package pam.poluxion.models;
 
+import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
@@ -18,7 +19,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import pam.poluxion.BuildConfig;
 import pam.poluxion.MainActivity;
+import pam.poluxion.R;
 import pam.poluxion.widgets.ProgressAnimation;
 
 public class FirebaseHelper {
@@ -33,17 +36,16 @@ public class FirebaseHelper {
 
     private SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");  //formatting the current date into a dd-MM-yyyy String type
 
-    public FirebaseHelper(Weather weather) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();  //stores Firebase instance into database variable
-
+    public FirebaseHelper(Weather weather, Context context) {
+        this.weather = weather;
         //gets current date which is later formatted into dd-MM-yyyy type
         //Date currentDate = Calendar.getInstance().getTime();
         //String currentFormattedDate = df.format(currentDate);
 
-        this.weather = weather;
-
         //stores a Firebase reference of the steps made during the current date, the weight and the height of the user
-        myRef = database.getReferenceFromUrl("https://poluxion-90559.firebaseio.com//");
+        FirebaseDatabase database = FirebaseDatabase.getInstance();  //stores Firebase instance into database variable
+        String FirebaseUrl = context.getString(R.string.firebase_database_url);
+        myRef = database.getReferenceFromUrl(FirebaseUrl);
         //myRef = database.getReferenceFromUrl("https://poluxion-90559.firebaseio.com//" + currentFormattedDate);
         //myRef.setValue(currentFormattedDate);
     }
