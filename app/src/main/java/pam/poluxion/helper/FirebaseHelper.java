@@ -1,10 +1,8 @@
-package pam.poluxion.models;
+package pam.poluxion.helper;
 
 import android.content.Context;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 
@@ -14,65 +12,63 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
-import pam.poluxion.BuildConfig;
 import pam.poluxion.MainActivity;
 import pam.poluxion.R;
+import pam.poluxion.models.LocalData;
 import pam.poluxion.widgets.ProgressAnimation;
 
 public class FirebaseHelper {
     private static final String TAG ="FirebaseHelper";
 
-    private DatabaseReference myRef;
+    private DatabaseReference myWeatherRef;
 
     private int AQI, Temperature;
     private double Pressure, NO2, SO2, CO, CO2, O3, VOC, Pb, PM10, PM25, PM1, NH3;
     private int weight, height, steps;
-    private Weather weather;
+    private LocalData localData;
 
-    private SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");  //formatting the current date into a dd-MM-yyyy String type
+    //private SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");  //formatting the current date into a dd-MM-yyyy String type
 
-    public FirebaseHelper(Weather weather, Context context) {
-        this.weather = weather;
+    public FirebaseHelper(LocalData localData, Context context, String country, String locality) {
+        this.localData = localData;
         //gets current date which is later formatted into dd-MM-yyyy type
         //Date currentDate = Calendar.getInstance().getTime();
         //String currentFormattedDate = df.format(currentDate);
 
         //stores a Firebase reference of the steps made during the current date, the weight and the height of the user
         FirebaseDatabase database = FirebaseDatabase.getInstance();  //stores Firebase instance into database variable
-        String FirebaseUrl = context.getString(R.string.firebase_database_url);
-        myRef = database.getReferenceFromUrl(FirebaseUrl);
-        //myRef = database.getReferenceFromUrl("https://poluxion-90559.firebaseio.com//" + currentFormattedDate);
-        //myRef.setValue(currentFormattedDate);
+        String FirebaseUrl = context.getString(R.string.firebase_database_url) + "//" + country + "//" + locality;
+        myWeatherRef = database.getReferenceFromUrl(FirebaseUrl);
+
+        //myWeatherRef = database.getReferenceFromUrl(context.getString(R.string.firebase_database_url) + "//" + currentFormattedDate);
+        //myWeatherRef.setValue(currentFormattedDate);
     }
 
     //Write in Firebase
     public void inputAQI(String aqi) {
         AQI = Integer.parseInt(aqi);
-        myRef.child("AQI").setValue(AQI); //stores AQI into Firebase
+        myWeatherRef.child("AQI").setValue(AQI); //stores AQI into Firebase
         MainActivity.nrAqiTV.setText(aqi);
-        weather.setAQI(AQI);
+        localData.setAQI(AQI);
         Log.e(TAG,"AQI data set = " + AQI);
         getAQIPercentage();
     }
     public void inputPressure(String pressure) {
         Pressure = Double.parseDouble(pressure);
-        myRef.child("Pressure").setValue(Pressure); //stores pressure into Firebase
+        myWeatherRef.child("Pressure").setValue(Pressure); //stores pressure into Firebase
         MainActivity.pressureTV.setText(pressure + " ");
-        weather.setPressure(Pressure);
+        localData.setPressure(Pressure);
         Log.e(TAG,"Pressure data set = " + Pressure);
     }
     public void inputTemperature(String temperature) {
         double temp = Double.parseDouble(temperature);
         Log.e(TAG,temp + "");
         Temperature = (int) Math.floor(temp);
-        myRef.child("Temperature").setValue(Temperature); //stores temperature into Firebase
+        myWeatherRef.child("Temperature").setValue(Temperature); //stores temperature into Firebase
         MainActivity.temperatureTV.setText(Temperature + " ");
-        weather.setTemperature(Temperature);
+        localData.setTemperature(Temperature);
         Log.e(TAG,"Temperature data set = " + Temperature);
     }
     public void inputNO2(String no2) {
@@ -94,8 +90,8 @@ public class FirebaseHelper {
             MainActivity.btnSlider.removeView(MainActivity.no2Btn);
             Log.e(TAG,"NO2 does not exist.");
         }
-        myRef.child("_IAQI-NO2").setValue(NO2); //stores NO2 into Firebase
-        weather.setNO2(NO2);
+        myWeatherRef.child("_IAQI-NO2").setValue(NO2); //stores NO2 into Firebase
+        localData.setNO2(NO2);
         Log.e(TAG,"NO2 data set = " + NO2);
     }
     public void inputSO2(String so2) {
@@ -117,8 +113,8 @@ public class FirebaseHelper {
             MainActivity.btnSlider.removeView(MainActivity.so2Btn);
             Log.e(TAG,"SO2 does not exist.");
         }
-        myRef.child("_IAQI-SO2").setValue(SO2); //stores SO2 into Firebase
-        weather.setSO2(SO2);
+        myWeatherRef.child("_IAQI-SO2").setValue(SO2); //stores SO2 into Firebase
+        localData.setSO2(SO2);
         Log.e(TAG,"SO2 data set = " + SO2);
     }
     public void inputPM10(String pm10) {
@@ -135,14 +131,16 @@ public class FirebaseHelper {
                     Log.e("IAQI", "pm10Btn clicked");
                 }
             });
+            MainActivity.measurementTV.setText(PM10 + " ");
+            MainActivity.unitsTV.setText("μg/m³");
         } else {
             PM10 = 0;
             MainActivity.btnSlider.removeView(MainActivity.pm10Btn);
             Log.e(TAG,"PM1 does not exist.");
         }
-        myRef.child("_IAQI-PM10").setValue(PM10); //stores PM10 into Firebase
+        myWeatherRef.child("_IAQI-PM10").setValue(PM10); //stores PM10 into Firebase
 
-        weather.setPM10(PM10);
+        localData.setPM10(PM10);
         Log.e(TAG,"PM10 data set = " + PM10);
     }
     public void inputO3(String o3) {
@@ -164,8 +162,8 @@ public class FirebaseHelper {
             MainActivity.btnSlider.removeView(MainActivity.o3Btn);
             Log.e(TAG,"O3 does not exist.");
         }
-        myRef.child("_IAQI-O3").setValue(O3); //stores O3 into Firebase
-        weather.setO3(O3);
+        myWeatherRef.child("_IAQI-O3").setValue(O3); //stores O3 into Firebase
+        localData.setO3(O3);
         Log.e(TAG,"O3 data set = " + O3);
     }
     public void inputPM25(String pm25) {
@@ -189,8 +187,8 @@ public class FirebaseHelper {
             MainActivity.btnSlider.removeView(MainActivity.pm25Btn);
             Log.e(TAG,"PM25 does not exist.");
         }
-        myRef.child("_IAQI-PM25").setValue(PM25); //stores PM2.5 into Firebase
-        weather.setPM25(PM25);
+        myWeatherRef.child("_IAQI-PM25").setValue(PM25); //stores PM2.5 into Firebase
+        localData.setPM25(PM25);
         Log.e(TAG,"PM25 data set = " + PM25);
     }
     public void inputPM1(String pm1) {
@@ -211,8 +209,8 @@ public class FirebaseHelper {
             MainActivity.btnSlider.removeView(MainActivity.pm1Btn);
             Log.e(TAG,"PM1 does not exist.");
         }
-        myRef.child("_IAQI-PM1").setValue(PM1); //stores PM1 into Firebase
-        weather.setPM1(PM1);
+        myWeatherRef.child("_IAQI-PM1").setValue(PM1); //stores PM1 into Firebase
+        localData.setPM1(PM1);
         Log.e(TAG,"PM1 data set = " + PM1);
     }
     public void inputNH3(String nh3) {
@@ -233,8 +231,8 @@ public class FirebaseHelper {
             MainActivity.btnSlider.removeView(MainActivity.nh3Btn);
             Log.e(TAG,"NH3 does not exist.");
         }
-        myRef.child("_IAQI-NH3").setValue(NH3); //stores NH3 into Firebase
-        weather.setNH3(NH3);
+        myWeatherRef.child("_IAQI-NH3").setValue(NH3); //stores NH3 into Firebase
+        localData.setNH3(NH3);
         Log.e(TAG,"NH3 data set = " + NH3);
     }
     public void inputCO(String co) {
@@ -256,8 +254,8 @@ public class FirebaseHelper {
             MainActivity.btnSlider.removeView(MainActivity.coBtn);
             Log.e(TAG,"CO does not exist.");
         }
-        myRef.child("_IAQI-CO").setValue(CO); //stores CO into Firebase
-        weather.setCO(CO);
+        myWeatherRef.child("_IAQI-CO").setValue(CO); //stores CO into Firebase
+        localData.setCO(CO);
         Log.e(TAG,"CO data set = " + CO);
     }
     public void inputCO2(String co2) {
@@ -278,8 +276,8 @@ public class FirebaseHelper {
             MainActivity.btnSlider.removeView(MainActivity.co2Btn);
             Log.e(TAG,"CO2 does not exist.");
         }
-        myRef.child("_IAQI-CO2").setValue(CO2); //stores CO2 into Firebase
-        weather.setCO2(CO2);
+        myWeatherRef.child("_IAQI-CO2").setValue(CO2); //stores CO2 into Firebase
+        localData.setCO2(CO2);
         Log.e(TAG,"CO2 data set = " + CO2);
     }
     public void inputVOC(String voc) {
@@ -299,8 +297,8 @@ public class FirebaseHelper {
             MainActivity.btnSlider.removeView(MainActivity.vocBtn);
             Log.e(TAG,"VOC does not exist.");
         }
-        myRef.child("_IAQI-VOC").setValue(VOC); //stores VOC into Firebase
-        weather.setVOC(VOC);
+        myWeatherRef.child("_IAQI-VOC").setValue(VOC); //stores VOC into Firebase
+        localData.setVOC(VOC);
         Log.e(TAG,"VOC data set = " + VOC);
     }
     public void inputPb(String pb) {
@@ -322,8 +320,8 @@ public class FirebaseHelper {
             MainActivity.btnSlider.removeView(MainActivity.pbBtn);
             Log.e(TAG,"Pb does not exist.");
         }
-        myRef.child("_IAQI-Pb").setValue(Pb); //stores Pb into Firebase
-        weather.setPb(Pb);
+        myWeatherRef.child("_IAQI-Pb").setValue(Pb); //stores Pb into Firebase
+        localData.setPb(Pb);
         Log.e(TAG,"Pb data set = " + Pb);
     }
 
@@ -401,7 +399,7 @@ public class FirebaseHelper {
 
     private double tempDouble;
     private double readDouble(String child) {
-        myRef.child(child).addListenerForSingleValueEvent(new ValueEventListener() {
+        myWeatherRef.child(child).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.e(TAG,"Currently reading");
@@ -421,7 +419,7 @@ public class FirebaseHelper {
 
     private int tempInt;
     private int readInt(String child) {
-        myRef.child(child).addListenerForSingleValueEvent(new ValueEventListener() {
+        myWeatherRef.child(child).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.e(TAG,"Currently reading");
@@ -461,13 +459,13 @@ public class FirebaseHelper {
         }
 
         double progr = AQI / 3.5;
-        Log.e("Weather", "Progress unaltered = " + progr);
+        Log.e("LocalData", "Progress unaltered = " + progr);
         progress = 100 - (int) progr;
         //progress = AQI;
-        Log.e("Weather", "Progress altered = " + progress);
+        Log.e("LocalData", "Progress altered = " + progress);
 
         ProgressAnimation anim = new ProgressAnimation(MainActivity.arcProgressBar, 0, progress);
-        anim.setDuration(1000);
+        anim.setDuration(3000);
         MainActivity.arcProgressBar.startAnimation(anim);
 
         MainActivity.arcProgressBar.setProgress(progress);

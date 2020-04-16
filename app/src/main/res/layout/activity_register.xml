@@ -160,8 +160,7 @@
                 android:gravity="center"
                 android:text="@string/take_to_login"
                 android:textColor="@color/colorPrimary"
-                android:textSize="15sp"
-                android:onClick="onClick"/>
+                android:textSize="15sp"/>
 
         </LinearLayout>
     </RelativeLayout>

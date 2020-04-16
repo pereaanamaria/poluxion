@@ -428,7 +428,7 @@
                             android:textColor="@color/colorPrimaryDark"
                             android:textSize="35sp"
                             android:textStyle="bold"
-                            android:visibility="invisible" />
+                            android:visibility="visible" />
 
                         <TextView
                             android:id="@+id/units"
@@ -436,11 +436,11 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.5"
                             android:gravity="start"
-                            android:text="@string/um3"
+                            android:text=""
                             android:textColor="@color/colorPrimaryDark"
                             android:textSize="35sp"
                             android:textStyle="bold"
-                            android:visibility="invisible" />
+                            android:visibility="visible" />
                     </LinearLayout>
 
                 </LinearLayout>

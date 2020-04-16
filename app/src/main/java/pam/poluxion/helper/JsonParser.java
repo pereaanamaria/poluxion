@@ -1,4 +1,4 @@
-package pam.poluxion.models;
+package pam.poluxion.helper;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,6 +9,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import pam.poluxion.helper.FirebaseHelper;
 
 public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
 

@@ -1,18 +1,13 @@
 package pam.poluxion.models;
 
 import android.content.Context;
-import android.os.Handler;
-import android.util.Log;
-import android.view.View;
-
 import pam.poluxion.BuildConfig;
-import pam.poluxion.MainActivity;
-import pam.poluxion.widgets.ProgressAnimation;
+import pam.poluxion.helper.FirebaseHelper;
+import pam.poluxion.helper.JsonParser;
 
-public class Weather {
+public class LocalData {
 
-    private String locality, country;
-    private static final String AccApi = BuildConfig.AccuWeatherApiKey;
+    //private static final String AccApi = BuildConfig.AccuWeatherApiKey;
     private static final String AqicnApi = BuildConfig.AqicnApiKey;
     private JsonParser parser;
     private FirebaseHelper FBHelper;
@@ -21,11 +16,8 @@ public class Weather {
     private int AQI, temperature;
     private double pressure, NO2, O3, PM10, SO2, PM25, VOC, PM1, CO, CO2, Pb, NH3;
 
-    public Weather(String locality, String country, Context context) {
-        this.locality = locality;
-        this.country = country;
-
-        FBHelper = new FirebaseHelper(this, context);
+    public LocalData(String locality, String country, Context context) {
+        FBHelper = new FirebaseHelper(this, context, country, locality);
 
         searchUrl = "https://api.waqi.info/feed/"+locality+"/?token="+AqicnApi;
         //searchUrl = "https://api.waqi.info/feed/Melbourne/?token="+AqicnApi;
@@ -202,5 +194,9 @@ public class Weather {
     }
     public double getVOC() {
         return VOC;
+    }
+
+    public FirebaseHelper getFBHelper() {
+        return FBHelper;
     }
 }
