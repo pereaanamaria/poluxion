@@ -5,6 +5,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Address;
@@ -13,6 +14,8 @@ import android.location.Location;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,7 +47,6 @@ public class MainActivityHelper extends MainActivity {
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
-    private static final String Api_Maps = BuildConfig.MapsApiKey;
 
     private static final float DEFAULT_ZOOM = 15f;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
@@ -53,16 +55,17 @@ public class MainActivityHelper extends MainActivity {
     private GoogleMap mMap;
     private LatLng current;    //current position of the device
 
-    private LocalData localData;
-    private User user;
+    //private User user;
 
     private Context context;
     private Activity activity;
+    private Intent intent;
 
-    public MainActivityHelper(Context context, Activity activity) {
+    public MainActivityHelper(Context context, Activity activity, Intent intent) {
         super();
         this.context = context;
         this.activity = activity;
+        this.intent = intent;
 
         getLocationPermission();
     }
@@ -73,19 +76,18 @@ public class MainActivityHelper extends MainActivity {
         Log.d(TAG, "getDeviceLocation: getting the device's current location");
 
         FusedLocationProviderClient mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity);
-
         try {
-            if(mLocationPermissionGranted) {
+            if (mLocationPermissionGranted) {
                 Task location = mFusedLocationProviderClient.getLastLocation();
                 location.addOnCompleteListener(new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
-                        if(task.isSuccessful()) {
+                        if (task.isSuccessful()) {
                             Log.d(TAG, "onComplete: found location");
                             Location currentLocation = (Location) task.getResult();
 
                             current = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                            moveCamera(current,DEFAULT_ZOOM);
+                            moveCamera(current, DEFAULT_ZOOM);
                             getAddress(currentLocation.getLatitude(), currentLocation.getLongitude());
                         } else {
                             Log.d(TAG, "onComplete: current location is null");
@@ -95,7 +97,6 @@ public class MainActivityHelper extends MainActivity {
                 });
 
             }
-
         } catch (SecurityException e) {
             Log.e(TAG, "getDeviceLocation: Security exception: " + e.getMessage());
         }
@@ -108,34 +109,22 @@ public class MainActivityHelper extends MainActivity {
             Address obj = addresses.get(0);
             String add = obj.getLocality() + ", " + obj.getCountryName();
 
-            localData = new LocalData(obj.getLocality(),obj.getCountryName(),context);
-            user = new User(localData.getFBHelper());
+            LocalData localData = new LocalData();
+            //user = new User(localData.getFBHelper());
 
-            try {
-                localData.getAQIData();
-                localData.getPressureData();
-                localData.getTemperatureData();
-                localData.getNO2Data();
-                localData.getO3Data();
-                localData.getPM10Data();
-                localData.getPM25Data();
-                localData.getPM1Data();
-                localData.getNH3Data();
-                localData.getCO2Data();
-                localData.getCOData();
-                localData.getSO2Data();
-                localData.getVOCData();
-                localData.getPbData();
-
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        crossfade();
-                    }
-                }, 5000);   //5 seconds
-
-            } catch (Exception e) {
-                Toast.makeText(context, "Could not get key", Toast.LENGTH_SHORT).show();
+            if (intent.getStringExtra("Msg").equals("Just started")) {
+                try {
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            crossfade(MainActivity.main);
+                        }
+                    }, 1000);   //1 seconds
+                } catch (Exception e) {
+                    Toast.makeText(context, "Could not get key", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                MainActivity.main.setVisibility(View.VISIBLE);
             }
 
             Log.v("IGA", "Address" + add);
@@ -147,32 +136,18 @@ public class MainActivityHelper extends MainActivity {
         }
     }
 
-    private void crossfade() {
+    private void crossfade(ViewGroup layout) {
         // Set the content view to 0% opacity but visible, so that it is visible
         // (but fully transparent) during the animation.
-        MainActivity.all.setAlpha(0f);
-        MainActivity.all.setVisibility(View.VISIBLE);
+        layout.setAlpha(0f);
+        layout.setVisibility(View.VISIBLE);
 
         // Animate the content view to 100% opacity, and clear any animation
         // listener set on the view.
-        MainActivity.all.animate()
+        layout.animate()
                 .alpha(1f)
-                .setDuration(1000)
+                .setDuration(2000)
                 .setListener(null);
-
-        // Animate the loading view to 0% opacity. After the animation ends,
-        // set its visibility to GONE as an optimization step (it won't
-        // participate in layout passes, etc.)
-        MainActivity.splash.animate()
-                .alpha(0f)
-                .setDuration(1000)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        MainActivity.splash.setVisibility(View.GONE);
-                    }
-                });
-
     }
 
     //the map is being moved according to the current position of the device
@@ -190,7 +165,7 @@ public class MainActivityHelper extends MainActivity {
 
     private void refresh(int milisecs) {
         final Handler handler = new Handler();
-        final Runnable runnable =  new Runnable() {
+        final Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 content();
@@ -231,20 +206,20 @@ public class MainActivityHelper extends MainActivity {
     }
 
     //gets permission to use GPS and Location
-    private void getLocationPermission(){
-        String[] permissions = {FINE_LOCATION,COARSE_LOCATION};
+    private void getLocationPermission() {
+        String[] permissions = {FINE_LOCATION, COARSE_LOCATION};
 
         Log.d(TAG, "getLocationPermissions: Getting location permissions");
-        if(ContextCompat.checkSelfPermission(context.getApplicationContext(),
+        if (ContextCompat.checkSelfPermission(context.getApplicationContext(),
                 FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {   //checks if FINE_LOCATION permission was granted
-            if(ContextCompat.checkSelfPermission(context.getApplicationContext(),
+            if (ContextCompat.checkSelfPermission(context.getApplicationContext(),
                     COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {   //checks if COARSE_LOCATION permission was granted
                 mLocationPermissionGranted = true;    //sets the flag
                 //initMap();
             } else {
                 ActivityCompat.requestPermissions(activity, permissions, LOCATION_PERMISSION_REQUEST_CODE);
             }
-        }  else {
+        } else {
             ActivityCompat.requestPermissions(activity, permissions, LOCATION_PERMISSION_REQUEST_CODE);
         }
     }
@@ -257,9 +232,9 @@ public class MainActivityHelper extends MainActivity {
 
         switch (requestCode) {
             case LOCATION_PERMISSION_REQUEST_CODE: {
-                if(grantResults.length > 0) {
-                    for(int i=0; i<grantResults.length; i++) {
-                        if(grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < grantResults.length; i++) {
+                        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                             mLocationPermissionGranted = false;
                             Log.d(TAG, "onRequestPermissionResult: Permission failed");
                             return;

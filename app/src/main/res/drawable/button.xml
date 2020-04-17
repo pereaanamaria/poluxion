@@ -4,15 +4,10 @@
         <shape
             android:shape="rectangle"
             android:name="button">
-            <solid android:color="@color/colorLight" />
+            <solid android:color="@color/colorAccent" />
             <stroke
                 android:width="5px"
-                android:color="@color/colorAccent" />
-            <gradient
-                android:gradientRadius="750dp"
-                android:startColor="@color/colorAccent"
-                android:endColor="@color/colorLight"
-                android:type="radial" />
+                android:color="@color/colorPrimary" />
         </shape>
     </item>
 </selector>

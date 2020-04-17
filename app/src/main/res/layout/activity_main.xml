@@ -1,63 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorAccent"
-    android:fillViewport="true"
-    android:scrollbars="none">
+    android:id="@+id/main"
+    android:visibility="invisible">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/sliderDot"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center">
+        android:layout_marginTop="15sp"
+        android:layout_marginBottom="15sp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:background="@color/colorAccent"
+        android:layout_alignParentBottom="true" />
 
-        <LinearLayout
-            android:id="@+id/layout_splash"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="200dp"
-            android:background="@color/colorAccent"
-            android:orientation="vertical"
-            android:visibility="visible">
 
-            <ImageView
-                android:layout_width="235dp"
-                android:layout_height="235dp"
-                android:layout_gravity="center"
-                android:layout_marginBottom="25dp"
-                android:background="@color/colorAccent"
-                android:src="@drawable/air_quality1" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:gravity="center"
-                android:scaleX="1.2"
-                android:text="@string/app_name"
-                android:textAllCaps="true"
-                android:textColor="@color/colorPrimaryDarker"
-                android:textSize="50sp" />
-
-        </LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:gravity="center"
+        android:scrollbars="none"
+        android:orientation="vertical"
+        android:layout_above="@id/sliderDot"
+        android:layout_marginLeft="25sp"
+        android:layout_marginRight="25sp">
 
         <LinearLayout
             android:id="@+id/layout_all"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="invisible">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="25sp"
                 android:layout_marginTop="25sp"
-                android:layout_marginRight="25sp"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -223,9 +207,7 @@
                 android:id="@+id/arc_progressTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="25dp"
                 android:gravity="center"
                 android:text=""
                 android:textColor="@color/colorPrimaryDark"
@@ -236,7 +218,8 @@
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
-                android:layout_margin="25sp"
+                android:layout_marginTop="25sp"
+                android:layout_marginBottom="25sp"
                 tools:context=".MainActivity" />
 
 
@@ -248,161 +231,137 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginRight="25dp"
-                    android:layout_marginLeft="25dp">
+                    android:layout_marginBottom="50dp"
+                    android:orientation="vertical">
 
                     <HorizontalScrollView
                         android:layout_width="match_parent"
-                        android:layout_height="30dp"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:foregroundGravity="center"
-                        android:scrollbars="none"
+                        android:background="@color/colorAccent"
                         android:requiresFadingEdge="horizontal"
                         android:fadingEdge="horizontal"
                         android:fadingEdgeLength="100dp"
                         android:fillViewport="true"
-                        android:background="@drawable/button">
+                        android:foregroundGravity="center"
+                        android:scrollbars="none">
 
                         <LinearLayout
                             android:id="@+id/btnSlider"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center"
-                            android:requiresFadingEdge="horizontal"
                             android:fadingEdge="horizontal"
-                            android:weightSum="11">
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:requiresFadingEdge="horizontal">
 
                             <Button
                                 android:id="@+id/pm10"
                                 style="?android:attr/borderlessButtonStyle"
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:layout_height="25dp"
-                                android:layout_margin="5dp"
-                                android:text="@string/pm10"
+                                android:layout_width="85dp"
+                                android:layout_height="30dp"
                                 android:background="@android:color/transparent"
+                                android:text="@string/pm10"
                                 android:textColor="@color/colorPrimaryDarker"
                                 android:textSize="12sp" />
 
                             <Button
                                 android:id="@+id/pm2_5"
                                 style="?android:attr/borderlessButtonStyle"
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:layout_height="25dp"
-                                android:layout_margin="5dp"
-                                android:text="@string/pm2_5"
+                                android:layout_width="85dp"
+                                android:layout_height="30dp"
                                 android:background="@android:color/transparent"
+                                android:text="@string/pm2_5"
                                 android:textColor="@color/colorPrimaryDarker"
                                 android:textSize="12sp" />
 
                             <Button
                                 android:id="@+id/pm1"
                                 style="?android:attr/borderlessButtonStyle"
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:layout_height="25dp"
-                                android:layout_margin="5dp"
-                                android:text="@string/pm1"
+                                android:layout_width="85dp"
+                                android:layout_height="30dp"
                                 android:background="@android:color/transparent"
+                                android:text="@string/pm1"
                                 android:textColor="@color/colorPrimaryDarker"
                                 android:textSize="12sp" />
 
                             <Button
                                 android:id="@+id/o3"
                                 style="?android:attr/borderlessButtonStyle"
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:layout_height="25dp"
-                                android:layout_margin="5dp"
-                                android:text="@string/o3"
+                                android:layout_width="85dp"
+                                android:layout_height="30dp"
                                 android:background="@android:color/transparent"
+                                android:text="@string/o3"
                                 android:textColor="@color/colorPrimaryDarker"
                                 android:textSize="12sp" />
 
                             <Button
                                 android:id="@+id/no2"
                                 style="?android:attr/borderlessButtonStyle"
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:layout_height="25dp"
-                                android:layout_margin="5dp"
-                                android:text="@string/no2"
+                                android:layout_width="85dp"
+                                android:layout_height="30dp"
                                 android:background="@android:color/transparent"
+                                android:text="@string/no2"
                                 android:textColor="@color/colorPrimaryDarker"
                                 android:textSize="12sp" />
 
                             <Button
                                 android:id="@+id/so2"
                                 style="?android:attr/borderlessButtonStyle"
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:layout_height="25dp"
-                                android:layout_margin="5dp"
-                                android:text="@string/so2"
+                                android:layout_width="85dp"
+                                android:layout_height="30dp"
                                 android:background="@android:color/transparent"
+                                android:text="@string/so2"
                                 android:textColor="@color/colorPrimaryDarker"
                                 android:textSize="12sp" />
 
                             <Button
                                 android:id="@+id/co2"
                                 style="?android:attr/borderlessButtonStyle"
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:layout_height="25dp"
-                                android:layout_margin="5dp"
-                                android:text="@string/co2"
+                                android:layout_width="85dp"
+                                android:layout_height="30dp"
                                 android:background="@android:color/transparent"
+                                android:text="@string/co2"
                                 android:textColor="@color/colorPrimaryDarker"
                                 android:textSize="12sp" />
 
                             <Button
                                 android:id="@+id/co"
                                 style="?android:attr/borderlessButtonStyle"
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:layout_height="25dp"
-                                android:layout_margin="5dp"
-                                android:text="@string/co"
+                                android:layout_width="85dp"
+                                android:layout_height="30dp"
                                 android:background="@android:color/transparent"
+                                android:text="@string/co"
                                 android:textColor="@color/colorPrimaryDarker"
                                 android:textSize="12sp" />
 
                             <Button
                                 android:id="@+id/nh3"
                                 style="?android:attr/borderlessButtonStyle"
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:layout_height="25dp"
-                                android:layout_margin="5dp"
-                                android:text="@string/nh3"
+                                android:layout_width="85dp"
+                                android:layout_height="30dp"
                                 android:background="@android:color/transparent"
+                                android:text="@string/nh3"
                                 android:textColor="@color/colorPrimaryDarker"
                                 android:textSize="12sp" />
 
                             <Button
                                 android:id="@+id/pb"
                                 style="?android:attr/borderlessButtonStyle"
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:layout_height="25dp"
-                                android:layout_margin="5dp"
-                                android:text="@string/pb"
+                                android:layout_width="85dp"
+                                android:layout_height="30dp"
                                 android:background="@android:color/transparent"
+                                android:text="@string/pb"
                                 android:textColor="@color/colorPrimaryDarker"
                                 android:textSize="12sp" />
 
                             <Button
                                 android:id="@+id/voc"
                                 style="?android:attr/borderlessButtonStyle"
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:layout_height="25dp"
-                                android:layout_margin="5dp"
-                                android:text="@string/voc"
+                                android:layout_width="85dp"
+                                android:layout_height="30dp"
                                 android:background="@android:color/transparent"
+                                android:text="@string/voc"
                                 android:textColor="@color/colorPrimaryDarker"
                                 android:textSize="12sp" />
 
@@ -427,8 +386,7 @@
                             android:text=""
                             android:textColor="@color/colorPrimaryDark"
                             android:textSize="35sp"
-                            android:textStyle="bold"
-                            android:visibility="visible" />
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/units"
@@ -439,8 +397,7 @@
                             android:text=""
                             android:textColor="@color/colorPrimaryDark"
                             android:textSize="35sp"
-                            android:textStyle="bold"
-                            android:visibility="visible" />
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -448,21 +405,6 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="15dp"
-                android:alpha="0.5"
-                android:background="@color/colorAccent" />
-
-            <LinearLayout
-                android:id="@+id/sliderDot"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="25sp"
-                android:gravity="center"
-                android:orientation="horizontal" />
-
         </LinearLayout>
-    </RelativeLayout>
-</ScrollView>
+    </ScrollView>
+</RelativeLayout>

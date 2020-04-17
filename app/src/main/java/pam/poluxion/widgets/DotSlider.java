@@ -10,18 +10,18 @@ import androidx.core.content.ContextCompat;
 
 import pam.poluxion.R;
 
-import static pam.poluxion.MainActivity.sliderDots;
-
 public class DotSlider {
     private static final String TAG = "DotSlider";
 
     private int[] layouts = {R.layout.activity_settings,R.layout.activity_main,R.layout.activity_tracker};
     private Context context;
     private int width;
+    private LinearLayout sliderDots;
 
-    public DotSlider(Context context, int screenWidth, int currentPosition) {
+    public DotSlider(Context context, int screenWidth, LinearLayout linearLayout, int currentPosition) {
         this.context = context;
         this.width = screenWidth;
+        this.sliderDots = linearLayout;
 
         createDots(currentPosition);
     }

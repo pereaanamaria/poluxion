@@ -5,23 +5,41 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import org.json.JSONException;
+import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
+
 import org.json.JSONObject;
+
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
-import pam.poluxion.helper.FirebaseHelper;
+import pam.poluxion.MainActivity;
+import pam.poluxion.widgets.ProgressAnimation;
 
 public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
 
-    private String urlStr;
-    private String whatToGet;
-    private FirebaseHelper FBHelper;
+    private static final String TAG = "JsonParser";
 
-    public JsonParser (String url, String whatToGet, FirebaseHelper FBHelper) {
-        this.urlStr = url;
-        this.whatToGet = whatToGet;
-        this.FBHelper = FBHelper;
+    private static final int colorAccent = Color.rgb(255,255,255);
+    private static final int colorLight = Color.rgb(203,223,202);
+    //private static final int colorPrimaryLight = Color.rgb(193,219,191);
+    //private static final int colorGrey = Color.rgb(224,224,224);
+    private static final int colorPrimary = Color.rgb(142, 171, 140);
+    //private static final int colorPrimaryDarker = Color.rgb(75,89,73);
+
+    private int AQI;
+    private String[] iaqiDataTypes = {"pm10", "pm1", "pm25", "no2", "so2", "nh3", "co", "co2", "o3", "pb", "voc", "p", "t"};
+    private HashMap<String, Double> iaqiData = new HashMap<>();
+
+    private String urlStr;
+    private Button clicked;
+
+    public JsonParser(String urlStr) {
+        this.urlStr = urlStr;
     }
 
     @Override
@@ -34,22 +52,16 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
 
             StringBuffer stringBuffer = new StringBuffer();
             String line;
-            while ((line = bufferedReader.readLine()) != null)
-            {
+            while ((line = bufferedReader.readLine()) != null) {
                 stringBuffer.append(line);
             }
 
             return new JSONObject(stringBuffer.toString());
-        }
-        catch(Exception ex)
-        {
+        } catch (Exception ex) {
             Log.e("App", "yourDataTask", ex);
             return null;
-        }
-        finally
-        {
-            if(bufferedReader != null)
-            {
+        } finally {
+            if (bufferedReader != null) {
                 try {
                     bufferedReader.close();
                 } catch (IOException e) {
@@ -59,160 +71,169 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
         }
     }
 
-
-
     @Override
-    protected void onPostExecute(JSONObject  result) {
-        if(result != null)
-        {
+    protected void onPostExecute(JSONObject result) {
+        if (result != null) {
             try {
-                switch (whatToGet) {
-                    case "AQI":
-                        JSONObject obj = new JSONObject(result.getString("data"));
-                        String str = obj.get("aqi").toString();
-                        FBHelper.inputAQI(str);
-                        Log.e("App", "AQI = " + str);
-                        break;
-                    case "pressure":
-                        obj = new JSONObject(result.getString("data"));
-                        JSONObject objIndex = new JSONObject((new JSONObject(obj.get("iaqi").toString())).get("p").toString());
+                JSONObject obj = new JSONObject(result.getString("data"));
+                String str = obj.get("aqi").toString();
+                postAQI(str);
+                Log.e(TAG, "AQI = " + str);
+            } catch (Exception e) {
+                Log.e(TAG, "No AQI", e);
+            }
+
+            for (String iaqiDataType : iaqiDataTypes) {
+                try {
+                    JSONObject obj = new JSONObject(result.getString("data"));
+                    String str;
+                    try {
+                        JSONObject objIndex = new JSONObject((new JSONObject(obj.get("iaqi").toString())).get(iaqiDataType).toString());
                         str = objIndex.get("v").toString();
-                        FBHelper.inputPressure(str);
-                        Log.e("App", "Pressure = " + str);
-                        break;
-                    case "temperature":
-                        obj = new JSONObject(result.getString("data"));
-                        objIndex = new JSONObject((new JSONObject(obj.get("iaqi").toString())).get("t").toString());
-                        str = objIndex.get("v").toString();
-                        FBHelper.inputTemperature(str);
-                        Log.e("App", "Temperature = " + str);
-                        break;
-                    case "NO2":
-                        obj = new JSONObject(result.getString("data"));
-                        try{
-                            objIndex = new JSONObject((new JSONObject(obj.get("iaqi").toString())).get("no2").toString());
-                            str = objIndex.get("v").toString();
-                        } catch(Exception e) {
-                            str = null;
-                        }
-                        FBHelper.inputNO2(str);
-                        Log.e("App", "NO2 = " + str);
-                        break;
-                    case "O3":
-                        obj = new JSONObject(result.getString("data"));
-                        try{
-                            objIndex = new JSONObject((new JSONObject(obj.get("iaqi").toString())).get("o3").toString());
-                            str = objIndex.get("v").toString();
-                        } catch(Exception e) {
-                            str = null;
-                        }
-                        FBHelper.inputO3(str);
-                        Log.e("App", "O3 = " + str);
-                        break;
-                    case "PM10":
-                        obj = new JSONObject(result.getString("data"));
-                        try{
-                            objIndex = new JSONObject((new JSONObject(obj.get("iaqi").toString())).get("pm10").toString());
-                            str = objIndex.get("v").toString();
-                        } catch(Exception e) {
-                            str = null;
-                        }
-                        FBHelper.inputPM10(str);
-                        Log.e("App", "PM10 = " + str);
-                        break;
-                    case "SO2":
-                        obj = new JSONObject(result.getString("data"));
-                        try{
-                            objIndex = new JSONObject((new JSONObject(obj.get("iaqi").toString())).get("so2").toString());
-                            str = objIndex.get("v").toString();
-                        } catch(Exception e) {
-                            str = null;
-                        }
-                        FBHelper.inputSO2(str);
-                        Log.e("App", "SO2 = " + str);
-                        break;
-                    case "PM25":
-                        obj = new JSONObject(result.getString("data"));
-                        try{
-                            objIndex = new JSONObject((new JSONObject(obj.get("iaqi").toString())).get("pm25").toString());
-                            str = objIndex.get("v").toString();
-                        } catch(Exception e) {
-                            str = null;
-                        }
-                        FBHelper.inputPM25(str);
-                        Log.e("App", "PM25 = " + str);
-                        break;
-                    case "PM1":
-                        obj = new JSONObject(result.getString("data"));
-                        try{
-                            objIndex = new JSONObject((new JSONObject(obj.get("iaqi").toString())).get("pm1").toString());
-                            str = objIndex.get("v").toString();
-                        } catch(Exception e) {
-                            str = null;
-                        }
-                        FBHelper.inputPM1(str);
-                        Log.e("App", "PM1 = " + str);
-                        break;
-                    case "NH3":
-                        obj = new JSONObject(result.getString("data"));
-                        try{
-                            objIndex = new JSONObject((new JSONObject(obj.get("iaqi").toString())).get("nh3").toString());
-                            str = objIndex.get("v").toString();
-                        } catch(Exception e) {
-                            str = null;
-                        }
-                        FBHelper.inputNH3(str);
-                        Log.e("App", "NH3 = " + str);
-                        break;
-                    case "CO":
-                        obj = new JSONObject(result.getString("data"));
-                        try{
-                            objIndex = new JSONObject((new JSONObject(obj.get("iaqi").toString())).get("co").toString());
-                            str = objIndex.get("v").toString();
-                        } catch(Exception e) {
-                            str = null;
-                        }
-                        FBHelper.inputCO(str);
-                        Log.e("App", "CO = " + str);
-                        break;
-                    case "CO2":
-                        obj = new JSONObject(result.getString("data"));
-                        try{
-                            objIndex = new JSONObject((new JSONObject(obj.get("iaqi").toString())).get("co2").toString());
-                            str = objIndex.get("v").toString();
-                        } catch(Exception e) {
-                            str = null;
-                        }
-                        FBHelper.inputCO2(str);
-                        Log.e("App", "CO2 = " + str);
-                        break;
-                    case "VOC":
-                        obj = new JSONObject(result.getString("data"));
-                        try{
-                            objIndex = new JSONObject((new JSONObject(obj.get("iaqi").toString())).get("voc").toString());
-                            str = objIndex.get("v").toString();
-                        } catch(Exception e) {
-                            str = null;
-                        }
-                        FBHelper.inputVOC(str);
-                        Log.e("App", "VOC = " + str);
-                        break;
-                    case "Pb":
-                        obj = new JSONObject(result.getString("data"));
-                        try{
-                            objIndex = new JSONObject((new JSONObject(obj.get("iaqi").toString())).get("pb").toString());
-                            str = objIndex.get("v").toString();
-                        } catch(Exception e) {
-                            str = null;
-                        }
-                        FBHelper.inputPb(str);
-                        Log.e("App", "Pb = " + str);
-                        break;
-                    default: Log.e("App", "Unknown information");
+                    } catch (Exception e) {
+                        str = null;
+                    }
+                    postIAQI(iaqiDataType, str);
+                    Log.e(TAG, iaqiDataType + " = " + str);
+                } catch (Exception e) {
+                    Log.e(TAG, "No " + iaqiDataType);
                 }
-            } catch (JSONException ex) {
-                Log.e("App", "Failure", ex);
             }
         }
+    }
+
+    private void iaqiButtonListener(final String iaqiType, String iaqiValue, final Button btn) {
+        try {
+            if (iaqiValue != null) {
+                double iaqi = Double.parseDouble(iaqiValue);
+                iaqiData.put(iaqiType, iaqi);
+                btn.setVisibility(View.VISIBLE);
+                setButtonUnclicked(btn);
+                btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MainActivity.measurementTV.setVisibility(View.VISIBLE);
+                        MainActivity.unitsTV.setVisibility(View.VISIBLE);
+                        MainActivity.measurementTV.setText(iaqiData.get(iaqiType) + " ");
+                        MainActivity.unitsTV.setText("μg/m³");
+                        Log.e("IAQI", iaqiType + "btn clicked");
+                        setButtonUnclicked(clicked);
+                        clicked = btn;
+                        setButtonClicked(clicked);
+                    }
+                });
+                if (iaqiType.equals("pm10")) {
+                    MainActivity.measurementTV.setVisibility(View.VISIBLE);
+                    MainActivity.unitsTV.setVisibility(View.VISIBLE);
+                    MainActivity.measurementTV.setText(iaqiData.get(iaqiType) + " ");
+                    MainActivity.unitsTV.setText("μg/m³");
+                    clicked = btn;
+                    setButtonClicked(clicked);
+                }
+            } else {
+                iaqiData.put(iaqiType, 0.0);
+                //iaqi = 0.0;
+                MainActivity.btnSlider.removeView(btn);
+            }
+            double valueIaqi = iaqiData.get(iaqiType);
+            Log.e(TAG, iaqiType + " data set = " + valueIaqi);
+        } catch (Exception e) {
+            Log.e(TAG, iaqiType + " does not exist.");
+        }
+    }
+
+    private void getAQIPercentage() {
+        String status, status2 = "";
+        int progress;
+        if (AQI <= 50) {
+            status = "Good";
+        } else if (AQI <= 100) {
+            status = "Moderate";
+        } else if (AQI <= 150) {
+            status = "Unhealthy";
+            status2 += "Active children and adults, and people with respiratory disease, such as asthma, should limit prolonged outdoor exertion.";
+        } else if (AQI <= 200) {
+            status = "Unhealthy";
+            status2 += "Active children and adults, and people with respiratory disease, such as asthma, should avoid prolonged outdoor exertion.";
+        } else if (AQI <= 300) {
+            status = "Very Unhealthy";
+            status2 += "Active children and adults, and people with respiratory disease, such as asthma, should avoid all outdoor exertion.";
+        } else {
+            status = "Hazardous";
+            status2 += "Everyone should avoid all outdoor exertion.";
+        }
+
+        double progr = AQI / 3.5;
+        Log.e(TAG, "Progress unaltered = " + progr);
+        progress = 100 - (int) progr;
+        //progress = AQI;
+        Log.e(TAG, "Progress altered = " + progress);
+
+        ProgressAnimation anim = new ProgressAnimation(MainActivity.arcProgressBar, 0, progress);
+        anim.setDuration(1000);
+        MainActivity.arcProgressBar.startAnimation(anim);
+
+        MainActivity.arcProgressBar.setProgress(progress);
+        MainActivity.arcProgressBar.setBottomText(status);
+        MainActivity.arcProgressTV.setText(status2);
+    }
+
+    private void postAQI(String aqi) {
+        AQI = Integer.parseInt(aqi);
+        MainActivity.nrAqiTV.setText(aqi);
+        Log.e(TAG, "AQI data set = " + AQI);
+        getAQIPercentage();
+    }
+
+    private void postPressure(String pressure) {
+        double Pressure = Double.parseDouble(pressure);
+        MainActivity.pressureTV.setText(pressure + " ");
+        Log.e(TAG, "Pressure data set = " + Pressure);
+    }
+
+    private void postTemperature(String temperature) {
+        double temp = Double.parseDouble(temperature);
+        Log.e(TAG, temp + "");
+        int Temperature = (int) Math.floor(temp);
+        MainActivity.temperatureTV.setText(Temperature + " ");
+        Log.e(TAG, "Temperature data set = " + Temperature);
+    }
+
+    private void postIAQI(String iaqiType, String iaqiValue) {
+        Button btn = null;
+        switch (iaqiType) {
+            case "pm10": btn = MainActivity.pm10Btn; break;
+            case "pm25": btn = MainActivity.pm25Btn; break;
+            case "pm1": btn = MainActivity.pm1Btn; break;
+            case "no2": btn = MainActivity.no2Btn; break;
+            case "so2": btn = MainActivity.so2Btn; break;
+            case "o3": btn = MainActivity.o3Btn; break;
+            case "co": btn = MainActivity.coBtn; break;
+            case "co2": btn = MainActivity.co2Btn; break;
+            case "nh3": btn = MainActivity.nh3Btn; break;
+            case "pb": btn = MainActivity.pbBtn; break;
+            case "voc": btn = MainActivity.vocBtn; break;
+            case "t": postTemperature(iaqiValue); break;
+            case "p": postPressure(iaqiValue); break;
+            default: Log.e(TAG, "Unknown IAQI");
+        }
+        if (btn != null) {
+            iaqiButtonListener(iaqiType, iaqiValue, btn);
+        }
+    }
+
+    private void setButtonClicked(Button btn) {
+        GradientDrawable gradientDrawable = new GradientDrawable();
+        gradientDrawable.setCornerRadius(3);
+        gradientDrawable.setColor(colorPrimary);
+        btn.setTextColor(colorAccent);
+        btn.setBackground(gradientDrawable);
+    }
+
+    private void setButtonUnclicked(Button btn) {
+        GradientDrawable gradientDrawable = new GradientDrawable();
+        gradientDrawable.setColor(colorLight);
+        btn.setTextColor(colorAccent);
+        btn.setBackground(gradientDrawable);
     }
 }
