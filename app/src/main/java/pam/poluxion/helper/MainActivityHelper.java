@@ -109,7 +109,7 @@ public class MainActivityHelper extends MainActivity {
             Address obj = addresses.get(0);
             String add = obj.getLocality() + ", " + obj.getCountryName();
 
-            LocalData localData = new LocalData();
+            LocalData localData = new LocalData(obj.getLocality());
             //user = new User(localData.getFBHelper());
 
             if (intent.getStringExtra("Msg").equals("Just started")) {
@@ -117,14 +117,24 @@ public class MainActivityHelper extends MainActivity {
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         public void run() {
-                            crossfade(MainActivity.main);
+                            crossfade(MainActivity.mainScroll);
                         }
-                    }, 1000);   //1 seconds
+                    }, 2000);   //2 seconds
                 } catch (Exception e) {
                     Toast.makeText(context, "Could not get key", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                MainActivity.main.setVisibility(View.VISIBLE);
+                MainActivity.loadingPanel.setVisibility(View.GONE);
+                try {
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            MainActivity.mainScroll.setVisibility(View.VISIBLE);
+                        }
+                    }, 200);   //1 seconds
+                } catch (Exception e) {
+                    Toast.makeText(context, "Could not get key", Toast.LENGTH_SHORT).show();
+                }
             }
 
             Log.v("IGA", "Address" + add);
@@ -146,8 +156,10 @@ public class MainActivityHelper extends MainActivity {
         // listener set on the view.
         layout.animate()
                 .alpha(1f)
-                .setDuration(2000)
+                .setDuration(1000)
                 .setListener(null);
+
+        MainActivity.loadingPanel.setVisibility(View.GONE);
     }
 
     //the map is being moved according to the current position of the device

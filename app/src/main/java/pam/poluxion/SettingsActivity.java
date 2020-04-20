@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -18,9 +19,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     private static final String TAG = "SettingsActivity";
     private RelativeLayout relativeLayout;
-    public static LinearLayout sliderDots;
+    private LinearLayout sliderDots;
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,12 +30,20 @@ public class SettingsActivity extends AppCompatActivity {
         createDotSlider();
 
         relativeLayout = (RelativeLayout) findViewById(R.id.settings);
-        relativeLayout.setOnTouchListener(new OnSwipeTouchListener(SettingsActivity.this) {
+        addSwipe(relativeLayout);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void addSwipe(View view) {
+        view.setOnTouchListener(new OnSwipeTouchListener(SettingsActivity.this) {
             public void onSwipeTop() {
                 //Toast.makeText(SettingsActivity.this, "top", Toast.LENGTH_SHORT).show();
             }
             public void onSwipeRight() {
-                //Toast.makeText(SettingsActivity.this, "left", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(SettingsActivity.this, TrackerActivity.class);
+                intent.putExtra("Msg", "Left Activity");
+                startActivity(intent);
+                //Toast.makeText(SettingsActivity.this, "TrackerActivity", Toast.LENGTH_SHORT).show();
             }
             public void onSwipeLeft() {
                 Intent intent = new Intent(SettingsActivity.this, MainActivity.class);

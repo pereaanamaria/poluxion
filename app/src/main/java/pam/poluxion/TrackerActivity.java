@@ -7,10 +7,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import pam.poluxion.models.GeneralClass;
+import pam.poluxion.models.User;
 import pam.poluxion.widgets.DotSlider;
 import pam.poluxion.widgets.OnSwipeTouchListener;
 
@@ -20,7 +23,8 @@ public class TrackerActivity extends AppCompatActivity {
 
     private static final String TAG = "TrackerActivity";
     private RelativeLayout relativeLayout;
-    public static LinearLayout sliderDots;
+    private LinearLayout sliderDots;
+    private User user = GeneralClass.getUserObject();
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -32,7 +36,12 @@ public class TrackerActivity extends AppCompatActivity {
         createDotSlider();
 
         relativeLayout = (RelativeLayout) findViewById(R.id.tracker);
-        relativeLayout.setOnTouchListener(new OnSwipeTouchListener(TrackerActivity.this) {
+       addSwipe(relativeLayout);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void addSwipe(View view) {
+        view.setOnTouchListener(new OnSwipeTouchListener(TrackerActivity.this) {
             public void onSwipeTop() {
                 //Toast.makeText(TrackerActivity.this, "top", Toast.LENGTH_SHORT).show();
             }
@@ -43,7 +52,16 @@ public class TrackerActivity extends AppCompatActivity {
                 //Toast.makeText(TrackerActivity.this, "MainActivity", Toast.LENGTH_SHORT).show();
             }
             public void onSwipeLeft() {
-                //Toast.makeText(TrackerActivity.this, "right", Toast.LENGTH_SHORT).show();
+                if (user.checkIfLogged()) {
+                    Intent intent = new Intent(TrackerActivity.this, SettingsActivity.class);
+                    intent.putExtra("Msg", "Left Activity");
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(TrackerActivity.this, LoginActivity.class);
+                    intent.putExtra("Msg", "Left Activity");
+                    startActivity(intent);
+                }
+                //Toast.makeText(TrackerActivity.this, "SettingsActivity", Toast.LENGTH_SHORT).show();
             }
             public void onSwipeBottom() {
                 //Toast.makeText(TrackerActivity.this, "bottom", Toast.LENGTH_SHORT).show();

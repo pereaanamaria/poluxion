@@ -6,31 +6,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorAccent"
-    android:id="@+id/main"
-    android:visibility="invisible">
+    android:id="@+id/main" >
 
     <LinearLayout
         android:id="@+id/sliderDot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="15sp"
         android:layout_marginBottom="15sp"
-        android:gravity="center"
-        android:orientation="horizontal"
         android:background="@color/colorAccent"
-        android:layout_alignParentBottom="true" />
+        android:gravity="center"
+        android:orientation="horizontal" />
+
+    <RelativeLayout
+        android:id="@+id/loadingPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center" >
+
+        <ProgressBar
+            style="@android:style/Widget.Holo.Light.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"/>
+    </RelativeLayout>
 
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fillViewport="true"
-        android:gravity="center"
-        android:scrollbars="none"
-        android:orientation="vertical"
         android:layout_above="@id/sliderDot"
         android:layout_marginLeft="25sp"
-        android:layout_marginRight="25sp">
+        android:layout_marginRight="25sp"
+        android:fillViewport="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:scrollbars="none"
+        android:visibility="invisible"
+        android:id="@+id/mainScroll">
 
         <LinearLayout
             android:id="@+id/layout_all"
@@ -42,13 +56,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25sp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:id="@+id/headerLayout">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:id="@+id/nameLayout">
 
                     <TextView
                         android:id="@+id/POLU"
@@ -79,7 +95,8 @@
                     android:layout_margin="10dp"
                     android:layout_marginStart="50dp"
                     android:gravity="end"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:id="@+id/dataLayout">
 
                     <LinearLayout
                         android:layout_width="200dp"
@@ -112,6 +129,7 @@
                                     android:id="@+id/QAI"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
                                     android:gravity="start"
                                     android:text="@string/CAQI"
                                     android:textAllCaps="true"
@@ -213,37 +231,30 @@
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="13sp" />
 
-            <fragment
-                android:id="@+id/map"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
+            <View
+                android:id="@+id/divider"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:layout_marginTop="25sp"
-                android:layout_marginBottom="25sp"
-                tools:context=".MainActivity" />
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="?android:attr/listDivider" />
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="50dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:id="@+id/buttonLayout">
 
                     <HorizontalScrollView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:background="@color/colorAccent"
-                        android:requiresFadingEdge="horizontal"
                         android:fadingEdge="horizontal"
                         android:fadingEdgeLength="100dp"
                         android:fillViewport="true"
                         android:foregroundGravity="center"
+                        android:requiresFadingEdge="horizontal"
                         android:scrollbars="none">
 
                         <LinearLayout
@@ -399,11 +410,23 @@
                             android:textSize="35sp"
                             android:textStyle="bold" />
                     </LinearLayout>
-
-                </LinearLayout>
-
-
             </LinearLayout>
+
+            <View
+                android:id="@+id/divider1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="?android:attr/listDivider" />
+
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginBottom="50dp"
+                tools:context=".MainActivity" />
 
         </LinearLayout>
     </ScrollView>

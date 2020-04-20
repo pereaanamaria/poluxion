@@ -36,7 +36,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="35dp"
             android:gravity="center"
-            android:text="@string/preferences"
+            android:text="@string/settings"
             android:textAllCaps="true"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="40sp" />
@@ -48,24 +48,24 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/weigth"
+                android:id="@+id/weight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
                 android:layout_weight="0.5"
-                android:hint="@string/weigth"
+                android:hint="@string/weight"
                 android:inputType="number|numberDecimal|numberSigned"
                 android:textColor="@color/colorPrimaryDark"
                 android:textColorHint="@color/colorPrimary"
                 app:backgroundTint="@color/colorPrimary" />
 
             <EditText
-                android:id="@+id/heigth"
+                android:id="@+id/height"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="0.5"
-                android:hint="@string/heigth"
+                android:hint="@string/height"
                 android:inputType="number|numberDecimal|numberSigned"
                 android:textColor="@color/colorPrimaryDark"
                 android:textColorHint="@color/colorPrimary"
@@ -79,24 +79,24 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/btnSaveWeigth"
+                android:id="@+id/btnSaveWeight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
                 android:layout_weight="0.5"
                 android:background="@drawable/button_unselected"
-                android:text="@string/save_weigth"
+                android:text="@string/save_weight"
                 android:textAllCaps="true"
                 android:textColor="@color/colorAccent" />
 
             <Button
-                android:id="@+id/btnSaveHeigth"
+                android:id="@+id/btnSaveHeight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="0.5"
                 android:background="@drawable/button_unselected"
-                android:text="@string/save_heigth"
+                android:text="@string/save_height"
                 android:textAllCaps="true"
                 android:textColor="@color/colorAccent" />
 
@@ -116,7 +116,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="35dp"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
 
             <RadioButton

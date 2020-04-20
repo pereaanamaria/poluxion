@@ -23,7 +23,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:gravity="center"
-            android:scaleX="1.2"
             android:text="@string/login"
             android:textAllCaps="true"
             android:textColor="@color/colorPrimaryDark"

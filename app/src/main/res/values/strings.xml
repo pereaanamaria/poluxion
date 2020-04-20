@@ -33,15 +33,15 @@
     <string name="register">Register</string>
     <string name="login">Login</string>
     <string name="logout">Logout</string>
-    <string name="take_to_login">I already have an account.</string>
+    <string name="take_to_login">Swipe down to login.</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
-    <string name="take_to_register">Create account.</string>
-    <string name="preferences">Preferences</string>
+    <string name="take_to_register">Swipe up to create account.</string>
+    <string name="settings">Settings</string>
     <string name="measurement_units">Measurement units</string>
-    <string name="weigth">Weigth</string>
-    <string name="save_weigth">Save weigth</string>
-    <string name="heigth">Heigth</string>
-    <string name="save_heigth">Save heigth</string>
+    <string name="weight">Weight</string>
+    <string name="save_weight">Save weight</string>
+    <string name="height">Height</string>
+    <string name="save_height">Save height</string>
     <string name="last_successful_update">Last successful update: </string>
 </resources>

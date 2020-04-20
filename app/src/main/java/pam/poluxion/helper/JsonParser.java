@@ -29,7 +29,7 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
     //private static final int colorPrimaryLight = Color.rgb(193,219,191);
     //private static final int colorGrey = Color.rgb(224,224,224);
     private static final int colorPrimary = Color.rgb(142, 171, 140);
-    //private static final int colorPrimaryDarker = Color.rgb(75,89,73);
+    private static final int colorPrimaryDarker = Color.rgb(75,89,73);
 
     private int AQI;
     private String[] iaqiDataTypes = {"pm10", "pm1", "pm25", "no2", "so2", "nh3", "co", "co2", "o3", "pb", "voc", "p", "t"};
@@ -224,15 +224,15 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
 
     private void setButtonClicked(Button btn) {
         GradientDrawable gradientDrawable = new GradientDrawable();
-        gradientDrawable.setCornerRadius(3);
-        gradientDrawable.setColor(colorPrimary);
-        btn.setTextColor(colorAccent);
+        gradientDrawable.setStroke(3,colorPrimary);
+        gradientDrawable.setColor(colorAccent);
+        btn.setTextColor(colorPrimaryDarker);
         btn.setBackground(gradientDrawable);
     }
 
     private void setButtonUnclicked(Button btn) {
         GradientDrawable gradientDrawable = new GradientDrawable();
-        gradientDrawable.setColor(colorLight);
+        gradientDrawable.setColor(colorPrimary);
         btn.setTextColor(colorAccent);
         btn.setBackground(gradientDrawable);
     }

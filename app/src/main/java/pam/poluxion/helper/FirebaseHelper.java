@@ -28,7 +28,6 @@ public class FirebaseHelper {
 
     private double tempDouble;
     private int tempInt;
-    private LocalData localData;
 
     //private SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");  //formatting the current date into a dd-MM-yyyy String type
 
@@ -36,6 +35,8 @@ public class FirebaseHelper {
         FirebaseDatabase database = FirebaseDatabase.getInstance();  //stores Firebase instance into database variable
         String FirebaseUrl = context.getString(R.string.firebase_database_url);
         myRef = database.getReferenceFromUrl(FirebaseUrl);
+
+        Log.e(TAG, "Successfully created");
     }
 
     public void inputInt(String child, String value) {

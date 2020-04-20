@@ -9,9 +9,11 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +22,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import pam.poluxion.helper.MainActivityHelper;
+import pam.poluxion.models.GeneralClass;
+import pam.poluxion.models.User;
 import pam.poluxion.widgets.ArcProgress;
 import pam.poluxion.widgets.DotSlider;
 import pam.poluxion.widgets.OnSwipeTouchListener;
@@ -32,40 +36,42 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static ArcProgress arcProgressBar;
     public static Button pm10Btn, pm25Btn, pm1Btn, no2Btn, nh3Btn, coBtn, co2Btn, o3Btn, so2Btn, vocBtn, pbBtn;
     public static TextView measurementTV, unitsTV;
-    public static LinearLayout sliderDots,all;
-    public static LinearLayout btnSlider;
-    public static RelativeLayout main;
+    public static LinearLayout all, btnSlider;
+    private LinearLayout sliderDots;
+    public static ScrollView mainScroll;
+    public static RelativeLayout main, loadingPanel;
+
     private Intent intent = new Intent();
 
     private MainActivityHelper mainActivityHelper;
+    private User user = GeneralClass.getUserObject();
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mainScroll = (ScrollView) findViewById(R.id.mainScroll);
+        loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
         main = (RelativeLayout) findViewById(R.id.main);
-        main.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
-            public void onSwipeTop() {
-                //Toast.makeText(MainActivity.this, "top", Toast.LENGTH_SHORT).show();
-            }
-            public void onSwipeRight() {
-                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                //intent.putExtra(EXTRA_MESSAGE, message);
-                startActivity(intent);
-                //Toast.makeText(MainActivity.this, "SettingsActivity", Toast.LENGTH_SHORT).show();
-            }
-            public void onSwipeLeft() {
-                Intent intent = new Intent(MainActivity.this, TrackerActivity.class);
-                //intent.putExtra(EXTRA_MESSAGE, message);
-                startActivity(intent);
-                //Toast.makeText(MainActivity.this, "TrackerActivity", Toast.LENGTH_SHORT).show();
-            }
-            public void onSwipeBottom() {
-                //Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
-            }
-        });
+        all = (LinearLayout) findViewById(R.id.layout_all);
+        sliderDots = (LinearLayout) findViewById(R.id.sliderDot);
+        LinearLayout buttonLayout = (LinearLayout) findViewById(R.id.buttonLayout);
+        LinearLayout headerLayout = (LinearLayout) findViewById(R.id.headerLayout);
+        LinearLayout nameLayout = (LinearLayout) findViewById(R.id.nameLayout);
+        LinearLayout dataLayout = (LinearLayout) findViewById(R.id.dataLayout);
+        btnSlider = (LinearLayout) findViewById(R.id.btnSlider);
+        btnSlider.setFadingEdgeLength(500);
+
+        addSwipe(mainScroll);
+        addSwipe(loadingPanel);
+        addSwipe(main);
+        addSwipe(all);
+        addSwipe(sliderDots);
+        addSwipe(buttonLayout);
+        addSwipe(headerLayout);
+        addSwipe(nameLayout);
+        addSwipe(dataLayout);
 
         intent = getIntent();
         mainActivityHelper = new MainActivityHelper(this,this,intent);
@@ -77,8 +83,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         measurementTV = (TextView) findViewById(R.id.measurement);
         unitsTV = (TextView) findViewById(R.id.units);
 
+        addSwipe(measurementTV);
+        addSwipe(unitsTV);
+
         arcProgressBar = (ArcProgress) findViewById(R.id.arc_progress);
         arcProgressTV = (TextView) findViewById(R.id.arc_progressTV);
+
+        addSwipe(arcProgressBar);
+        addSwipe(arcProgressTV);
 
         pm10Btn = (Button) findViewById(R.id.pm10);
         pm25Btn = (Button) findViewById(R.id.pm2_5);
@@ -91,11 +103,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         so2Btn = (Button) findViewById(R.id.so2);
         vocBtn = (Button) findViewById(R.id.voc);
         pbBtn = (Button) findViewById(R.id.pb);
-        all = (LinearLayout) findViewById(R.id.layout_all);
-        btnSlider = (LinearLayout) findViewById(R.id.btnSlider);
-        btnSlider.setFadingEdgeLength(500);
 
-        sliderDots = (LinearLayout) findViewById(R.id.sliderDot);
         createDotSlider();
 
         //viewSlider = findViewById(R.id.viewDotSlider);
@@ -128,5 +136,36 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         mainActivityHelper.onRequestPermissionsResult(requestCode,permissions,grantResults);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void addSwipe(View view) {
+        view.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
+            public void onSwipeTop() {
+                //Toast.makeText(MainActivity.this, "top", Toast.LENGTH_SHORT).show();
+            }
+            public void onSwipeRight() {
+                if(user.checkIfLogged()) {
+                    Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                    //intent.putExtra(EXTRA_MESSAGE, message);
+                    startActivity(intent);
+                    //Toast.makeText(MainActivity.this, "SettingsActivity", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    //intent.putExtra(EXTRA_MESSAGE, message);
+                    startActivity(intent);
+                    //Toast.makeText(MainActivity.this, "LoginActivity", Toast.LENGTH_SHORT).show();
+                }
+            }
+            public void onSwipeLeft() {
+                Intent intent = new Intent(MainActivity.this, TrackerActivity.class);
+                //intent.putExtra(EXTRA_MESSAGE, message);
+                startActivity(intent);
+                //Toast.makeText(MainActivity.this, "TrackerActivity", Toast.LENGTH_SHORT).show();
+            }
+            public void onSwipeBottom() {
+                //Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
