@@ -14,25 +14,39 @@
         android:id="@+id/layout_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="25sp"
+        android:layout_marginTop="35dp"
+        android:layout_marginRight="35dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginBottom="100dp"
         android:orientation="vertical"
         android:visibility="visible">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:text="@string/register"
             android:textAllCaps="true"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="30sp" />
 
-        <EditText
-            android:id="@+id/name"
+        <TextView
+            android:id="@+id/takeToLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:text="@string/take_to_login"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/nameRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:hint="@string/name"
             android:inputType="text|textCapSentences"
             android:textColor="@color/colorPrimaryDark"
@@ -40,10 +54,11 @@
             app:backgroundTint="@color/colorPrimary" />
 
         <EditText
-            android:id="@+id/lastName"
+            android:id="@+id/lastNameRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:hint="@string/last_name"
             android:inputType="text|textCapSentences"
             android:textColor="@color/colorPrimaryDark"
@@ -51,10 +66,11 @@
             app:backgroundTint="@color/colorPrimary" />
 
         <EditText
-            android:id="@+id/email"
+            android:id="@+id/emailRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:hint="@string/email"
             android:inputType="textEmailAddress"
             android:textColor="@color/colorPrimaryDark"
@@ -64,26 +80,22 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginTop="20dp"
             android:text="@string/gender"
             android:textColor="@color/colorPrimary"
             android:textSize="18sp" />
 
         <RadioGroup
-            android:id="@+id/gender"
+            android:id="@+id/genderRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal">
+            android:layout_marginBottom="20dp"
+            android:orientation="vertical">
 
 
             <RadioButton
-                android:id="@+id/male"
+                android:id="@+id/maleRegister"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
@@ -94,7 +106,7 @@
                 android:textSize="18sp" />
 
             <RadioButton
-                android:id="@+id/female"
+                android:id="@+id/femaleRegister"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
@@ -106,10 +118,11 @@
         </RadioGroup>
 
         <EditText
-            android:id="@+id/age"
+            android:id="@+id/ageRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:ems="3"
             android:hint="@string/age"
             android:inputType="number"
@@ -118,10 +131,11 @@
             app:backgroundTint="@color/colorPrimary" />
 
         <EditText
-            android:id="@+id/password"
+            android:id="@+id/passwordRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:hint="@string/password"
             android:inputType="textPassword"
             android:textColor="@color/colorPrimaryDark"
@@ -129,10 +143,11 @@
             app:backgroundTint="@color/colorPrimary" />
 
         <EditText
-            android:id="@+id/confirmPassword"
+            android:id="@+id/confirmPasswordRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:hint="@string/password_confirm"
             android:inputType="textPassword"
             android:textColor="@color/colorPrimaryDark"
@@ -140,25 +155,18 @@
             app:backgroundTint="@color/colorPrimary" />
 
         <Button
+            android:id="@+id/registerButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
             android:layout_marginTop="35dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginRight="35dp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginBottom="150dp"
             android:background="@drawable/button"
-            android:text="@string/register"
-            android:textAllCaps="true"
-            android:textColor="@color/colorPrimaryDark" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:gravity="center"
-            android:text="@string/take_to_login"
-            android:textColor="@color/colorPrimary"
-            android:textSize="15sp" />
+            android:shadowColor="@color/colorPrimaryDark"
+            android:textColor="@color/colorPrimaryDarker"
+            android:text="@string/submit"
+            android:textAllCaps="true" />
 
     </LinearLayout>
 </ScrollView>

@@ -7,7 +7,7 @@ import android.os.Bundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import pam.poluxion.models.GeneralClass;
+import pam.poluxion.data.GeneralClass;
 
 public class SplashActivity extends Activity {
     private static final long DELAY = 1000;

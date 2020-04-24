@@ -14,14 +14,15 @@
         android:id="@+id/layout_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="25sp"
+        android:layout_margin="35sp"
         android:orientation="vertical"
         android:visibility="visible">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:gravity="center"
             android:text="@string/login"
             android:textAllCaps="true"
@@ -29,10 +30,11 @@
             android:textSize="30sp" />
 
         <EditText
-            android:id="@+id/email"
+            android:id="@+id/emailLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:hint="@string/email"
             android:inputType="textEmailAddress"
             android:textColor="@color/colorPrimaryDark"
@@ -40,10 +42,11 @@
             app:backgroundTint="@color/colorPrimary" />
 
         <EditText
-            android:id="@+id/password"
+            android:id="@+id/passwordLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:hint="@string/password"
             android:inputType="textPassword"
             android:textColor="@color/colorPrimaryDark"
@@ -54,19 +57,21 @@
             android:id="@+id/loginButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
             android:layout_marginTop="35dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginRight="35dp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/button"
-            android:text="@string/login"
-            android:textAllCaps="true"
-            android:textColor="@color/colorPrimaryDark" />
+            android:shadowColor="@color/colorPrimaryDark"
+            android:textColor="@color/colorPrimaryDarker"
+            android:text="@string/submit"
+            android:textAllCaps="true" />
 
         <TextView
+            android:id="@+id/createNewAccount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:layout_marginBottom="50dp"
             android:gravity="center"
             android:text="@string/take_to_register"
             android:textColor="@color/colorPrimary"

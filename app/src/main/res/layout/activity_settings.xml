@@ -120,7 +120,7 @@
 
 
             <RadioButton
-                android:id="@+id/male"
+                android:id="@+id/ppb"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
@@ -132,7 +132,7 @@
                 android:textSize="18sp" />
 
             <RadioButton
-                android:id="@+id/female"
+                android:id="@+id/ugm3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
@@ -144,13 +144,14 @@
         </RadioGroup>
 
         <Button
+            android:id="@+id/logoutBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="35dp"
-            android:background="@drawable/button"
-            android:shadowColor="@color/colorPrimaryDark"
             android:text="@string/logout"
             android:textAllCaps="true"
+            android:background="@drawable/button"
+            android:shadowColor="@color/colorPrimaryDark"
             android:textColor="@color/colorPrimaryDarker" />
 
     </LinearLayout>

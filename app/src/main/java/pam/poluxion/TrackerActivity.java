@@ -10,21 +10,21 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import pam.poluxion.models.GeneralClass;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import pam.poluxion.data.GeneralClass;
 import pam.poluxion.models.User;
 import pam.poluxion.widgets.DotSlider;
 import pam.poluxion.widgets.OnSwipeTouchListener;
 
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
-
 public class TrackerActivity extends AppCompatActivity {
 
     private static final String TAG = "TrackerActivity";
-    private RelativeLayout relativeLayout;
     private LinearLayout sliderDots;
     private User user = GeneralClass.getUserObject();
+    private FirebaseAuth mAuth;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -35,36 +35,36 @@ public class TrackerActivity extends AppCompatActivity {
         sliderDots = (LinearLayout) findViewById(R.id.sliderDot);
         createDotSlider();
 
-        relativeLayout = (RelativeLayout) findViewById(R.id.tracker);
-       addSwipe(relativeLayout);
+        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.tracker);
+        addSwipe(relativeLayout);
+
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void addSwipe(View view) {
         view.setOnTouchListener(new OnSwipeTouchListener(TrackerActivity.this) {
-            public void onSwipeTop() {
-                //Toast.makeText(TrackerActivity.this, "top", Toast.LENGTH_SHORT).show();
-            }
             public void onSwipeRight() {
+                TrackerActivity.this.finish();
                 Intent intent = new Intent(TrackerActivity.this, MainActivity.class);
                 intent.putExtra("Msg", "Left Activity");
                 startActivity(intent);
-                //Toast.makeText(TrackerActivity.this, "MainActivity", Toast.LENGTH_SHORT).show();
             }
             public void onSwipeLeft() {
-                if (user.checkIfLogged()) {
+                FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                if(firebaseUser != null) {
+                //if(user.checkIfLogged()){
+                    TrackerActivity.this.finish();
                     Intent intent = new Intent(TrackerActivity.this, SettingsActivity.class);
                     intent.putExtra("Msg", "Left Activity");
                     startActivity(intent);
                 } else {
+                    TrackerActivity.this.finish();
                     Intent intent = new Intent(TrackerActivity.this, LoginActivity.class);
                     intent.putExtra("Msg", "Left Activity");
                     startActivity(intent);
                 }
-                //Toast.makeText(TrackerActivity.this, "SettingsActivity", Toast.LENGTH_SHORT).show();
-            }
-            public void onSwipeBottom() {
-                //Toast.makeText(TrackerActivity.this, "bottom", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -73,8 +73,7 @@ public class TrackerActivity extends AppCompatActivity {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int width = displayMetrics.widthPixels;
-        Log.e(TAG,"Width = " + width);
 
-        DotSlider dotSlider = new DotSlider(this,width,sliderDots,2);
+        new DotSlider(this,width,sliderDots,2);
     }
 }

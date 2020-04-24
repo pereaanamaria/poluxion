@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorAccent"
-    android:id="@+id/main" >
+    android:background="@color/colorAccent">
 
     <LinearLayout
         android:id="@+id/sliderDot"
@@ -23,28 +23,28 @@
         android:id="@+id/loadingPanel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center" >
+        android:gravity="center">
 
         <ProgressBar
             style="@android:style/Widget.Holo.Light.ProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:indeterminate="true"/>
+            android:indeterminate="true" />
     </RelativeLayout>
 
 
     <ScrollView
+        android:id="@+id/mainScroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/sliderDot"
-        android:layout_marginLeft="25sp"
-        android:layout_marginRight="25sp"
+        android:layout_marginLeft="35sp"
+        android:layout_marginRight="35sp"
         android:fillViewport="true"
         android:gravity="center"
         android:orientation="vertical"
         android:scrollbars="none"
-        android:visibility="invisible"
-        android:id="@+id/mainScroll">
+        android:visibility="invisible">
 
         <LinearLayout
             android:id="@+id/layout_all"
@@ -53,18 +53,18 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/headerLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25sp"
-                android:orientation="horizontal"
-                android:id="@+id/headerLayout">
+                android:layout_marginBottom="10sp"
+                android:orientation="horizontal">
 
                 <LinearLayout
+                    android:id="@+id/nameLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:orientation="vertical"
-                    android:id="@+id/nameLayout">
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/POLU"
@@ -90,16 +90,15 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/dataLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
                     android:layout_marginStart="50dp"
                     android:gravity="end"
-                    android:orientation="vertical"
-                    android:id="@+id/dataLayout">
+                    android:orientation="vertical">
 
                     <LinearLayout
-                        android:layout_width="200dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
@@ -223,197 +222,187 @@
 
             <TextView
                 android:id="@+id/arc_progressTV"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
+                android:layout_gravity="center"
                 android:text=""
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="13sp" />
 
             <View
-                android:id="@+id/divider"
+                android:id="@+id/divider1"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:background="?android:attr/listDivider" />
 
+            <LinearLayout
+                android:id="@+id/buttonLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@color/colorAccent"
+                    android:fadingEdge="horizontal"
+                    android:fadingEdgeLength="100dp"
+                    android:fillViewport="true"
+                    android:foregroundGravity="center"
+                    android:requiresFadingEdge="horizontal"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/btnSlider"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fadingEdge="horizontal"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:requiresFadingEdge="horizontal">
+
+                        <Button
+                            android:id="@+id/pm10"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="85dp"
+                            android:layout_height="30dp"
+                            android:background="@android:color/transparent"
+                            android:text="@string/pm10"
+                            android:textSize="12sp" />
+
+                        <Button
+                            android:id="@+id/pm2_5"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="85dp"
+                            android:layout_height="30dp"
+                            android:background="@android:color/transparent"
+                            android:text="@string/pm2_5"
+                            android:textSize="12sp" />
+
+                        <Button
+                            android:id="@+id/pm1"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="85dp"
+                            android:layout_height="30dp"
+                            android:background="@android:color/transparent"
+                            android:text="@string/pm1"
+                            android:textSize="12sp" />
+
+                        <Button
+                            android:id="@+id/o3"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="85dp"
+                            android:layout_height="30dp"
+                            android:background="@android:color/transparent"
+                            android:text="@string/o3"
+                            android:textSize="12sp" />
+
+                        <Button
+                            android:id="@+id/no2"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="85dp"
+                            android:layout_height="30dp"
+                            android:background="@android:color/transparent"
+                            android:text="@string/no2"
+                            android:textSize="12sp" />
+
+                        <Button
+                            android:id="@+id/so2"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="85dp"
+                            android:layout_height="30dp"
+                            android:background="@android:color/transparent"
+                            android:text="@string/so2"
+                            android:textSize="12sp" />
+
+                        <Button
+                            android:id="@+id/co2"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="85dp"
+                            android:layout_height="30dp"
+                            android:background="@android:color/transparent"
+                            android:text="@string/co2"
+                            android:textSize="12sp" />
+
+                        <Button
+                            android:id="@+id/co"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="85dp"
+                            android:layout_height="30dp"
+                            android:background="@android:color/transparent"
+                            android:text="@string/co"
+                            android:textSize="12sp" />
+
+                        <Button
+                            android:id="@+id/nh3"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="85dp"
+                            android:layout_height="30dp"
+                            android:background="@android:color/transparent"
+                            android:text="@string/nh3"
+                            android:textSize="12sp" />
+
+                        <Button
+                            android:id="@+id/pb"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="85dp"
+                            android:layout_height="30dp"
+                            android:background="@android:color/transparent"
+                            android:text="@string/pb"
+                            android:textSize="12sp" />
+
+                        <Button
+                            android:id="@+id/voc"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="85dp"
+                            android:layout_height="30dp"
+                            android:background="@android:color/transparent"
+                            android:text="@string/voc"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+                </HorizontalScrollView>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:id="@+id/buttonLayout">
+                    android:layout_marginLeft="25sp"
+                    android:layout_marginTop="15sp"
+                    android:layout_marginRight="25sp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-                    <HorizontalScrollView
+                    <TextView
+                        android:id="@+id/measurement"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:background="@color/colorAccent"
-                        android:fadingEdge="horizontal"
-                        android:fadingEdgeLength="100dp"
-                        android:fillViewport="true"
-                        android:foregroundGravity="center"
-                        android:requiresFadingEdge="horizontal"
-                        android:scrollbars="none">
+                        android:layout_weight="0.5"
+                        android:gravity="end"
+                        android:text=""
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="35sp"
+                        android:textStyle="bold" />
 
-                        <LinearLayout
-                            android:id="@+id/btnSlider"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fadingEdge="horizontal"
-                            android:gravity="center"
-                            android:orientation="horizontal"
-                            android:requiresFadingEdge="horizontal">
-
-                            <Button
-                                android:id="@+id/pm10"
-                                style="?android:attr/borderlessButtonStyle"
-                                android:layout_width="85dp"
-                                android:layout_height="30dp"
-                                android:background="@android:color/transparent"
-                                android:text="@string/pm10"
-                                android:textColor="@color/colorPrimaryDarker"
-                                android:textSize="12sp" />
-
-                            <Button
-                                android:id="@+id/pm2_5"
-                                style="?android:attr/borderlessButtonStyle"
-                                android:layout_width="85dp"
-                                android:layout_height="30dp"
-                                android:background="@android:color/transparent"
-                                android:text="@string/pm2_5"
-                                android:textColor="@color/colorPrimaryDarker"
-                                android:textSize="12sp" />
-
-                            <Button
-                                android:id="@+id/pm1"
-                                style="?android:attr/borderlessButtonStyle"
-                                android:layout_width="85dp"
-                                android:layout_height="30dp"
-                                android:background="@android:color/transparent"
-                                android:text="@string/pm1"
-                                android:textColor="@color/colorPrimaryDarker"
-                                android:textSize="12sp" />
-
-                            <Button
-                                android:id="@+id/o3"
-                                style="?android:attr/borderlessButtonStyle"
-                                android:layout_width="85dp"
-                                android:layout_height="30dp"
-                                android:background="@android:color/transparent"
-                                android:text="@string/o3"
-                                android:textColor="@color/colorPrimaryDarker"
-                                android:textSize="12sp" />
-
-                            <Button
-                                android:id="@+id/no2"
-                                style="?android:attr/borderlessButtonStyle"
-                                android:layout_width="85dp"
-                                android:layout_height="30dp"
-                                android:background="@android:color/transparent"
-                                android:text="@string/no2"
-                                android:textColor="@color/colorPrimaryDarker"
-                                android:textSize="12sp" />
-
-                            <Button
-                                android:id="@+id/so2"
-                                style="?android:attr/borderlessButtonStyle"
-                                android:layout_width="85dp"
-                                android:layout_height="30dp"
-                                android:background="@android:color/transparent"
-                                android:text="@string/so2"
-                                android:textColor="@color/colorPrimaryDarker"
-                                android:textSize="12sp" />
-
-                            <Button
-                                android:id="@+id/co2"
-                                style="?android:attr/borderlessButtonStyle"
-                                android:layout_width="85dp"
-                                android:layout_height="30dp"
-                                android:background="@android:color/transparent"
-                                android:text="@string/co2"
-                                android:textColor="@color/colorPrimaryDarker"
-                                android:textSize="12sp" />
-
-                            <Button
-                                android:id="@+id/co"
-                                style="?android:attr/borderlessButtonStyle"
-                                android:layout_width="85dp"
-                                android:layout_height="30dp"
-                                android:background="@android:color/transparent"
-                                android:text="@string/co"
-                                android:textColor="@color/colorPrimaryDarker"
-                                android:textSize="12sp" />
-
-                            <Button
-                                android:id="@+id/nh3"
-                                style="?android:attr/borderlessButtonStyle"
-                                android:layout_width="85dp"
-                                android:layout_height="30dp"
-                                android:background="@android:color/transparent"
-                                android:text="@string/nh3"
-                                android:textColor="@color/colorPrimaryDarker"
-                                android:textSize="12sp" />
-
-                            <Button
-                                android:id="@+id/pb"
-                                style="?android:attr/borderlessButtonStyle"
-                                android:layout_width="85dp"
-                                android:layout_height="30dp"
-                                android:background="@android:color/transparent"
-                                android:text="@string/pb"
-                                android:textColor="@color/colorPrimaryDarker"
-                                android:textSize="12sp" />
-
-                            <Button
-                                android:id="@+id/voc"
-                                style="?android:attr/borderlessButtonStyle"
-                                android:layout_width="85dp"
-                                android:layout_height="30dp"
-                                android:background="@android:color/transparent"
-                                android:text="@string/voc"
-                                android:textColor="@color/colorPrimaryDarker"
-                                android:textSize="12sp" />
-
-                        </LinearLayout>
-                    </HorizontalScrollView>
-
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/units"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="25sp"
-                        android:layout_marginTop="15sp"
-                        android:layout_marginRight="25sp"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/measurement"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.5"
-                            android:gravity="end"
-                            android:text=""
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="35sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/units"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.5"
-                            android:gravity="start"
-                            android:text=""
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="35sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
+                        android:layout_weight="0.5"
+                        android:gravity="start"
+                        android:text=""
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="35sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
             </LinearLayout>
 
             <View
-                android:id="@+id/divider1"
+                android:id="@+id/divider2"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="10dp"

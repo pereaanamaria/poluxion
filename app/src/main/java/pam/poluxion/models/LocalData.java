@@ -3,7 +3,7 @@ package pam.poluxion.models;
 import android.util.Log;
 
 import pam.poluxion.BuildConfig;
-import pam.poluxion.helper.JsonParser;
+import pam.poluxion.data.JsonParser;
 
 public class LocalData {
     private  static final String TAG = "LocalData";

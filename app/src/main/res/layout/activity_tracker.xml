@@ -3,21 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tracker"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorAccent"
-    android:id="@+id/tracker">
+    android:background="@color/colorAccent">
 
     <LinearLayout
         android:id="@+id/sliderDot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="50sp"
         android:layout_marginBottom="15sp"
-        android:gravity="center"
-        android:orientation="horizontal"
         android:background="@color/colorAccent"
-        android:layout_alignParentBottom="true" />
+        android:gravity="center"
+        android:orientation="horizontal" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -65,7 +65,6 @@
                 android:layout_weight="0.75"
                 android:gravity="end"
                 android:scaleY="1.2"
-                android:text="5853"
                 android:textColor="@color/colorPrimary"
                 android:textSize="60sp"
                 android:textStyle="bold" />
@@ -95,7 +94,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:gravity="center"
-                android:text="4.256 Km"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="30sp" />
 
@@ -105,7 +103,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:gravity="center"
-                android:text="80.795 cal"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="30sp" />
         </LinearLayout>
@@ -116,43 +113,95 @@
             android:layout_marginTop="100sp"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/walkingInside"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="start"
-                android:text="267 walking steps inside + BPI"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="20sp" />
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/walkingOutside"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:text="3496 walking steps outside + BPI"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/walkingInside"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/runningInside"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:text="2090 running steps inside + BPI"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="20sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text="@string/walk_inside_bpi"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="20sp" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/runningOutside"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="start"
-                android:text="0 running steps outside + BPI"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="20sp" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/walkingOutside"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text="@string/walk_outside_bpi"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/runningInside"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text="@string/run_inside_bpi"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/runningOutside"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text="@string/run_outside_bpi"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="20sp" />
+            </LinearLayout>
 
         </LinearLayout>
-
     </LinearLayout>
 </RelativeLayout>

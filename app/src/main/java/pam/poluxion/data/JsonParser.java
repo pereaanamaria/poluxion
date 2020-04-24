@@ -1,4 +1,4 @@
-package pam.poluxion.helper;
+package pam.poluxion.data;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 import org.json.JSONObject;
 
@@ -108,23 +107,19 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
                 double iaqi = Double.parseDouble(iaqiValue);
                 iaqiData.put(iaqiType, iaqi);
                 btn.setVisibility(View.VISIBLE);
-                setButtonUnclicked(btn);
+                setButtonNotClicked(btn);
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        MainActivity.measurementTV.setVisibility(View.VISIBLE);
-                        MainActivity.unitsTV.setVisibility(View.VISIBLE);
                         MainActivity.measurementTV.setText(iaqiData.get(iaqiType) + " ");
                         MainActivity.unitsTV.setText("μg/m³");
                         Log.e("IAQI", iaqiType + "btn clicked");
-                        setButtonUnclicked(clicked);
+                        setButtonNotClicked(clicked);
                         clicked = btn;
                         setButtonClicked(clicked);
                     }
                 });
                 if (iaqiType.equals("pm10")) {
-                    MainActivity.measurementTV.setVisibility(View.VISIBLE);
-                    MainActivity.unitsTV.setVisibility(View.VISIBLE);
                     MainActivity.measurementTV.setText(iaqiData.get(iaqiType) + " ");
                     MainActivity.unitsTV.setText("μg/m³");
                     clicked = btn;
@@ -230,7 +225,7 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
         btn.setBackground(gradientDrawable);
     }
 
-    private void setButtonUnclicked(Button btn) {
+    private void setButtonNotClicked(Button btn) {
         GradientDrawable gradientDrawable = new GradientDrawable();
         gradientDrawable.setColor(colorPrimary);
         btn.setTextColor(colorAccent);

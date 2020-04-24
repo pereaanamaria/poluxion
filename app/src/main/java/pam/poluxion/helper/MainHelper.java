@@ -1,8 +1,6 @@
 package pam.poluxion.helper;
 
 import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +13,6 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -35,15 +32,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import pam.poluxion.BuildConfig;
 import pam.poluxion.MainActivity;
 import pam.poluxion.R;
 import pam.poluxion.models.LocalData;
-import pam.poluxion.models.User;
 
-public class MainActivityHelper extends MainActivity {
+public class MainHelper extends MainActivity {
 
-    private static final String TAG = "MainActivityHelper";
+    private static final String TAG = "MainHelper";
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -55,13 +50,11 @@ public class MainActivityHelper extends MainActivity {
     private GoogleMap mMap;
     private LatLng current;    //current position of the device
 
-    //private User user;
-
     private Context context;
     private Activity activity;
     private Intent intent;
 
-    public MainActivityHelper(Context context, Activity activity, Intent intent) {
+    public MainHelper(Context context, Activity activity, Intent intent) {
         super();
         this.context = context;
         this.activity = activity;
@@ -110,7 +103,6 @@ public class MainActivityHelper extends MainActivity {
             String add = obj.getLocality() + ", " + obj.getCountryName();
 
             LocalData localData = new LocalData(obj.getLocality());
-            //user = new User(localData.getFBHelper());
 
             if (intent.getStringExtra("Msg").equals("Just started")) {
                 try {
@@ -169,7 +161,7 @@ public class MainActivityHelper extends MainActivity {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
 
-    //refreshes content every 200ms for a better
+    //refreshes content every 200ms for better accuracy
     public void content() {
         refresh(200);
         getDeviceLocation();

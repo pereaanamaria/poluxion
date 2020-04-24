@@ -4,12 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -17,12 +17,16 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
-import pam.poluxion.helper.MainActivityHelper;
-import pam.poluxion.models.GeneralClass;
+import pam.poluxion.helper.MainHelper;
+import pam.poluxion.data.GeneralClass;
 import pam.poluxion.models.User;
 import pam.poluxion.widgets.ArcProgress;
 import pam.poluxion.widgets.DotSlider;
@@ -31,6 +35,7 @@ import pam.poluxion.widgets.OnSwipeTouchListener;
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String TAG = "MainActivity";
+    private static final int ERROR_DIALOG_REQUEST = 9001;
 
     public static TextView locationTV, temperatureTV, nrAqiTV, pressureTV,arcProgressTV;
     public static ArcProgress arcProgressBar;
@@ -43,8 +48,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private Intent intent = new Intent();
 
-    private MainActivityHelper mainActivityHelper;
+    private MainHelper mainHelper;
     private User user = GeneralClass.getUserObject();
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +62,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         main = (RelativeLayout) findViewById(R.id.main);
         all = (LinearLayout) findViewById(R.id.layout_all);
         sliderDots = (LinearLayout) findViewById(R.id.sliderDot);
-        LinearLayout buttonLayout = (LinearLayout) findViewById(R.id.buttonLayout);
-        LinearLayout headerLayout = (LinearLayout) findViewById(R.id.headerLayout);
-        LinearLayout nameLayout = (LinearLayout) findViewById(R.id.nameLayout);
-        LinearLayout dataLayout = (LinearLayout) findViewById(R.id.dataLayout);
         btnSlider = (LinearLayout) findViewById(R.id.btnSlider);
         btnSlider.setFadingEdgeLength(500);
 
@@ -68,13 +70,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         addSwipe(main);
         addSwipe(all);
         addSwipe(sliderDots);
-        addSwipe(buttonLayout);
-        addSwipe(headerLayout);
-        addSwipe(nameLayout);
-        addSwipe(dataLayout);
+
+        addSwipe(findViewById(R.id.buttonLayout));
+        addSwipe(findViewById(R.id.headerLayout));
+        addSwipe(findViewById(R.id.nameLayout));
+        addSwipe(findViewById(R.id.dataLayout));
+        addSwipe(findViewById(R.id.divider1));
+        addSwipe(findViewById(R.id.divider2));
 
         intent = getIntent();
-        mainActivityHelper = new MainActivityHelper(this,this,intent);
+        mainHelper = new MainHelper(this,this,intent);
 
         locationTV = (TextView) findViewById(R.id.location);
         temperatureTV = (TextView) findViewById(R.id.temperature);
@@ -106,18 +111,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         createDotSlider();
 
-        //viewSlider = findViewById(R.id.viewDotSlider);
+        //map is requested
+        if (isServicesOK()) {
+            initMap();  //initialises map
+        }
 
-        initMap();  //initialises map
-    }
-
-    private void createDotSlider() {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int width = displayMetrics.widthPixels;
-        Log.e(TAG,"Width = " + width);
-
-        DotSlider dotSlider = new DotSlider(this,width,sliderDots,1);
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
     }
 
     //initialises the map
@@ -129,43 +129,63 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mainActivityHelper.onMapReady(googleMap);
+        mainHelper.onMapReady(googleMap);
     }
 
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        mainActivityHelper.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        mainHelper.onRequestPermissionsResult(requestCode,permissions,grantResults);
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void addSwipe(View view) {
         view.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
-            public void onSwipeTop() {
-                //Toast.makeText(MainActivity.this, "top", Toast.LENGTH_SHORT).show();
-            }
             public void onSwipeRight() {
-                if(user.checkIfLogged()) {
-                    Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                    //intent.putExtra(EXTRA_MESSAGE, message);
-                    startActivity(intent);
-                    //Toast.makeText(MainActivity.this, "SettingsActivity", Toast.LENGTH_SHORT).show();
+                FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                if(firebaseUser != null) {
+                //if(user.checkIfLogged()) {
+                    enterNewActivity(SettingsActivity.class);
                 } else {
-                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                    //intent.putExtra(EXTRA_MESSAGE, message);
-                    startActivity(intent);
-                    //Toast.makeText(MainActivity.this, "LoginActivity", Toast.LENGTH_SHORT).show();
+                    enterNewActivity(LoginActivity.class);
                 }
             }
             public void onSwipeLeft() {
-                Intent intent = new Intent(MainActivity.this, TrackerActivity.class);
-                //intent.putExtra(EXTRA_MESSAGE, message);
-                startActivity(intent);
-                //Toast.makeText(MainActivity.this, "TrackerActivity", Toast.LENGTH_SHORT).show();
-            }
-            public void onSwipeBottom() {
-                //Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
+                enterNewActivity(TrackerActivity.class);
             }
         });
+    }
+
+    //Google services are being checked in order to make map requests
+    public boolean isServicesOK() {
+        Log.d(TAG, "isServicesOK: checking google services version");
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(MainActivity.this);
+
+        if (available == ConnectionResult.SUCCESS) {
+            Log.d(TAG, "isServicesOK: Google Play Services is working");
+            return true;
+        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
+            Log.d(TAG, "isServicesOK: an error occured but it can be fixed");
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(MainActivity.this, available, ERROR_DIALOG_REQUEST);
+            dialog.show();
+        } else {
+            Toast.makeText(this, "You can't make map requests", Toast.LENGTH_SHORT).show();
+        }
+        return false;
+    }
+
+    private void enterNewActivity(Class activityClass) {
+        MainActivity.this.finish();
+        Intent intent = new Intent(MainActivity.this, activityClass);
+        //intent.putExtra("Msg", "Left Activity");
+        startActivity(intent);
+    }
+
+    private void createDotSlider() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
+
+        new DotSlider(this,width,sliderDots,1);
     }
 }

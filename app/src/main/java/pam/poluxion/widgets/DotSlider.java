@@ -11,12 +11,11 @@ import androidx.core.content.ContextCompat;
 import pam.poluxion.R;
 
 public class DotSlider {
-    private static final String TAG = "DotSlider";
 
-    private int[] layouts = {R.layout.activity_settings,R.layout.activity_main,R.layout.activity_tracker};
     private Context context;
     private int width;
     private LinearLayout sliderDots;
+    private int[] layouts = {R.layout.activity_settings,R.layout.activity_main,R.layout.activity_tracker};
 
     public DotSlider(Context context, int screenWidth, LinearLayout linearLayout, int currentPosition) {
         this.context = context;
@@ -32,8 +31,6 @@ public class DotSlider {
         for(int i=0; i<layouts.length; i++) {
             dots[i] = new ImageView(context);
             int padding = (width-50)/(layouts.length*layouts.length);
-            Log.e(TAG,"Layouts length = " + layouts.length);
-            Log.e(TAG,"Padding/dot = 2 * " + padding);
             dots[i].setPadding(padding,0,padding,0);
             if(i == currentPosition) {
                 dots[i].setImageDrawable(ContextCompat.getDrawable(context, R.drawable.active_dot));
