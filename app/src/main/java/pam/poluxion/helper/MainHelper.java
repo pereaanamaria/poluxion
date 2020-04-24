@@ -52,13 +52,11 @@ public class MainHelper extends MainActivity {
 
     private Context context;
     private Activity activity;
-    private Intent intent;
 
-    public MainHelper(Context context, Activity activity, Intent intent) {
+    public MainHelper(Context context, Activity activity) {
         super();
         this.context = context;
         this.activity = activity;
-        this.intent = intent;
 
         getLocationPermission();
     }
@@ -104,29 +102,15 @@ public class MainHelper extends MainActivity {
 
             LocalData localData = new LocalData(obj.getLocality());
 
-            if (intent.getStringExtra("Msg").equals("Just started")) {
-                try {
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        public void run() {
-                            crossfade(MainActivity.mainScroll);
-                        }
-                    }, 2000);   //2 seconds
-                } catch (Exception e) {
-                    Toast.makeText(context, "Could not get key", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                MainActivity.loadingPanel.setVisibility(View.GONE);
-                try {
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        public void run() {
-                            MainActivity.mainScroll.setVisibility(View.VISIBLE);
-                        }
-                    }, 200);   //1 seconds
-                } catch (Exception e) {
-                    Toast.makeText(context, "Could not get key", Toast.LENGTH_SHORT).show();
-                }
+            try {
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        crossfade(MainActivity.mainScroll);
+                    }
+                }, 1000);   //1 seconds
+            } catch (Exception e) {
+                Toast.makeText(context, "Could not get key", Toast.LENGTH_SHORT).show();
             }
 
             Log.v("IGA", "Address" + add);

@@ -25,6 +25,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import pam.poluxion.data.FirebaseHelper;
 import pam.poluxion.helper.MainHelper;
 import pam.poluxion.data.GeneralClass;
 import pam.poluxion.models.User;
@@ -46,10 +47,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static ScrollView mainScroll;
     public static RelativeLayout main, loadingPanel;
 
-    private Intent intent = new Intent();
-
     private MainHelper mainHelper;
-    private User user = GeneralClass.getUserObject();
     private FirebaseAuth mAuth;
 
     @Override
@@ -78,8 +76,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         addSwipe(findViewById(R.id.divider1));
         addSwipe(findViewById(R.id.divider2));
 
-        intent = getIntent();
-        mainHelper = new MainHelper(this,this,intent);
+        mainHelper = new MainHelper(this,this);
 
         locationTV = (TextView) findViewById(R.id.location);
         temperatureTV = (TextView) findViewById(R.id.temperature);
@@ -144,7 +141,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onSwipeRight() {
                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
                 if(firebaseUser != null) {
-                //if(user.checkIfLogged()) {
                     enterNewActivity(SettingsActivity.class);
                 } else {
                     enterNewActivity(LoginActivity.class);
@@ -177,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void enterNewActivity(Class activityClass) {
         MainActivity.this.finish();
         Intent intent = new Intent(MainActivity.this, activityClass);
-        //intent.putExtra("Msg", "Left Activity");
+        intent.putExtra("Msg", "Left Activity");
         startActivity(intent);
     }
 

@@ -34,10 +34,10 @@
     <string name="login">Login</string>
     <string name="logout">Logout</string>
     <string name="submit">Submit</string>
-    <string name="take_to_login">or login here\.\.\.</string>
+    <string name="take_to_login">or login <b><i>here</i></b>\.\.\.</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
-    <string name="take_to_register">or create a new account here\.\.\.</string>
+    <string name="take_to_register">or create a new account <b><i>here</i></b>\.\.\.</string>
     <string name="settings">Settings</string>
     <string name="measurement_units">Measurement units</string>
     <string name="weight">Weight</string>

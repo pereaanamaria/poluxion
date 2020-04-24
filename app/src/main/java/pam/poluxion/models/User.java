@@ -1,25 +1,19 @@
 package pam.poluxion.models;
 
 import android.util.Log;
-
-import pam.poluxion.data.FirebaseHelper;
 import pam.poluxion.data.GeneralClass;
 
 public class User {
     private static final String TAG = "User";
+    private static final double AVERAGE_WALKING_SPEED = 1.3888;  // 5km/h ~= 1.38 m/s
 
-    private static final double AVERAGE_WALKING_SPEED = 5000/3600;  // 5km/h ~= 1.38 m/s
-
-    //private String deviceID;
     private double weight, height;
     private int age;
-    private String nameUser, lastNameUser, email, gender, ID;
-    private boolean loggedIn;
+    private String nameUser, lastNameUser, gender, ID;
 
     public User() {
-        //this.deviceID = deviceID;
-        this.weight = 55.0;  //default value
-        this.height = 165.0; //default value
+        weight = 55.0;
+        height = 165.0;  //default values
 
         Log.e(TAG,"Successfully created: " + GeneralClass.getAndroid_id());
     }
@@ -39,24 +33,11 @@ public class User {
         return temp + " cal";
     }
 
-    public void login() {
-        loggedIn = true;
-        setLoggedFB();
-    }
-
-    public void logout() {
-        loggedIn = false;
-        setLoggedFB();
-    }
-
-    public boolean checkIfLogged() {
-        return loggedIn;
-    }
-
     public void setNameUser(String nameUser) {
         this.nameUser = nameUser;
     }
     public String getNameUser() {
+        nameUser = GeneralClass.getFirebaseHelperObject().readName(ID);
         return nameUser;
     }
 
@@ -64,6 +45,7 @@ public class User {
         this.lastNameUser = lastNameUser;
     }
     public String getLastNameUser() {
+        lastNameUser = GeneralClass.getFirebaseHelperObject().readLastName(ID);
         return lastNameUser;
     }
 
@@ -71,6 +53,7 @@ public class User {
         this.age = age;
     }
     public int getAge() {
+        age = GeneralClass.getFirebaseHelperObject().readAge(ID);
         return age;
     }
 
@@ -78,6 +61,7 @@ public class User {
         this.gender = gender;
     }
     public String getGender() {
+        gender = GeneralClass.getFirebaseHelperObject().readGender(ID);
         return gender;
     }
 
@@ -85,6 +69,7 @@ public class User {
         this.weight = weight;
     }
     public double getWeight() {
+        weight = GeneralClass.getFirebaseHelperObject().readWeight(ID);
         return weight;
     }
 
@@ -92,24 +77,21 @@ public class User {
         this.height = height;
     }
     public double getHeight() {
+        height = GeneralClass.getFirebaseHelperObject().readHeight(ID);
         return height;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    public String getEmail() {
-        return email;
     }
 
     public void setID(String ID) {
         this.ID = ID;
     }
-    public String getID() {
-        return ID;
-    }
 
-    private void setLoggedFB() {
-        GeneralClass.getFirebaseHelperObject().inputBoolean(GeneralClass.getAndroid_id()+"/connectedUser",loggedIn);
+    public void displayInfo() {
+        Log.e(TAG,"ID user = " + ID);  //user UID - fireAuth
+        Log.e(TAG,"Name = " + nameUser);
+        Log.e(TAG,"Last name = " + lastNameUser);
+        Log.e(TAG,"Age = " + age);
+        Log.e(TAG,"Gender = " + gender);
+        Log.e(TAG,"Weight = " + weight);
+        Log.e(TAG,"Height = " + height);
     }
 }

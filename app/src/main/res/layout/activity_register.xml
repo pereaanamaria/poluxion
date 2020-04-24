@@ -77,6 +77,19 @@
             android:textColorHint="@color/colorPrimary"
             app:backgroundTint="@color/colorPrimary" />
 
+        <EditText
+            android:id="@+id/ageRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:ems="3"
+            android:hint="@string/age"
+            android:inputType="number"
+            android:textColor="@color/colorPrimaryDark"
+            android:textColorHint="@color/colorPrimary"
+            app:backgroundTint="@color/colorPrimary" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -116,19 +129,6 @@
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp" />
         </RadioGroup>
-
-        <EditText
-            android:id="@+id/ageRegister"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:ems="3"
-            android:hint="@string/age"
-            android:inputType="number"
-            android:textColor="@color/colorPrimaryDark"
-            android:textColorHint="@color/colorPrimary"
-            app:backgroundTint="@color/colorPrimary" />
 
         <EditText
             android:id="@+id/passwordRegister"
