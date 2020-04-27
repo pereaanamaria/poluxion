@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -53,6 +55,17 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        passwordET.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                    signIn();
+                    Log.e(TAG,"Enter pressed");
+                }
+                return false;
+            }
+        });
+
         TextView createNewAccount = (TextView) findViewById(R.id.createNewAccount);
         createNewAccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,21 +96,28 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
-                            FirebaseHelper firebaseHelper = GeneralClass.getFirebaseHelperObject();
                             FirebaseUser firebaseUser = mAuth.getCurrentUser();
 
                             GeneralClass.getUserObject().setID(firebaseUser.getUid());
-                            Log.e(TAG,"Firebase auth UID : " + firebaseUser.getUid());
-
-                            enterNewActivity(SettingsActivity.class);
+                            GeneralClass.getUserObject().updateData(firebaseUser.getUid());
+                            Log.e(TAG, "Updating...");
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                         }
+
+                        if(task.isSuccessful()) {
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                public void run() {
+                                    enterNewActivity(SettingsActivity.class);
+                                }
+                            }, 500);   //0.5 seconds
+                        }
                     }
                 });
-    }
+   }
 
     @SuppressLint("ClickableViewAccessibility")
     private void addSwipe(View view) {

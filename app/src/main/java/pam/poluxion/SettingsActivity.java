@@ -9,8 +9,10 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -38,14 +40,17 @@ public class SettingsActivity extends AppCompatActivity {
     private EditText weightET, heightET;
 
     private User user = GeneralClass.getUserObject();
-    private double weight, height;
-    private String name;
     private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        Log.e(TAG,"Entered settings");
+
+        RelativeLayout relativeSetting = (RelativeLayout) findViewById(R.id.relativeSettings);
+        addSwipe(relativeSetting);
 
         sliderDots = (LinearLayout) findViewById(R.id.sliderDot);
         createDotSlider();
@@ -58,10 +63,11 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-
-        name = user.getNameUser();
-        weight = user.getWeight();
-        height = user.getHeight();
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        if(firebaseUser != null) {
+            Log.e(TAG,"userID = firebaseUser.getUid()");
+            //GeneralClass.getUserObject().updateData(firebaseUser.getUid());
+        }
 
         Button logoutBtn = findViewById(R.id.logoutBtn);
         logoutBtn.setOnClickListener(new View.OnClickListener() {
@@ -74,6 +80,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        Log.e(TAG,"This display is from settings");
         user.displayInfo();
 
         start();
@@ -83,17 +90,21 @@ public class SettingsActivity extends AppCompatActivity {
         FirebaseHelper firebaseHelper = GeneralClass.getFirebaseHelperObject();
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
 
-        String weight = weightET.getText().toString();
+        String str = weightET.getText().toString();
 
-        if(TextUtils.isEmpty(weight)) {
+        if(TextUtils.isEmpty(str)) {
             Toast.makeText(SettingsActivity.this, "Enter weight.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        firebaseHelper.inputDouble(firebaseUser.getUid() + "/weight",weight);
-        user.setWeight(Double.parseDouble(weight));
+        firebaseHelper.inputDouble(firebaseUser.getUid() + "/weight",str);
+        user.setWeight(Double.parseDouble(str));
 
         weightET.getText().clear();
+
+        double weight = user.getWeight();
+        weightET.setHint(weight + " kg");
+
         Toast.makeText(SettingsActivity.this, "Weight value has been set.", Toast.LENGTH_SHORT).show();
     }
 
@@ -101,17 +112,21 @@ public class SettingsActivity extends AppCompatActivity {
         FirebaseHelper firebaseHelper = GeneralClass.getFirebaseHelperObject();
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
 
-        String height = heightET.getText().toString();
+        String str = heightET.getText().toString();
 
-        if(TextUtils.isEmpty(height)) {
+        if(TextUtils.isEmpty(str)) {
             Toast.makeText(SettingsActivity.this, "Enter height.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        firebaseHelper.inputDouble(firebaseUser.getUid() + "/height", height);
-        user.setHeight(Double.parseDouble(height));
+        firebaseHelper.inputDouble(firebaseUser.getUid() + "/height", str);
+        user.setHeight(Double.parseDouble(str));
 
         heightET.getText().clear();
+
+        double height = user.getHeight();
+        heightET.setHint(height + " cm");
+
         Toast.makeText(SettingsActivity.this, "Height value has been set.", Toast.LENGTH_SHORT).show();
     }
 
@@ -159,12 +174,30 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void start() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                crossfade(settingsLayout);
+            }
+        }, 1000);   //1 seconds
+
         TextView helloTV = (TextView) findViewById(R.id.helloText);
-        String str = "Hello, " + name + "! Please enter your weight and height.";
+        String str = "Hello, " + user.getNameUser() + "! Please enter your weight and height.";
         helloTV.setText(str);
 
         weightET = (EditText) findViewById(R.id.weight);
-        weightET.setHint(weight + " kg");
+        weightET.setHint(user.getWeight() + " kg");
+
+        weightET.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                    setWeightListener();
+                    Log.e(TAG,"Enter pressed");
+                }
+                return false;
+            }
+        });
 
         Button weightBtn = (Button) findViewById(R.id.btnSaveWeight);
         weightBtn.setOnClickListener(new View.OnClickListener() {
@@ -175,7 +208,18 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         heightET = (EditText) findViewById(R.id.height);
-        heightET.setHint(height + " cm");
+        heightET.setHint(user.getHeight() + " cm");
+
+        heightET.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                    setHeightListener();
+                    Log.e(TAG,"Enter pressed");
+                }
+                return false;
+            }
+        });
 
         Button heightBtn = (Button) findViewById(R.id.btnSaveHeight);
         heightBtn.setOnClickListener(new View.OnClickListener() {
@@ -184,16 +228,5 @@ public class SettingsActivity extends AppCompatActivity {
                 setHeightListener();
             }
         });
-
-        try {
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                public void run() {
-                    crossfade(settingsLayout);
-                }
-            }, 1000);   //1 seconds
-        } catch (Exception e) {
-            Toast.makeText(this, "Could not get key", Toast.LENGTH_SHORT).show();
-        }
     }
 }

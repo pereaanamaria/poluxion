@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private MainHelper mainHelper;
     private FirebaseAuth mAuth;
+    private FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         addSwipe(findViewById(R.id.divider1));
         addSwipe(findViewById(R.id.divider2));
 
-        mainHelper = new MainHelper(this,this);
+        mainHelper = new MainHelper(this,this, getIntent());
 
         locationTV = (TextView) findViewById(R.id.location);
         temperatureTV = (TextView) findViewById(R.id.temperature);
@@ -115,6 +116,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+        firebaseUser = mAuth.getCurrentUser();
+        if(firebaseUser != null) {
+            GeneralClass.getUserObject().updateData(firebaseUser.getUid());
+        }
     }
 
     //initialises the map
@@ -139,7 +144,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void addSwipe(View view) {
         view.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
             public void onSwipeRight() {
-                FirebaseUser firebaseUser = mAuth.getCurrentUser();
                 if(firebaseUser != null) {
                     enterNewActivity(SettingsActivity.class);
                 } else {

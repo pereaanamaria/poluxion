@@ -6,8 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -63,6 +67,17 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 createNewAccount();
+            }
+        });
+
+        confirmPasswordET.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                    createNewAccount();
+                    Log.e(TAG,"Enter pressed");
+                }
+                return false;
             }
         });
 
@@ -139,22 +154,32 @@ public class RegisterActivity extends AppCompatActivity {
                                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
 
                                 firebaseHelper.inputString(firebaseUser.getUid() + "/name",name);
-                                //GeneralClass.getUserObject().setNameUser(name);
+                                GeneralClass.getUserObject().setNameUser(name);
                                 firebaseHelper.inputString(firebaseUser.getUid() + "/lastName",lastName);
-                                //GeneralClass.getUserObject().setLastNameUser(lastName);
+                                GeneralClass.getUserObject().setLastNameUser(lastName);
                                 firebaseHelper.inputString(firebaseUser.getUid() + "/gender",gender);
-                                //GeneralClass.getUserObject().setGender(gender);
+                                GeneralClass.getUserObject().setGender(gender);
                                 firebaseHelper.inputInt(firebaseUser.getUid() + "/age",age);
-                                //GeneralClass.getUserObject().setAge(Integer.parseInt(age));
-                                firebaseHelper.inputDouble(firebaseUser.getUid() + "/weight","55.0");
-                                firebaseHelper.inputDouble(firebaseUser.getUid() + "/height","165.0");
+                                GeneralClass.getUserObject().setAge(Integer.parseInt(age));
+                                firebaseHelper.inputDouble(firebaseUser.getUid() + "/weight","65.0");
+                                GeneralClass.getUserObject().setWeight(65.0);
+                                firebaseHelper.inputDouble(firebaseUser.getUid() + "/height","170.0");
+                                GeneralClass.getUserObject().setHeight(170.0);
 
                                 GeneralClass.getUserObject().setID(firebaseUser.getUid());
-
-                                enterNewActivity(SettingsActivity.class);
+                                //enterNewActivity(SettingsActivity.class);
                             } else {
                                 String message = task.getException().getMessage();
                                 Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_SHORT).show();
+                            }
+
+                            if (task.isSuccessful()) {
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    public void run() {
+                                        enterNewActivity(SettingsActivity.class);
+                                    }
+                                }, 500);   //0.5 seconds
                             }
                         }
                     });

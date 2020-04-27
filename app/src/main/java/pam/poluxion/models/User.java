@@ -37,7 +37,6 @@ public class User {
         this.nameUser = nameUser;
     }
     public String getNameUser() {
-        nameUser = GeneralClass.getFirebaseHelperObject().readName(ID);
         return nameUser;
     }
 
@@ -45,7 +44,6 @@ public class User {
         this.lastNameUser = lastNameUser;
     }
     public String getLastNameUser() {
-        lastNameUser = GeneralClass.getFirebaseHelperObject().readLastName(ID);
         return lastNameUser;
     }
 
@@ -53,7 +51,6 @@ public class User {
         this.age = age;
     }
     public int getAge() {
-        age = GeneralClass.getFirebaseHelperObject().readAge(ID);
         return age;
     }
 
@@ -61,7 +58,6 @@ public class User {
         this.gender = gender;
     }
     public String getGender() {
-        gender = GeneralClass.getFirebaseHelperObject().readGender(ID);
         return gender;
     }
 
@@ -69,7 +65,6 @@ public class User {
         this.weight = weight;
     }
     public double getWeight() {
-        weight = GeneralClass.getFirebaseHelperObject().readWeight(ID);
         return weight;
     }
 
@@ -77,7 +72,6 @@ public class User {
         this.height = height;
     }
     public double getHeight() {
-        height = GeneralClass.getFirebaseHelperObject().readHeight(ID);
         return height;
     }
 
@@ -93,5 +87,18 @@ public class User {
         Log.e(TAG,"Gender = " + gender);
         Log.e(TAG,"Weight = " + weight);
         Log.e(TAG,"Height = " + height);
+    }
+
+    public void updateData(String ID) {
+        this.ID = ID;
+        nameUser = GeneralClass.getFirebaseHelperObject().readName(ID);
+        lastNameUser = GeneralClass.getFirebaseHelperObject().readLastName(ID);
+        age = GeneralClass.getFirebaseHelperObject().readAge(ID);
+        gender = GeneralClass.getFirebaseHelperObject().readGender(ID);
+        height = GeneralClass.getFirebaseHelperObject().readHeight(ID);
+        weight = GeneralClass.getFirebaseHelperObject().readWeight(ID);
+
+        Log.e(TAG,"This display is from update method");
+        displayInfo();
     }
 }
