@@ -8,42 +8,34 @@ import android.provider.Settings.Secure;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import pam.poluxion.models.AirData;
 import pam.poluxion.models.StepCounter;
 import pam.poluxion.models.User;
 
 public class GeneralClass extends Application {
     private static final String TAG = "GeneralClass";
 
-    static User user;
-    static FirebaseHelper firebaseHelper;
-    static StepCounter stepCounter;
-    static String android_id;
+    private static User user;
+    private static FirebaseHelper firebaseHelper;
+    private static StepCounter stepCounter;
+    private static AirData airData;
 
     @SuppressLint("HardwareIds")
     public GeneralClass(@NotNull Context context) {
-        android_id = Secure.getString(context.getContentResolver(),Secure.ANDROID_ID);
+        airData = new AirData();
         user = new User();
         firebaseHelper = new FirebaseHelper(context);
         stepCounter = new StepCounter();
     }
 
     @Contract(pure = true)
-    public static User getUserObject(){
-        return user;
-    }
+    public static User getUserObject(){return user;}
 
     @Contract(pure = true)
-    public static FirebaseHelper getFirebaseHelperObject(){
-        return firebaseHelper;
-    }
+    public static FirebaseHelper getFirebaseHelperObject(){return firebaseHelper;}
 
     @Contract(pure = true)
-    public static StepCounter getStepCounterObject(){
-        return stepCounter;
-    }
+    public static StepCounter getStepCounterObject(){return stepCounter;}
 
-    @Contract(pure = true)
-    public static String getAndroid_id() {
-        return android_id;
-    }
+    public static AirData getAirData() {return airData;}
 }

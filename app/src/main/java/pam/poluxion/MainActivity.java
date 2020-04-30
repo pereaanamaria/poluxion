@@ -5,7 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -25,30 +31,38 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import pam.poluxion.data.FirebaseHelper;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import pam.poluxion.helper.MainHelper;
 import pam.poluxion.data.GeneralClass;
-import pam.poluxion.models.User;
+import pam.poluxion.helper.ServiceMain;
+import pam.poluxion.models.LoginActivity;
+import pam.poluxion.steps.StepDetector;
+import pam.poluxion.steps.StepListener;
 import pam.poluxion.widgets.ArcProgress;
 import pam.poluxion.widgets.DotSlider;
 import pam.poluxion.widgets.OnSwipeTouchListener;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
 
     private static final String TAG = "MainActivity";
     private static final int ERROR_DIALOG_REQUEST = 9001;
 
-    public static TextView locationTV, temperatureTV, nrAqiTV, pressureTV,arcProgressTV;
+    @SuppressLint("StaticFieldLeak")
+    public static TextView locationTV, temperatureTV, nrAqiTV, pressureTV,arcProgressTV,measurementTV,unitsTV;
     public static ArcProgress arcProgressBar;
+    @SuppressLint("StaticFieldLeak")
     public static Button pm10Btn, pm25Btn, pm1Btn, no2Btn, nh3Btn, coBtn, co2Btn, o3Btn, so2Btn, vocBtn, pbBtn;
-    public static TextView measurementTV, unitsTV;
-    public static LinearLayout all, btnSlider;
-    private LinearLayout sliderDots;
+    @SuppressLint("StaticFieldLeak")
+    public static LinearLayout all, btnSlider, sliderDots;
+    @SuppressLint("StaticFieldLeak")
     public static ScrollView mainScroll;
+    @SuppressLint("StaticFieldLeak")
     public static RelativeLayout main, loadingPanel;
 
     private MainHelper mainHelper;
-    private FirebaseAuth mAuth;
     private FirebaseUser firebaseUser;
 
     @Override
@@ -115,11 +129,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         // Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
         if(firebaseUser != null) {
             GeneralClass.getUserObject().updateData(firebaseUser.getUid());
         }
+        startService(new Intent(getApplicationContext(), ServiceMain.class));
     }
 
     //initialises the map
@@ -130,30 +145,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mainHelper.onMapReady(googleMap);
-    }
+    public void onMapReady(GoogleMap googleMap) {mainHelper.onMapReady(googleMap);}
 
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         mainHelper.onRequestPermissionsResult(requestCode,permissions,grantResults);
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private void addSwipe(View view) {
-        view.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
-            public void onSwipeRight() {
-                if(firebaseUser != null) {
-                    enterNewActivity(SettingsActivity.class);
-                } else {
-                    enterNewActivity(LoginActivity.class);
-                }
-            }
-            public void onSwipeLeft() {
-                enterNewActivity(TrackerActivity.class);
-            }
-        });
     }
 
     //Google services are being checked in order to make map requests
@@ -187,5 +184,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         int width = displayMetrics.widthPixels;
 
         new DotSlider(this,width,sliderDots,1);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void addSwipe(View view) {
+        view.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
+            public void onSwipeRight() {
+                if(firebaseUser != null) {
+                    GeneralClass.getUserObject().updateData(firebaseUser.getUid());
+                    enterNewActivity(SettingsActivity.class);
+                } else {
+                    enterNewActivity(LoginActivity.class);
+                }
+            }
+            public void onSwipeLeft() {
+                enterNewActivity(TrackerActivity.class);
+            }
+        });
     }
 }

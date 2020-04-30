@@ -34,7 +34,7 @@ import java.util.Locale;
 
 import pam.poluxion.MainActivity;
 import pam.poluxion.R;
-import pam.poluxion.models.LocalData;
+import pam.poluxion.data.LocalData;
 
 public class MainHelper extends MainActivity {
 

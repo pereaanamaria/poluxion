@@ -1,4 +1,4 @@
-package pam.poluxion;
+package pam.poluxion.models;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -23,7 +22,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import pam.poluxion.data.FirebaseHelper;
+import pam.poluxion.MainActivity;
+import pam.poluxion.R;
+import pam.poluxion.SettingsActivity;
+import pam.poluxion.TrackerActivity;
 import pam.poluxion.data.GeneralClass;
 import pam.poluxion.widgets.OnSwipeTouchListener;
 
@@ -98,9 +100,9 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser firebaseUser = mAuth.getCurrentUser();
 
-                            GeneralClass.getUserObject().setID(firebaseUser.getUid());
                             GeneralClass.getUserObject().updateData(firebaseUser.getUid());
-                            Log.e(TAG, "Updating...");
+
+                            Log.e(TAG, "Updating... : " + firebaseUser.getUid());
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -108,12 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
 
                         if(task.isSuccessful()) {
-                            Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                public void run() {
-                                    enterNewActivity(SettingsActivity.class);
-                                }
-                            }, 500);   //0.5 seconds
+                            enterNewActivity(SettingsActivity.class);
                         }
                     }
                 });

@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import pam.poluxion.data.FirebaseHelper;
 import pam.poluxion.data.GeneralClass;
+import pam.poluxion.models.LoginActivity;
 import pam.poluxion.models.User;
 import pam.poluxion.widgets.DotSlider;
 import pam.poluxion.widgets.OnSwipeTouchListener;
@@ -47,6 +48,14 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        if(firebaseUser != null) {
+            Log.e(TAG,"userID = firebaseUser.getUid()");
+            GeneralClass.getUserObject().updateData(firebaseUser.getUid());
+        }
+
         Log.e(TAG,"Entered settings");
 
         RelativeLayout relativeSetting = (RelativeLayout) findViewById(R.id.relativeSettings);
@@ -61,25 +70,22 @@ public class SettingsActivity extends AppCompatActivity {
         addSwipe(allSettings);
         loadingPanelSettings = (RelativeLayout) findViewById(R.id.loadingPanelSettings);
 
-        // Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        if(firebaseUser != null) {
-            Log.e(TAG,"userID = firebaseUser.getUid()");
-            //GeneralClass.getUserObject().updateData(firebaseUser.getUid());
-        }
-
         Button logoutBtn = findViewById(R.id.logoutBtn);
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //make default again
+                user.setWeight(65.0);
+                user.setWeight(170.0);
+                user.setGender("male");
+                user.setAge(30);
+
                 mAuth.signOut();
                 Toast.makeText(SettingsActivity.this, "Signed out.", Toast.LENGTH_SHORT).show();
 
                 enterNewActivity(LoginActivity.class);
             }
         });
-
         Log.e(TAG,"This display is from settings");
         user.displayInfo();
 

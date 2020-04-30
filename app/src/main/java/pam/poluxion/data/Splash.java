@@ -1,18 +1,16 @@
-package pam.poluxion;
+package pam.poluxion.data;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
 import java.util.Timer;
 import java.util.TimerTask;
 
-import pam.poluxion.data.GeneralClass;
+import pam.poluxion.MainActivity;
+import pam.poluxion.R;
 
-public class SplashActivity extends Activity {
+public class Splash extends Activity {
+
     private static final long DELAY = 1000;
     private boolean scheduled = false;
     private Timer splashTimer;
@@ -24,20 +22,12 @@ public class SplashActivity extends Activity {
 
         new GeneralClass(this);
 
-        // Initialize Firebase Auth
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        if(firebaseUser != null) {
-            //update user
-            GeneralClass.getUserObject().updateData(firebaseUser.getUid());
-        }
-
         splashTimer = new Timer();
         splashTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                SplashActivity.this.finish();
-                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                Splash.this.finish();
+                Intent intent = new Intent(Splash.this, MainActivity.class);
                 intent.putExtra("Msg", "Just started");
                 startActivity(intent);
             }

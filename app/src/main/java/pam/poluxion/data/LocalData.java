@@ -1,16 +1,14 @@
-package pam.poluxion.models;
+package pam.poluxion.data;
 
 import android.util.Log;
 
 import pam.poluxion.BuildConfig;
-import pam.poluxion.data.JsonParser;
 
 public class LocalData {
     private  static final String TAG = "LocalData";
 
     //private static final String AccApi = BuildConfig.AccuWeatherApiKey;
     private static final String AqicnApi = BuildConfig.AqicnApiKey;
-    private JsonParser parser;
     private String searchUrl;
 
     public LocalData(String locality) {
@@ -22,7 +20,7 @@ public class LocalData {
 
     private void getData() {
         //searchUrl = "https://api.waqi.info/feed/Melbourne/?token="+AqicnApi;
-        parser = new JsonParser(searchUrl);
+        JsonParser parser = new JsonParser(searchUrl);
         parser.execute();
         parser = null;
     }

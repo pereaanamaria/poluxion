@@ -1,10 +1,13 @@
-package pam.poluxion;
+package pam.poluxion.models;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -13,6 +16,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.ScrollView;
@@ -25,20 +29,30 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
+import pam.poluxion.MainActivity;
+import pam.poluxion.R;
+import pam.poluxion.SettingsActivity;
+import pam.poluxion.TrackerActivity;
 import pam.poluxion.data.FirebaseHelper;
 import pam.poluxion.data.GeneralClass;
 import pam.poluxion.widgets.OnSwipeTouchListener;
 
 public class RegisterActivity extends AppCompatActivity {
+
     private static final String TAG = "SettingsActivity";
+    private final Calendar myCalendar = Calendar.getInstance();
 
     private EditText emailET, passwordET, confirmPasswordET;
-    private EditText nameET, lastNameET, ageET;
+    private EditText nameET, lastNameET, dobET;
     private RadioButton maleRB, femaleRB;
 
     private FirebaseAuth mAuth;
 
-    private String name, lastName, age, gender;
+    private String name, lastName, dob, gender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +71,9 @@ public class RegisterActivity extends AppCompatActivity {
 
         nameET = (EditText) findViewById(R.id.nameRegister);
         lastNameET = (EditText) findViewById(R.id.lastNameRegister);
-        ageET = (EditText) findViewById(R.id.ageRegister);
+
+        dobET = (EditText) findViewById(R.id.birthday);
+        getDobET();
 
         maleRB = (RadioButton) findViewById(R.id.maleRegister);
         femaleRB = (RadioButton) findViewById(R.id.femaleRegister);
@@ -97,7 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         name = nameET.getText().toString();
         lastName = lastNameET.getText().toString();
-        age = ageET.getText().toString();
+        dob = dobET.getText().toString();
 
 
         if(TextUtils.isEmpty(name)) {
@@ -125,8 +141,8 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        if(TextUtils.isEmpty(age)) {
-            Toast.makeText(RegisterActivity.this, "Enter age.", Toast.LENGTH_SHORT).show();
+        if(TextUtils.isEmpty(dob)) {
+            Toast.makeText(RegisterActivity.this, "Enter date of birth.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -159,8 +175,8 @@ public class RegisterActivity extends AppCompatActivity {
                                 GeneralClass.getUserObject().setLastNameUser(lastName);
                                 firebaseHelper.inputString(firebaseUser.getUid() + "/gender",gender);
                                 GeneralClass.getUserObject().setGender(gender);
-                                firebaseHelper.inputInt(firebaseUser.getUid() + "/age",age);
-                                GeneralClass.getUserObject().setAge(Integer.parseInt(age));
+                                firebaseHelper.inputString(firebaseUser.getUid() + "/dob",dob);
+                                //GeneralClass.getUserObject().setAge(Integer.parseInt(age));
                                 firebaseHelper.inputDouble(firebaseUser.getUid() + "/weight","65.0");
                                 GeneralClass.getUserObject().setWeight(65.0);
                                 firebaseHelper.inputDouble(firebaseUser.getUid() + "/height","170.0");
@@ -184,6 +200,41 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     });
         }
+    }
+
+    private void getDobET() {
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                month = month + 1;
+                Log.d(TAG, "onDateSet: dd/mm/yyyy: " + day + "/" + month + "/" + year);
+
+                dob = day + "/" + month + "/" + year;
+                dobET.setText(dob);
+            }
+        };
+
+        dobET.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar cal = Calendar.getInstance();
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dialog = new DatePickerDialog(RegisterActivity.this,
+                        android.R.style.Theme_Holo_Light_Dialog_MinWidth, date, year,month,day);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+            }
+        });
+    }
+
+    private void updateLabel() {
+        String myFormat = "MM/dd/yy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+        dobET.setText(sdf.format(myCalendar.getTime()));
     }
 
     @SuppressLint("ClickableViewAccessibility")

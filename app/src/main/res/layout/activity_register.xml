@@ -78,17 +78,17 @@
             app:backgroundTint="@color/colorPrimary" />
 
         <EditText
-            android:id="@+id/ageRegister"
+            android:id="@+id/birthday"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
-            android:ems="3"
-            android:hint="@string/age"
-            android:inputType="number"
+            android:hint="@string/dob"
+            android:clickable="true"
             android:textColor="@color/colorPrimaryDark"
             android:textColorHint="@color/colorPrimary"
-            app:backgroundTint="@color/colorPrimary" />
+            app:backgroundTint="@color/colorPrimary"
+            android:focusable="false" />
 
         <TextView
             android:layout_width="match_parent"

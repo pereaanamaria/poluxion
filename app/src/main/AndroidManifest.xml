@@ -7,12 +7,13 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/air_quality1"
+        android:icon="@drawable/air_quality"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/air_quality1"
+        android:roundIcon="@drawable/air_quality"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true"
@@ -29,8 +30,13 @@
             android:name="pam.poluxion.API_KEY"
             android:value="@string/AccuWeatherApiKey" />
 
+        <service
+            android:name=".helper.ServiceMain"
+            android:enabled="true"
+            android:exported="true" />
+
         <activity
-            android:name=".SplashActivity"
+            android:name=".data.Splash"
             android:configChanges="orientation"
             android:screenOrientation="fullSensor">
             <intent-filter>
@@ -42,7 +48,8 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation"
-            android:screenOrientation="fullSensor">
+            android:screenOrientation="fullSensor"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAINACTIVITY" />
                 <action android:name="android.intent.action.SEND" />
@@ -52,11 +59,11 @@
         </activity>
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".models.LoginActivity"
             android:configChanges="orientation"
             android:screenOrientation="fullSensor" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".models.RegisterActivity"
             android:configChanges="orientation"
             android:screenOrientation="fullSensor" />
         <activity

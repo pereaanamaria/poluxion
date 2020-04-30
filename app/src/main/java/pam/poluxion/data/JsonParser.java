@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.json.JSONObject;
 
@@ -25,14 +26,12 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
 
     private static final int colorAccent = Color.rgb(255,255,255);
     private static final int colorLight = Color.rgb(203,223,202);
-    //private static final int colorPrimaryLight = Color.rgb(193,219,191);
-    //private static final int colorGrey = Color.rgb(224,224,224);
     private static final int colorPrimary = Color.rgb(142, 171, 140);
     private static final int colorPrimaryDarker = Color.rgb(75,89,73);
 
     private int AQI;
     private String[] iaqiDataTypes = {"pm10", "pm1", "pm25", "no2", "so2", "nh3", "co", "co2", "o3", "pb", "voc", "p", "t"};
-    private HashMap<String, Double> iaqiData = new HashMap<>();
+    private Map<String, Double> iaqiData = new HashMap<>();
 
     private String urlStr;
     private Button clicked;
@@ -98,6 +97,8 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
                     Log.e(TAG, "No " + iaqiDataType);
                 }
             }
+
+            GeneralClass.getAirData().setPolluants(iaqiData);
         }
     }
 
@@ -112,7 +113,7 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
                     @Override
                     public void onClick(View v) {
                         MainActivity.measurementTV.setText(iaqiData.get(iaqiType) + " ");
-                        MainActivity.unitsTV.setText("μg/m³");
+                        MainActivity.unitsTV.setText(GeneralClass.getAirData().getUnitMeasurement());
                         Log.e("IAQI", iaqiType + "btn clicked");
                         setButtonNotClicked(clicked);
                         clicked = btn;
@@ -121,13 +122,12 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
                 });
                 if (iaqiType.equals("pm10")) {
                     MainActivity.measurementTV.setText(iaqiData.get(iaqiType) + " ");
-                    MainActivity.unitsTV.setText("μg/m³");
+                    MainActivity.unitsTV.setText(GeneralClass.getAirData().getUnitMeasurement());
                     clicked = btn;
                     setButtonClicked(clicked);
                 }
             } else {
                 iaqiData.put(iaqiType, 0.0);
-                //iaqi = 0.0;
                 MainActivity.btnSlider.removeView(btn);
             }
             double valueIaqi = iaqiData.get(iaqiType);
@@ -178,12 +178,14 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
         MainActivity.nrAqiTV.setText(aqi);
         Log.e(TAG, "AQI data set = " + AQI);
         getAQIPercentage();
+        GeneralClass.getAirData().setAQI(AQI);
     }
 
     private void postPressure(String pressure) {
         double Pressure = Double.parseDouble(pressure);
         MainActivity.pressureTV.setText(pressure + " ");
         Log.e(TAG, "Pressure data set = " + Pressure);
+        GeneralClass.getAirData().setPressure(Pressure);
     }
 
     private void postTemperature(String temperature) {
@@ -192,6 +194,7 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
         int Temperature = (int) Math.floor(temp);
         MainActivity.temperatureTV.setText(Temperature + " ");
         Log.e(TAG, "Temperature data set = " + Temperature);
+        GeneralClass.getAirData().setTemperature(Temperature);
     }
 
     private void postIAQI(String iaqiType, String iaqiValue) {

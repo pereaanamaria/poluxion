@@ -20,7 +20,7 @@ public class FirebaseHelper {
 
     private double weight, height;
     private int age;
-    private String name, lastName, gender;
+    private String name, lastName, gender, dob;
 
     public FirebaseHelper(Context context) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();  //stores Firebase instance into database variable
@@ -46,12 +46,6 @@ public class FirebaseHelper {
         });
 
         Log.e(TAG, "Successfully created");
-    }
-
-    public void inputInt(String child, String value) {
-        int temp = Integer.parseInt(value);
-        myRef.child(child).setValue(temp);
-        Log.e(TAG, child + " data set = " + temp);
     }
 
     public void inputDouble(String child, String value) {
@@ -82,6 +76,7 @@ public class FirebaseHelper {
             public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
         Log.e(TAG,"readHeight: From firebase = " + height);
+        GeneralClass.getUserObject().setHeight(height);
         return height;
     }
 
@@ -101,26 +96,28 @@ public class FirebaseHelper {
             public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
         Log.e(TAG,"readWeight: From firebase = " + weight);
+        GeneralClass.getUserObject().setWeight(weight);
         return weight;
     }
 
-    public int readAge(String child) {
-        myRef.child(child + "/age").addListenerForSingleValueEvent(new ValueEventListener() {
+    public String readDOB(String child) {
+        myRef.child(child + "/dob").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.e(TAG,"readAge: Currently reading");
+                Log.e(TAG,"readDOB: Currently reading");
 
                 if (dataSnapshot.getValue() != null) {
-                    int read = dataSnapshot.getValue(Integer.class); //gets from Firebase
-                    age = read;
-                    Log.e(TAG,"readAge: DataSnapshot = " + read);
+                    String read = dataSnapshot.getValue(String.class); //gets from Firebase
+                    dob = read;
+                    Log.e(TAG,"readDOB: DataSnapshot = " + read);
                 }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
-        Log.e(TAG,"readAge: From firebase = " + age);
-        return age;
+        Log.e(TAG,"readDOB: From firebase = " + dob);
+        GeneralClass.getUserObject().setAge(dob);
+        return dob;
     }
 
     public String readName(String child) {
@@ -139,6 +136,7 @@ public class FirebaseHelper {
             public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
         Log.e(TAG,"readName: From firebase = " + name);
+        GeneralClass.getUserObject().setNameUser(name);
         return name;
     }
 
@@ -158,6 +156,7 @@ public class FirebaseHelper {
             public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
         Log.e(TAG,"readLastName: From firebase = " + lastName);
+        GeneralClass.getUserObject().setLastNameUser(lastName);
         return lastName;
     }
 
@@ -177,6 +176,7 @@ public class FirebaseHelper {
             public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
         Log.e(TAG,"readGender: From firebase = " + gender);
+        GeneralClass.getUserObject().setGender(gender);
         return gender;
     }
 }
