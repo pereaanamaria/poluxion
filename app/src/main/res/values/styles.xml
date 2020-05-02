@@ -8,4 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="CustomNumberPickerTheme" parent="AppTheme">
+        <item name="colorControlNormal">@android:color/transparent</item>
+    </style>
+
 </resources>

@@ -36,6 +36,8 @@ public class GeneralClass extends Application {
 
     @Contract(pure = true)
     public static StepCounter getStepCounterObject(){return stepCounter;}
+    public static void setStepCounter(StepCounter stepCounter) {GeneralClass.stepCounter = stepCounter;}
 
+    @Contract(pure = true)
     public static AirData getAirData() {return airData;}
 }

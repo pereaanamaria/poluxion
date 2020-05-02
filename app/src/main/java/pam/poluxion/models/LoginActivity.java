@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -42,10 +43,10 @@ public class LoginActivity extends AppCompatActivity {
 
         addSwipe(findViewById(R.id.login));
 
-        emailET = (EditText) findViewById(R.id.emailLogin);
-        passwordET = (EditText) findViewById(R.id.passwordLogin);
+        emailET = findViewById(R.id.emailLogin);
+        passwordET = findViewById(R.id.passwordLogin);
 
-        Button loginBtn = (Button) findViewById(R.id.loginButton);
+        Button loginBtn = findViewById(R.id.loginButton);
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
@@ -99,10 +100,16 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
 
-                            FirebaseUser firebaseUser = mAuth.getCurrentUser();
-                            Log.e(TAG, "Start Updating... : " + firebaseUser.getUid());
-                            GeneralClass.getUserObject().updateData(firebaseUser.getUid());
-                            Log.e(TAG, "Updating... : " + firebaseUser.getUid());
+                            Handler handler = new Handler();
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                                    Log.e(TAG, "Start Updating... : " + firebaseUser.getUid());
+                                    GeneralClass.getUserObject().updateData(firebaseUser.getUid());
+                                    Log.e(TAG, "Updating... : " + firebaseUser.getUid());
+                                }
+                            });
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -111,6 +118,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         if(task.isSuccessful()) {
                             enterNewActivity(MainActivity.class);
+                            Toast.makeText(LoginActivity.this, "Logged in successfully.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

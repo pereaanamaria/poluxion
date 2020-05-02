@@ -17,6 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true"
+        android:hardwareAccelerated="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="m">
 

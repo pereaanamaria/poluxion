@@ -50,13 +50,13 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-        //FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        /*if(firebaseUser != null) {
-            Log.e(TAG,"userID = firebaseUser.getUid()");
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        if(firebaseUser != null) {
+            Log.e(TAG,"userID = " + firebaseUser.getUid());
             GeneralClass.getUserObject().updateData(firebaseUser.getUid());
-        }*/
+        }
 
-        Log.e(TAG,"Entered settings");
+        Log.e(TAG, "Entered settings");
 
         RelativeLayout relativeSetting = findViewById(R.id.relativeSettings);
         addSwipe(relativeSetting);
@@ -81,13 +81,11 @@ public class SettingsActivity extends AppCompatActivity {
                 user.setAge(30);
 
                 mAuth.signOut();
-                Toast.makeText(SettingsActivity.this, "Signed out.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SettingsActivity.this, "Logged out successfully.", Toast.LENGTH_SHORT).show();
 
                 enterNewActivity(LoginActivity.class);
             }
         });
-        Log.e(TAG,"This display is from settings");
-        user.displayInfo();
 
         start();
     }
@@ -98,12 +96,12 @@ public class SettingsActivity extends AppCompatActivity {
 
         String str = weightET.getText().toString();
 
-        if(TextUtils.isEmpty(str)) {
+        if (TextUtils.isEmpty(str)) {
             Toast.makeText(SettingsActivity.this, "Enter weight.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        firebaseHelper.inputDouble(firebaseUser.getUid() + "/weight",str);
+        firebaseHelper.inputDouble(firebaseUser.getUid() + "/weight", str);
         user.setWeight(Double.parseDouble(str));
 
         weightET.getText().clear();
@@ -120,7 +118,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         String str = heightET.getText().toString();
 
-        if(TextUtils.isEmpty(str)) {
+        if (TextUtils.isEmpty(str)) {
             Toast.makeText(SettingsActivity.this, "Enter height.", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -142,6 +140,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onSwipeRight() {
                 enterNewActivity(TrackerActivity.class);
             }
+
             public void onSwipeLeft() {
                 enterNewActivity(MainActivity.class);
             }
@@ -160,7 +159,7 @@ public class SettingsActivity extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int width = displayMetrics.widthPixels;
 
-        new DotSlider(this,width,sliderDots,0);
+        new DotSlider(this, width, sliderDots, 0);
     }
 
     private void crossfade(ViewGroup layout) {
@@ -184,55 +183,55 @@ public class SettingsActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             public void run() {
                 crossfade(settingsLayout);
+
+                TextView helloTV = findViewById(R.id.helloText);
+                String str = "Hello, " + user.getNameUser() + "! Please enter your weight and height.";
+                helloTV.setText(str);
+
+                weightET = findViewById(R.id.weight);
+                weightET.setHint(user.getWeight() + " kg");
+
+                weightET.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                            setWeightListener();
+                            Log.e(TAG, "Enter pressed");
+                        }
+                        return false;
+                    }
+                });
+
+                Button weightBtn = findViewById(R.id.btnSaveWeight);
+                weightBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        setWeightListener();
+                    }
+                });
+
+                heightET = findViewById(R.id.height);
+                heightET.setHint(user.getHeight() + " cm");
+
+                heightET.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                            setHeightListener();
+                            Log.e(TAG, "Enter pressed");
+                        }
+                        return false;
+                    }
+                });
+
+                Button heightBtn = findViewById(R.id.btnSaveHeight);
+                heightBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        setHeightListener();
+                    }
+                });
             }
-        }, 1000);   //1 seconds
-
-        TextView helloTV = findViewById(R.id.helloText);
-        String str = "Hello, " + user.getNameUser() + "! Please enter your weight and height.";
-        helloTV.setText(str);
-
-        weightET = findViewById(R.id.weight);
-        weightET.setHint(user.getWeight() + " kg");
-
-        weightET.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    setWeightListener();
-                    Log.e(TAG,"Enter pressed");
-                }
-                return false;
-            }
-        });
-
-        Button weightBtn = findViewById(R.id.btnSaveWeight);
-        weightBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setWeightListener();
-            }
-        });
-
-        heightET = findViewById(R.id.height);
-        heightET.setHint(user.getHeight() + " cm");
-
-        heightET.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    setHeightListener();
-                    Log.e(TAG,"Enter pressed");
-                }
-                return false;
-            }
-        });
-
-        Button heightBtn = findViewById(R.id.btnSaveHeight);
-        heightBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setHeightListener();
-            }
-        });
+        }, 500);   //0.5 seconds
     }
 }

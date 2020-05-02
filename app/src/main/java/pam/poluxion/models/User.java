@@ -106,16 +106,7 @@ public class User {
 
     public void setHeight(double height) {this.height = height;}
     public double getHeight() {return height;}
-
-    public void displayInfo() {
-        Log.e(TAG,"ID user = " + ID);  //user UID - fireAuth
-        Log.e(TAG,"Name = " + nameUser);
-        Log.e(TAG,"Last name = " + lastNameUser);
-        Log.e(TAG,"Age = " + age);
-        Log.e(TAG,"Gender = " + gender);
-        Log.e(TAG,"Weight = " + weight);
-        Log.e(TAG,"Height = " + height);
-    }
+    
     void setID(String ID) {
         this.ID = ID;
     }
@@ -132,8 +123,5 @@ public class User {
         gender = GeneralClass.getFirebaseHelperObject().readGender(ID);
         height = GeneralClass.getFirebaseHelperObject().readHeight(ID);
         weight = GeneralClass.getFirebaseHelperObject().readWeight(ID);
-
-        Log.e(TAG,"This display is from update method");
-        displayInfo();
     }
 }

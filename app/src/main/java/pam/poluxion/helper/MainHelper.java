@@ -1,6 +1,7 @@
 package pam.poluxion.helper;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -31,11 +32,13 @@ import com.google.android.gms.tasks.Task;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import pam.poluxion.MainActivity;
 import pam.poluxion.R;
 import pam.poluxion.data.LocalData;
 
+@SuppressLint("Registered")
 public class MainHelper extends MainActivity {
 
     private static final String TAG = "MainHelper";
@@ -94,7 +97,7 @@ public class MainHelper extends MainActivity {
             Log.e(TAG, "getDeviceLocation: Security exception: " + e.getMessage());
         }
 
-        if (intent.getStringExtra("Msg").equals("Just started")) {
+        if (Objects.equals(intent.getStringExtra("Msg"), "Just started")) {
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 public void run() {
@@ -116,12 +119,6 @@ public class MainHelper extends MainActivity {
         Thread thread = new Thread();
         thread.start();
         try {
-            /*DecimalFormat df = new DecimalFormat();
-            df.setMaximumFractionDigits(3);
-
-            double latitude = Double.parseDouble(df.format(lat));
-            double longitude = Double.parseDouble(df.format(lng));*/
-
             Geocoder geocoder = new Geocoder(context, Locale.getDefault());
             List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
             Address obj = addresses.get(0);
@@ -160,13 +157,13 @@ public class MainHelper extends MainActivity {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, MainHelper.DEFAULT_ZOOM));
     }
 
-    //refreshes content every 200ms for better accuracy
+    //refreshes content for better accuracy
     public void content() {
-        refresh(200);
+        refresh();
         getDeviceLocation();
     }
 
-    private void refresh(int milisecs) {
+    private void refresh() {
         final Handler handler = new Handler();
         final Runnable runnable = new Runnable() {
             @Override
@@ -218,7 +215,6 @@ public class MainHelper extends MainActivity {
             if (ContextCompat.checkSelfPermission(context.getApplicationContext(),
                     COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {   //checks if COARSE_LOCATION permission was granted
                 mLocationPermissionGranted = true;    //sets the flag
-                //initMap();
             } else {
                 ActivityCompat.requestPermissions(activity, permissions, LOCATION_PERMISSION_REQUEST_CODE);
             }
@@ -233,20 +229,17 @@ public class MainHelper extends MainActivity {
 
         mLocationPermissionGranted = false;
 
-        switch (requestCode) {
-            case LOCATION_PERMISSION_REQUEST_CODE: {
-                if (grantResults.length > 0) {
-                    for (int i = 0; i < grantResults.length; i++) {
-                        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                            mLocationPermissionGranted = false;
-                            Log.d(TAG, "onRequestPermissionResult: Permission failed");
-                            return;
-                        }
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0) {
+                for (int grantResult : grantResults) {
+                    if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                        Log.d(TAG, "onRequestPermissionResult: Permission failed");
+                        return;
                     }
-                    mLocationPermissionGranted = true;
-                    Log.d(TAG, "onRequestPermissionResult: Permission granted");
-                    //initMap();
                 }
+                mLocationPermissionGranted = true;
+                Log.d(TAG, "onRequestPermissionResult: Permission granted");
+                //initMap();
             }
         }
     }

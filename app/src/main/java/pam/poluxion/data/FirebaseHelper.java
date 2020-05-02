@@ -51,12 +51,12 @@ public class FirebaseHelper {
     public void inputDouble(String child, String value) {
         double temp = Double.parseDouble(value);
         myRef.child(child).setValue(temp);
-        Log.e(TAG,child + " data set = " + temp);
+        //Log.e(TAG,child + " data set = " + temp);
     }
 
     public void inputString(String child, String value) {
         myRef.child(child).setValue(value);
-        Log.e(TAG,child + " data set = " + value);
+        //Log.e(TAG,child + " data set = " + value);
     }
 
 
@@ -64,18 +64,18 @@ public class FirebaseHelper {
         myRef.child(child + "/height").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.e(TAG,"readHeight: Currently reading");
+                //Log.e(TAG,"readHeight: Currently reading");
 
                 if (dataSnapshot.getValue() != null) {
                     double read = dataSnapshot.getValue(Double.class); //gets from Firebase
                     height = read;
-                    Log.e(TAG,"readHeight: DataSnapshot = " + read);
+                    //Log.e(TAG,"readHeight: DataSnapshot = " + read);
                 }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
-        Log.e(TAG,"readHeight: From firebase = " + height);
+        //Log.e(TAG,"readHeight: From firebase = " + height);
         GeneralClass.getUserObject().setHeight(height);
         return height;
     }
@@ -84,18 +84,18 @@ public class FirebaseHelper {
         myRef.child(child + "/weight").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.e(TAG,"readWeight: Currently reading");
+                //Log.e(TAG,"readWeight: Currently reading");
 
                 if (dataSnapshot.getValue() != null) {
                     double read = dataSnapshot.getValue(Double.class); //gets from Firebase
                     weight = read;
-                    Log.e(TAG,"readWeight: DataSnapshot = " + read);
+                    //Log.e(TAG,"readWeight: DataSnapshot = " + read);
                 }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
-        Log.e(TAG,"readWeight: From firebase = " + weight);
+        //Log.e(TAG,"readWeight: From firebase = " + weight);
         GeneralClass.getUserObject().setWeight(weight);
         return weight;
     }
@@ -104,18 +104,18 @@ public class FirebaseHelper {
         myRef.child(child + "/dob").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.e(TAG,"readDOB: Currently reading");
+                //Log.e(TAG,"readDOB: Currently reading");
 
                 if (dataSnapshot.getValue() != null) {
                     String read = dataSnapshot.getValue(String.class); //gets from Firebase
                     dob = read;
-                    Log.e(TAG,"readDOB: DataSnapshot = " + read);
+                    //Log.e(TAG,"readDOB: DataSnapshot = " + read);
                 }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
-        Log.e(TAG,"readDOB: From firebase = " + dob);
+        //Log.e(TAG,"readDOB: From firebase = " + dob);
         GeneralClass.getUserObject().setAge(dob);
         return dob;
     }
@@ -124,18 +124,18 @@ public class FirebaseHelper {
         myRef.child(child + "/name").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.e(TAG,"readName: Currently reading");
+                //Log.e(TAG,"readName: Currently reading");
 
                 if (dataSnapshot.getValue() != null) {
                     String read = dataSnapshot.getValue(String.class); //gets from Firebase
                     name = read;
-                    Log.e(TAG,"readName: DataSnapshot = " + read);
+                    //Log.e(TAG,"readName: DataSnapshot = " + read);
                 }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
-        Log.e(TAG,"readName: From firebase = " + name);
+        //Log.e(TAG,"readName: From firebase = " + name);
         GeneralClass.getUserObject().setNameUser(name);
         return name;
     }
@@ -144,18 +144,18 @@ public class FirebaseHelper {
         myRef.child(child + "/lastName").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.e(TAG,"readLastName: Currently reading");
+                //Log.e(TAG,"readLastName: Currently reading");
 
                 if (dataSnapshot.getValue() != null) {
                     String read = dataSnapshot.getValue(String.class); //gets from Firebase
                     lastName = read;
-                    Log.e(TAG,"readLastName: DataSnapshot = " + read);
+                    //Log.e(TAG,"readLastName: DataSnapshot = " + read);
                 }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
-        Log.e(TAG,"readLastName: From firebase = " + lastName);
+        //Log.e(TAG,"readLastName: From firebase = " + lastName);
         GeneralClass.getUserObject().setLastNameUser(lastName);
         return lastName;
     }
@@ -164,18 +164,18 @@ public class FirebaseHelper {
         myRef.child(child + "/gender").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.e(TAG,"readGender: Currently reading");
+                //Log.e(TAG,"readGender: Currently reading");
 
                 if (dataSnapshot.getValue() != null) {
                     String read = dataSnapshot.getValue(String.class); //gets from Firebase
                     gender = read;
-                    Log.e(TAG,"readGender: DataSnapshot = " + read);
+                    //Log.e(TAG,"readGender: DataSnapshot = " + read);
                 }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
-        Log.e(TAG,"readGender: From firebase = " + gender);
+        //Log.e(TAG,"readGender: From firebase = " + gender);
         GeneralClass.getUserObject().setGender(gender);
         return gender;
     }

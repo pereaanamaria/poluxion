@@ -163,38 +163,37 @@ public class RegisterActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 Toast.makeText(RegisterActivity.this, "Account created successfully.", Toast.LENGTH_SHORT).show();
 
-                                FirebaseHelper firebaseHelper = GeneralClass.getFirebaseHelperObject();
-                                FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                                Handler handler = new Handler();
+                                handler.post(new Runnable() {
+                                    public void run() {
+                                        FirebaseHelper firebaseHelper = GeneralClass.getFirebaseHelperObject();
+                                        FirebaseUser firebaseUser = mAuth.getCurrentUser();
 
-                                Log.e(TAG, "Start Updating... : " + firebaseUser.getUid());
-                                firebaseHelper.inputString(firebaseUser.getUid() + "/name",name);
-                                GeneralClass.getUserObject().setNameUser(name);
-                                firebaseHelper.inputString(firebaseUser.getUid() + "/lastName",lastName);
-                                GeneralClass.getUserObject().setLastNameUser(lastName);
-                                firebaseHelper.inputString(firebaseUser.getUid() + "/gender",gender);
-                                GeneralClass.getUserObject().setGender(gender);
-                                firebaseHelper.inputString(firebaseUser.getUid() + "/dob",dob);
-                                GeneralClass.getUserObject().setAge(dob);
-                                firebaseHelper.inputDouble(firebaseUser.getUid() + "/weight","65.0");
-                                GeneralClass.getUserObject().setWeight(65.0);
-                                firebaseHelper.inputDouble(firebaseUser.getUid() + "/height","170.0");
-                                GeneralClass.getUserObject().setHeight(170.0);
+                                        Log.e(TAG, "Start Updating... : " + firebaseUser.getUid());
+                                        firebaseHelper.inputString(firebaseUser.getUid() + "/name", name);
+                                        GeneralClass.getUserObject().setNameUser(name);
+                                        firebaseHelper.inputString(firebaseUser.getUid() + "/lastName", lastName);
+                                        GeneralClass.getUserObject().setLastNameUser(lastName);
+                                        firebaseHelper.inputString(firebaseUser.getUid() + "/gender", gender);
+                                        GeneralClass.getUserObject().setGender(gender);
+                                        firebaseHelper.inputString(firebaseUser.getUid() + "/dob", dob);
+                                        GeneralClass.getUserObject().setAge(dob);
+                                        firebaseHelper.inputDouble(firebaseUser.getUid() + "/weight", "65.0");
+                                        GeneralClass.getUserObject().setWeight(65.0);
+                                        firebaseHelper.inputDouble(firebaseUser.getUid() + "/height", "170.0");
+                                        GeneralClass.getUserObject().setHeight(170.0);
 
-                                GeneralClass.getUserObject().setID(firebaseUser.getUid());
-                                Log.e(TAG, "Updating... : " + firebaseUser.getUid());
-
+                                        GeneralClass.getUserObject().setID(firebaseUser.getUid());
+                                        Log.e(TAG, "Updating... : " + firebaseUser.getUid());
+                                    }
+                                });
                             } else {
                                 String message = task.getException().getMessage();
                                 Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_SHORT).show();
                             }
 
                             if (task.isSuccessful()) {
-                                Handler handler = new Handler();
-                                handler.postDelayed(new Runnable() {
-                                    public void run() {
-                                        enterNewActivity(MainActivity.class);
-                                    }
-                                }, 500);   //0.5 seconds
+                                enterNewActivity(MainActivity.class);
                             }
                         }
                     });
@@ -223,7 +222,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                 DatePickerDialog dialog = new DatePickerDialog(RegisterActivity.this,
                         android.R.style.Theme_Holo_Light_Dialog_MinWidth, date, year,month,day);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialog.show();
             }
         });

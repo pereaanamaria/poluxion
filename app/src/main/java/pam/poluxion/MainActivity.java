@@ -120,10 +120,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
         if(firebaseUser != null) {
-            Log.e(TAG, "Start Updating... : " + firebaseUser.getUid());
+            //Log.e(TAG, "Start Updating... : " + firebaseUser.getUid());
             GeneralClass.getUserObject().updateData(firebaseUser.getUid());
-            Log.e(TAG, "Updating... : " + firebaseUser.getUid());
+            //Log.e(TAG, "Updating... : " + firebaseUser.getUid());
         }
+
         startService(new Intent(getApplicationContext(), ServiceMain.class));
     }
 
