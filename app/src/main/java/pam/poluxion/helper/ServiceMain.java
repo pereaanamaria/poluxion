@@ -1,11 +1,13 @@
 package pam.poluxion.helper;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -20,6 +22,7 @@ import androidx.core.app.NotificationCompat;
 import pam.poluxion.MainActivity;
 import pam.poluxion.R;
 import pam.poluxion.data.GeneralClass;
+import pam.poluxion.data.Splash;
 import pam.poluxion.steps.StepDetector;
 import pam.poluxion.steps.StepListener;
 
@@ -54,11 +57,6 @@ public class ServiceMain extends Service implements SensorEventListener, StepLis
     }
 
     private void startForeground() {
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-
-        pendingIntent = PendingIntent.getActivity(this, 0,
-                notificationIntent, 0);
-
         createNotificationChannel();
         displayNotification();
     }
@@ -73,6 +71,18 @@ public class ServiceMain extends Service implements SensorEventListener, StepLis
         //creates a StepDetector for counting steps
         stepDetector = new StepDetector();
         stepDetector.registerListener(this);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        //get saved steps
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //save steps
     }
 
     //step counting
@@ -101,6 +111,8 @@ public class ServiceMain extends Service implements SensorEventListener, StepLis
 
             NotificationChannel notificationChannel = new NotificationChannel(NOTIF_CHANNEL_ID,name,importance);
             notificationChannel.setDescription(description);
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.WHITE);
 
             NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             notificationManager.createNotificationChannel(notificationChannel);
@@ -108,15 +120,21 @@ public class ServiceMain extends Service implements SensorEventListener, StepLis
     }
 
     private void displayNotification() {
-        startForeground(NOTIF_ID, new NotificationCompat.Builder(this,
-                NOTIF_CHANNEL_ID) // don't forget create a notification channel first
-                .setOngoing(true)
-                .setSmallIcon(R.drawable.air_quality)
-                .setContentTitle("Steps : " + GeneralClass.getStepCounterObject().getSteps())
-                .setContentText("")
-                .setContentIntent(pendingIntent)
-                .build());
+        startForeground(NOTIF_ID, getChannelNotification().build());
         Log.d(TAG, "Steps : " + GeneralClass.getStepCounterObject().getSteps());
+    }
+
+    private NotificationCompat.Builder getChannelNotification() {
+        Intent resultIntent = new Intent(this, Splash.class);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 1, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        return new NotificationCompat.Builder(this, NOTIF_CHANNEL_ID)
+                .setContentTitle("Counting steps..")
+                .setContentText("Steps : " + GeneralClass.getStepCounterObject().getSteps())
+                .setSmallIcon(R.drawable.poluxion)
+                .setAutoCancel(true)
+                .setColor(Color.parseColor("#4b5949"))
+                .setContentIntent(resultPendingIntent);
     }
 
 

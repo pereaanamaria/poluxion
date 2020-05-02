@@ -11,6 +11,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -35,7 +36,7 @@ public class TrackerActivity extends AppCompatActivity implements SensorEventLis
     private StepCounter stepCounter = GeneralClass.getStepCounterObject();
     private User user = GeneralClass.getUserObject();
 
-    private FirebaseAuth mAuth;
+    private FirebaseUser firebaseUser;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -48,24 +49,30 @@ public class TrackerActivity extends AppCompatActivity implements SensorEventLis
 
         sensorManager.registerListener(TrackerActivity.this,sensor,SensorManager.SENSOR_DELAY_FASTEST);
 
-        sliderDots = (LinearLayout) findViewById(R.id.sliderDot);
+        sliderDots = findViewById(R.id.sliderDot);
         createDotSlider();
 
-        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.tracker);
+        RelativeLayout relativeLayout = findViewById(R.id.tracker);
         addSwipe(relativeLayout);
 
         // Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        firebaseUser = mAuth.getCurrentUser();
+        if(firebaseUser != null) {
+            Log.e(TAG, "Start Updating... : " + firebaseUser.getUid());
+            GeneralClass.getUserObject().updateData(firebaseUser.getUid());
+            Log.e(TAG, "Updating... : " + firebaseUser.getUid());
+        }
 
-        walkIn = (TextView) findViewById(R.id.walkingInside);
-        walkOut = (TextView) findViewById(R.id.walkingOutside);
-        runIn = (TextView) findViewById(R.id.runningInside);
-        runOut = (TextView) findViewById(R.id.runningOutside);
+        walkIn = findViewById(R.id.walkingInside);
+        walkOut = findViewById(R.id.walkingOutside);
+        runIn = findViewById(R.id.runningInside);
+        runOut = findViewById(R.id.runningOutside);
 
-        total = (TextView) findViewById(R.id.totalSteps);
-        bpi = (TextView) findViewById(R.id.bpi);
-        kms = (TextView) findViewById(R.id.km);
-        cals = (TextView) findViewById(R.id.cal);
+        total = findViewById(R.id.totalSteps);
+        bpi = findViewById(R.id.bpi);
+        kms = findViewById(R.id.km);
+        cals = findViewById(R.id.cal);
 
         displayInfo();
     }
@@ -101,9 +108,7 @@ public class TrackerActivity extends AppCompatActivity implements SensorEventLis
                 enterNewActivity(MainActivity.class);
             }
             public void onSwipeLeft() {
-                FirebaseUser firebaseUser = mAuth.getCurrentUser();
                 if(firebaseUser != null) {
-                    GeneralClass.getUserObject().updateData(firebaseUser.getUid());
                     enterNewActivity(SettingsActivity.class);
                 } else {
                     enterNewActivity(LoginActivity.class);

@@ -5,13 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -31,16 +25,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
 import pam.poluxion.helper.MainHelper;
 import pam.poluxion.data.GeneralClass;
 import pam.poluxion.helper.ServiceMain;
 import pam.poluxion.models.LoginActivity;
-import pam.poluxion.steps.StepDetector;
-import pam.poluxion.steps.StepListener;
 import pam.poluxion.widgets.ArcProgress;
 import pam.poluxion.widgets.DotSlider;
 import pam.poluxion.widgets.OnSwipeTouchListener;
@@ -70,12 +58,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mainScroll = (ScrollView) findViewById(R.id.mainScroll);
-        loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
-        main = (RelativeLayout) findViewById(R.id.main);
-        all = (LinearLayout) findViewById(R.id.layout_all);
-        sliderDots = (LinearLayout) findViewById(R.id.sliderDot);
-        btnSlider = (LinearLayout) findViewById(R.id.btnSlider);
+        mainScroll = findViewById(R.id.mainScroll);
+        loadingPanel = findViewById(R.id.loadingPanel);
+        main = findViewById(R.id.main);
+        all = findViewById(R.id.layout_all);
+        sliderDots = findViewById(R.id.sliderDot);
+        btnSlider = findViewById(R.id.btnSlider);
         btnSlider.setFadingEdgeLength(500);
 
         addSwipe(mainScroll);
@@ -93,33 +81,33 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mainHelper = new MainHelper(this,this, getIntent());
 
-        locationTV = (TextView) findViewById(R.id.location);
-        temperatureTV = (TextView) findViewById(R.id.temperature);
-        nrAqiTV = (TextView) findViewById(R.id.nrAQI);
-        pressureTV = (TextView) findViewById(R.id.pressure);
-        measurementTV = (TextView) findViewById(R.id.measurement);
-        unitsTV = (TextView) findViewById(R.id.units);
+        locationTV = findViewById(R.id.location);
+        temperatureTV = findViewById(R.id.temperature);
+        nrAqiTV = findViewById(R.id.nrAQI);
+        pressureTV = findViewById(R.id.pressure);
+        measurementTV = findViewById(R.id.measurement);
+        unitsTV = findViewById(R.id.units);
 
         addSwipe(measurementTV);
         addSwipe(unitsTV);
 
-        arcProgressBar = (ArcProgress) findViewById(R.id.arc_progress);
-        arcProgressTV = (TextView) findViewById(R.id.arc_progressTV);
+        arcProgressBar = findViewById(R.id.arc_progress);
+        arcProgressTV = findViewById(R.id.arc_progressTV);
 
         addSwipe(arcProgressBar);
         addSwipe(arcProgressTV);
 
-        pm10Btn = (Button) findViewById(R.id.pm10);
-        pm25Btn = (Button) findViewById(R.id.pm2_5);
-        pm1Btn = (Button) findViewById(R.id.pm1);
-        no2Btn = (Button) findViewById(R.id.no2);
-        nh3Btn = (Button) findViewById(R.id.nh3);
-        coBtn = (Button) findViewById(R.id.co);
-        co2Btn = (Button) findViewById(R.id.co2);
-        o3Btn = (Button) findViewById(R.id.o3);
-        so2Btn = (Button) findViewById(R.id.so2);
-        vocBtn = (Button) findViewById(R.id.voc);
-        pbBtn = (Button) findViewById(R.id.pb);
+        pm10Btn = findViewById(R.id.pm10);
+        pm25Btn = findViewById(R.id.pm2_5);
+        pm1Btn = findViewById(R.id.pm1);
+        no2Btn = findViewById(R.id.no2);
+        nh3Btn = findViewById(R.id.nh3);
+        coBtn = findViewById(R.id.co);
+        co2Btn = findViewById(R.id.co2);
+        o3Btn = findViewById(R.id.o3);
+        so2Btn = findViewById(R.id.so2);
+        vocBtn = findViewById(R.id.voc);
+        pbBtn = findViewById(R.id.pb);
 
         createDotSlider();
 
@@ -132,7 +120,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
         if(firebaseUser != null) {
+            Log.e(TAG, "Start Updating... : " + firebaseUser.getUid());
             GeneralClass.getUserObject().updateData(firebaseUser.getUid());
+            Log.e(TAG, "Updating... : " + firebaseUser.getUid());
         }
         startService(new Intent(getApplicationContext(), ServiceMain.class));
     }
@@ -191,7 +181,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         view.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
             public void onSwipeRight() {
                 if(firebaseUser != null) {
-                    GeneralClass.getUserObject().updateData(firebaseUser.getUid());
                     enterNewActivity(SettingsActivity.class);
                 } else {
                     enterNewActivity(LoginActivity.class);

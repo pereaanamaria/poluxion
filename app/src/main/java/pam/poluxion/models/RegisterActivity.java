@@ -29,9 +29,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 
 import pam.poluxion.MainActivity;
 import pam.poluxion.R;
@@ -44,7 +42,6 @@ import pam.poluxion.widgets.OnSwipeTouchListener;
 public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = "SettingsActivity";
-    private final Calendar myCalendar = Calendar.getInstance();
 
     private EditText emailET, passwordET, confirmPasswordET;
     private EditText nameET, lastNameET, dobET;
@@ -59,26 +56,26 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        ScrollView scrollView = (ScrollView) findViewById(R.id.register);
+        ScrollView scrollView = findViewById(R.id.register);
         addSwipe(scrollView);
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
-        emailET = (EditText) findViewById(R.id.emailRegister);
-        passwordET = (EditText) findViewById(R.id.passwordRegister);
-        confirmPasswordET = (EditText) findViewById(R.id.confirmPasswordRegister);
+        emailET = findViewById(R.id.emailRegister);
+        passwordET = findViewById(R.id.passwordRegister);
+        confirmPasswordET = findViewById(R.id.confirmPasswordRegister);
 
-        nameET = (EditText) findViewById(R.id.nameRegister);
-        lastNameET = (EditText) findViewById(R.id.lastNameRegister);
+        nameET = findViewById(R.id.nameRegister);
+        lastNameET = findViewById(R.id.lastNameRegister);
 
-        dobET = (EditText) findViewById(R.id.birthday);
+        dobET = findViewById(R.id.birthday);
         getDobET();
 
-        maleRB = (RadioButton) findViewById(R.id.maleRegister);
-        femaleRB = (RadioButton) findViewById(R.id.femaleRegister);
+        maleRB = findViewById(R.id.maleRegister);
+        femaleRB = findViewById(R.id.femaleRegister);
 
-        Button registerBtn = (Button) findViewById(R.id.registerButton);
+        Button registerBtn = findViewById(R.id.registerButton);
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,7 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        TextView takeToLogin = (TextView) findViewById(R.id.takeToLogin);
+        TextView takeToLogin = findViewById(R.id.takeToLogin);
         takeToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -169,6 +166,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 FirebaseHelper firebaseHelper = GeneralClass.getFirebaseHelperObject();
                                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
 
+                                Log.e(TAG, "Start Updating... : " + firebaseUser.getUid());
                                 firebaseHelper.inputString(firebaseUser.getUid() + "/name",name);
                                 GeneralClass.getUserObject().setNameUser(name);
                                 firebaseHelper.inputString(firebaseUser.getUid() + "/lastName",lastName);
@@ -176,14 +174,15 @@ public class RegisterActivity extends AppCompatActivity {
                                 firebaseHelper.inputString(firebaseUser.getUid() + "/gender",gender);
                                 GeneralClass.getUserObject().setGender(gender);
                                 firebaseHelper.inputString(firebaseUser.getUid() + "/dob",dob);
-                                //GeneralClass.getUserObject().setAge(Integer.parseInt(age));
+                                GeneralClass.getUserObject().setAge(dob);
                                 firebaseHelper.inputDouble(firebaseUser.getUid() + "/weight","65.0");
                                 GeneralClass.getUserObject().setWeight(65.0);
                                 firebaseHelper.inputDouble(firebaseUser.getUid() + "/height","170.0");
                                 GeneralClass.getUserObject().setHeight(170.0);
 
                                 GeneralClass.getUserObject().setID(firebaseUser.getUid());
-                                //enterNewActivity(SettingsActivity.class);
+                                Log.e(TAG, "Updating... : " + firebaseUser.getUid());
+
                             } else {
                                 String message = task.getException().getMessage();
                                 Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_SHORT).show();
@@ -193,7 +192,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 Handler handler = new Handler();
                                 handler.postDelayed(new Runnable() {
                                     public void run() {
-                                        enterNewActivity(SettingsActivity.class);
+                                        enterNewActivity(MainActivity.class);
                                     }
                                 }, 500);   //0.5 seconds
                             }
@@ -224,17 +223,10 @@ public class RegisterActivity extends AppCompatActivity {
 
                 DatePickerDialog dialog = new DatePickerDialog(RegisterActivity.this,
                         android.R.style.Theme_Holo_Light_Dialog_MinWidth, date, year,month,day);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
                 dialog.show();
             }
         });
-    }
-
-    private void updateLabel() {
-        String myFormat = "MM/dd/yy"; //In which you need put here
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-
-        dobET.setText(sdf.format(myCalendar.getTime()));
     }
 
     @SuppressLint("ClickableViewAccessibility")

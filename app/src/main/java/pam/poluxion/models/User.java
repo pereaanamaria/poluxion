@@ -38,6 +38,9 @@ public class User {
         double stepsPerMin = 110;
 
         double temp = (calPerMin * GeneralClass.getStepCounterObject().getSteps()) / stepsPerMin;
+        if (Double.isNaN(temp)) {
+            return "0.0 cal";
+        }
         return df2.format(temp) + " cal";
     }
 

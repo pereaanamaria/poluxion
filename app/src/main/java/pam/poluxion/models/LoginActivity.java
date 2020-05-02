@@ -98,10 +98,10 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
+
                             FirebaseUser firebaseUser = mAuth.getCurrentUser();
-
+                            Log.e(TAG, "Start Updating... : " + firebaseUser.getUid());
                             GeneralClass.getUserObject().updateData(firebaseUser.getUid());
-
                             Log.e(TAG, "Updating... : " + firebaseUser.getUid());
                         } else {
                             // If sign in fails, display a message to the user.
@@ -110,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
 
                         if(task.isSuccessful()) {
-                            enterNewActivity(SettingsActivity.class);
+                            enterNewActivity(MainActivity.class);
                         }
                     }
                 });

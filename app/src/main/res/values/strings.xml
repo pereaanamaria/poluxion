@@ -51,7 +51,6 @@
     <string name="run_outside_bpi"> running steps outside</string>
     <string name="BPI">BPI : </string>
     <string name="percent">%</string>
-    <string name="want_to_leave">Are you sure you want to leave?</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
+    <string name="error_text">We are sorry, but the application is not functional at the moment. Please check your internet connection and then restart the application.</string>
+    <string name="exit">Exit</string>
 </resources>

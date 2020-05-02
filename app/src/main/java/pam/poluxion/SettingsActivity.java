@@ -50,25 +50,25 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        if(firebaseUser != null) {
+        //FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        /*if(firebaseUser != null) {
             Log.e(TAG,"userID = firebaseUser.getUid()");
             GeneralClass.getUserObject().updateData(firebaseUser.getUid());
-        }
+        }*/
 
         Log.e(TAG,"Entered settings");
 
-        RelativeLayout relativeSetting = (RelativeLayout) findViewById(R.id.relativeSettings);
+        RelativeLayout relativeSetting = findViewById(R.id.relativeSettings);
         addSwipe(relativeSetting);
 
-        sliderDots = (LinearLayout) findViewById(R.id.sliderDot);
+        sliderDots = findViewById(R.id.sliderDot);
         createDotSlider();
         addSwipe(sliderDots);
-        settingsLayout = (ScrollView) findViewById(R.id.settingsLayout);
+        settingsLayout = findViewById(R.id.settingsLayout);
         addSwipe(settingsLayout);
-        LinearLayout allSettings = (LinearLayout) findViewById(R.id.allSettings);
+        LinearLayout allSettings = findViewById(R.id.allSettings);
         addSwipe(allSettings);
-        loadingPanelSettings = (RelativeLayout) findViewById(R.id.loadingPanelSettings);
+        loadingPanelSettings = findViewById(R.id.loadingPanelSettings);
 
         Button logoutBtn = findViewById(R.id.logoutBtn);
         logoutBtn.setOnClickListener(new View.OnClickListener() {
@@ -187,11 +187,11 @@ public class SettingsActivity extends AppCompatActivity {
             }
         }, 1000);   //1 seconds
 
-        TextView helloTV = (TextView) findViewById(R.id.helloText);
+        TextView helloTV = findViewById(R.id.helloText);
         String str = "Hello, " + user.getNameUser() + "! Please enter your weight and height.";
         helloTV.setText(str);
 
-        weightET = (EditText) findViewById(R.id.weight);
+        weightET = findViewById(R.id.weight);
         weightET.setHint(user.getWeight() + " kg");
 
         weightET.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -205,7 +205,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        Button weightBtn = (Button) findViewById(R.id.btnSaveWeight);
+        Button weightBtn = findViewById(R.id.btnSaveWeight);
         weightBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -213,7 +213,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        heightET = (EditText) findViewById(R.id.height);
+        heightET = findViewById(R.id.height);
         heightET.setHint(user.getHeight() + " cm");
 
         heightET.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -227,7 +227,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        Button heightBtn = (Button) findViewById(R.id.btnSaveHeight);
+        Button heightBtn = findViewById(R.id.btnSaveHeight);
         heightBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

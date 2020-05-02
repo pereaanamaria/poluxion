@@ -11,7 +11,7 @@ import pam.poluxion.R;
 
 public class Splash extends Activity {
 
-    private static final long DELAY = 1000;
+    private static final long DELAY = 2000;
     private boolean scheduled = false;
     private Timer splashTimer;
 

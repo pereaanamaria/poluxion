@@ -80,7 +80,7 @@ public class MainHelper extends MainActivity {
                             Location currentLocation = (Location) task.getResult();
 
                             current = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                            moveCamera(current, DEFAULT_ZOOM);
+                            moveCamera(current);
                             getAddress(currentLocation.getLatitude(), currentLocation.getLongitude());
                         } else {
                             Log.d(TAG, "onComplete: current location is null");
@@ -93,43 +93,43 @@ public class MainHelper extends MainActivity {
         } catch (SecurityException e) {
             Log.e(TAG, "getDeviceLocation: Security exception: " + e.getMessage());
         }
+
+        if (intent.getStringExtra("Msg").equals("Just started")) {
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    crossfade(MainActivity.mainScroll);
+                }
+            }, 2000);   //2 seconds
+        } else {
+            MainActivity.loadingPanel.setVisibility(View.GONE);
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    MainActivity.mainScroll.setVisibility(View.VISIBLE);
+                }
+            }, 300);   //0.3 seconds
+        }
     }
 
     public void getAddress(double lat, double lng) {
-        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+        Thread thread = new Thread();
+        thread.start();
         try {
+            /*DecimalFormat df = new DecimalFormat();
+            df.setMaximumFractionDigits(3);
+
+            double latitude = Double.parseDouble(df.format(lat));
+            double longitude = Double.parseDouble(df.format(lng));*/
+
+            Geocoder geocoder = new Geocoder(context, Locale.getDefault());
             List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
             Address obj = addresses.get(0);
             String add = obj.getLocality() + ", " + obj.getCountryName();
 
             LocalData localData = new LocalData(obj.getLocality());
 
-            if (intent.getStringExtra("Msg").equals("Just started")) {
-                try {
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        public void run() {
-                            crossfade(MainActivity.mainScroll);
-                        }
-                    }, 2000);   //2 seconds
-                } catch (Exception e) {
-                    Toast.makeText(context, "Could not get key", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                MainActivity.loadingPanel.setVisibility(View.GONE);
-                try {
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        public void run() {
-                            MainActivity.mainScroll.setVisibility(View.VISIBLE);
-                        }
-                    }, 300);   //0.3 seconds
-                } catch (Exception e) {
-                    Toast.makeText(context, "Could not get key", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            Log.v("IGA", "Address" + add);
+            Log.e("IGA", "Address : " + add);
 
             MainActivity.locationTV.setText(add);
         } catch (IOException e) {
@@ -155,10 +155,9 @@ public class MainHelper extends MainActivity {
     }
 
     //the map is being moved according to the current position of the device
-    private void moveCamera(LatLng latLng, float zoom) {
+    private void moveCamera(LatLng latLng) {
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + " lng: " + latLng.longitude);
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, MainHelper.DEFAULT_ZOOM));
     }
 
     //refreshes content every 200ms for better accuracy
