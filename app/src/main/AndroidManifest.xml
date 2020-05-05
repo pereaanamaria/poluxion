@@ -39,10 +39,6 @@
             android:permission="TODO"
             tools:ignore="ExportedService" />
 
-        <service
-            android:name=".services.ActivityIntentService"
-            android:exported="false" />
-
         <activity
             android:name=".helper.Splash"
             android:configChanges="orientation"
