@@ -1,4 +1,4 @@
-package pam.poluxion.data;
+package pam.poluxion.helper;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,6 +8,7 @@ import java.util.TimerTask;
 
 import pam.poluxion.MainActivity;
 import pam.poluxion.R;
+import pam.poluxion.data.GeneralClass;
 
 public class Splash extends Activity {
 

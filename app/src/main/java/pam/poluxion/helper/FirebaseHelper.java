@@ -1,4 +1,4 @@
-package pam.poluxion.data;
+package pam.poluxion.helper;
 
 import android.content.Context;
 import android.util.Log;
@@ -12,6 +12,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import pam.poluxion.R;
+import pam.poluxion.data.GeneralClass;
 
 public class FirebaseHelper {
     private static final String TAG ="FirebaseHelper";

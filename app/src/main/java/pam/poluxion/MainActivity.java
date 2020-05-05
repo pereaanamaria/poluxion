@@ -5,8 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -19,21 +26,35 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.location.ActivityRecognition;
+import com.google.android.gms.location.ActivityRecognitionClient;
+import com.google.android.gms.location.ActivityTransition;
+import com.google.android.gms.location.ActivityTransitionEvent;
+import com.google.android.gms.location.ActivityTransitionRequest;
+import com.google.android.gms.location.ActivityTransitionResult;
+import com.google.android.gms.location.DetectedActivity;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import pam.poluxion.helper.MainHelper;
 import pam.poluxion.data.GeneralClass;
-import pam.poluxion.helper.ServiceMain;
-import pam.poluxion.models.LoginActivity;
+//import pam.poluxion.services.ActivityIntentService;
+import pam.poluxion.services.StepsService;
 import pam.poluxion.widgets.ArcProgress;
 import pam.poluxion.widgets.DotSlider;
 import pam.poluxion.widgets.OnSwipeTouchListener;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{//, SharedPreferences.OnSharedPreferenceChangeListener{
 
     private static final String TAG = "MainActivity";
     private static final int ERROR_DIALOG_REQUEST = 9001;
@@ -52,6 +73,38 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private MainHelper mainHelper;
     private FirebaseUser firebaseUser;
+
+    /*public static final String DETECTED_ACTIVITY = ".DETECTED_ACTIVITY";
+
+    private ActivityRecognitionClient mActivityRecognitionClient;*/
+
+    // Intents action that will be fired when transitions are triggered
+    private final String TRANSITION_ACTION_RECEIVER =
+            BuildConfig.APPLICATION_ID + "TRANSITION_ACTION_RECEIVER";
+    private PendingIntent mPendingIntent;
+    private myTransitionReceiver mTransitionsReceiver;
+
+    private static String toActivityString(int activity) {
+        switch (activity) {
+            case DetectedActivity.STILL:
+                return "STILL";
+            case DetectedActivity.WALKING:
+                return "WALKING";
+            default:
+                return "UNKNOWN";
+        }
+    }
+
+    private static String toTransitionType(int transitionType) {
+        switch (transitionType) {
+            case ActivityTransition.ACTIVITY_TRANSITION_ENTER:
+                return "ENTER";
+            case ActivityTransition.ACTIVITY_TRANSITION_EXIT:
+                return "EXIT";
+            default:
+                return "UNKNOWN";
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,8 +178,194 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             //Log.e(TAG, "Updating... : " + firebaseUser.getUid());
         }
 
-        startService(new Intent(getApplicationContext(), ServiceMain.class));
+        startService(new Intent(getApplicationContext(), StepsService.class));
+        /*ArrayList<DetectedActivity> detectedActivities = ActivityIntentService.detectedActivitiesFromJson(
+                PreferenceManager.getDefaultSharedPreferences(this).getString(
+                        DETECTED_ACTIVITY, ""));
+
+        //detectedActivitiesListView.setAdapter(mAdapter);
+        mActivityRecognitionClient = new ActivityRecognitionClient(this);*/
+
+        Intent intent = new Intent(TRANSITION_ACTION_RECEIVER);
+        mPendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
+
+        mTransitionsReceiver = new myTransitionReceiver();
+        registerReceiver(mTransitionsReceiver, new IntentFilter(TRANSITION_ACTION_RECEIVER));
+
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setUpTransitions();
+    }
+
+    @Override
+    protected void onPause() {
+        // Unregister the transitions:
+        ActivityRecognition.getClient(this).removeActivityTransitionUpdates(mPendingIntent)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.i(TAG, "Transitions successfully unregistered.");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "Transitions could not be unregistered: " + e);
+                    }
+                });
+
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        if (mTransitionsReceiver != null) {
+            unregisterReceiver(mTransitionsReceiver);
+            mTransitionsReceiver = null;
+        }
+        super.onStop();
+    }
+
+    private void setUpTransitions(){
+        List<ActivityTransition> transitions = new ArrayList<>();
+
+        transitions.add(
+                new ActivityTransition.Builder()
+                        .setActivityType(DetectedActivity.WALKING)
+                        .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_ENTER)
+                        .build());
+
+        transitions.add(
+                new ActivityTransition.Builder()
+                        .setActivityType(DetectedActivity.WALKING)
+                        .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_EXIT)
+                        .build());
+
+        transitions.add(
+                new ActivityTransition.Builder()
+                        .setActivityType(DetectedActivity.STILL)
+                        .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_ENTER)
+                        .build());
+
+        transitions.add(
+                new ActivityTransition.Builder()
+                        .setActivityType(DetectedActivity.STILL)
+                        .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_EXIT)
+                        .build());
+
+        ActivityTransitionRequest request = new ActivityTransitionRequest(transitions);
+
+        // Register for Transitions Updates.
+        Task<Void> task =
+                ActivityRecognition.getClient(this)
+                        .requestActivityTransitionUpdates(request, mPendingIntent);
+        task.addOnSuccessListener(
+                new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void result) {
+                        Log.i(TAG, "Transitions Api was successfully registered.");
+                    }
+                });
+        task.addOnFailureListener(
+                new OnFailureListener() {
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.e(TAG, "Transitions Api could not be registered: " + e);
+                    }
+                });
+    }
+
+    public class myTransitionReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (!TextUtils.equals(TRANSITION_ACTION_RECEIVER, intent.getAction())){
+                Log.e(TAG,"Unsupported action received in myTransitionReceiver class: action=" + intent.getAction());
+                return;
+            }
+
+            if (ActivityTransitionResult.hasResult(intent)){
+                ActivityTransitionResult result = ActivityTransitionResult.extractResult(intent);
+                for (ActivityTransitionEvent event : result.getTransitionEvents()){
+                    String theActivity = toActivityString(event.getActivityType());
+                    String transType = toTransitionType(event.getTransitionType());
+                    Toast.makeText(context,"Transition: " + theActivity + " (" + transType + ")" ,Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    /*@Override
+    protected void onResume() {
+        super.onResume();
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(this);
+        updateDetectedActivitiesList();
+    }
+    @Override
+    protected void onPause() {
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(this);
+        super.onPause();
+    }
+    public void requestUpdatesHandler(View view) {
+        Task<Void> task = mActivityRecognitionClient.requestActivityUpdates(
+                3000,
+                getActivityDetectionPendingIntent());
+        task.addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                updateDetectedActivitiesList();
+            }
+        });
+    }
+
+    private PendingIntent getActivityDetectionPendingIntent() {
+        Intent intent = new Intent(this, ActivityIntentService.class);
+        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+    }
+
+    protected void updateDetectedActivitiesList() {
+        ArrayList<DetectedActivity> detectedActivities = ActivityIntentService.detectedActivitiesFromJson(
+                PreferenceManager.getDefaultSharedPreferences(this)
+                        .getString(DETECTED_ACTIVITY, ""));
+
+        updateActivities(detectedActivities);
+    }
+
+    private void updateActivities(ArrayList<DetectedActivity> detectedActivities) {
+        HashMap<Integer, Integer> detectedActivitiesMap = new HashMap<>();
+        for (DetectedActivity activity : detectedActivities) {
+            detectedActivitiesMap.put(activity.getType(), activity.getConfidence());
+        }
+
+        ArrayList<DetectedActivity> temporaryList = new ArrayList<>();
+        for (int i = 0; i < ActivityIntentService.POSSIBLE_ACTIVITIES.length; i++) {
+            int confidence = detectedActivitiesMap.containsKey(ActivityIntentService.POSSIBLE_ACTIVITIES[i]) ?
+                    detectedActivitiesMap.get(ActivityIntentService.POSSIBLE_ACTIVITIES[i]) : 0;
+
+            temporaryList.add(new DetectedActivity(ActivityIntentService.POSSIBLE_ACTIVITIES[i], confidence));
+        }
+
+        for (DetectedActivity detectedActivity: temporaryList) {
+            Log.e(TAG,detectedActivity.toString());
+            if(detectedActivity.getType() == DetectedActivity.STILL) {
+                Toast.makeText(this, "Still : " + detectedActivity.getConfidence(), Toast.LENGTH_SHORT).show();
+            } else if(detectedActivity.getType() == DetectedActivity.WALKING) {
+                Toast.makeText(this, "Walking : " + detectedActivity.getConfidence(), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        if (s.equals(DETECTED_ACTIVITY)) {
+            updateDetectedActivitiesList();
+        }
+    }*/
 
     //initialises the map
     protected void initMap() {

@@ -26,6 +26,7 @@ public class StepCounter {
             case WALK_OUTSIDE: stepsWalkOutside++; break;
             case RUN_INSIDE: stepsRunInside++; break;
             case RUN_OUTSIDE: stepsRunOutside++; break;
+            default: Log.e(TAG,"Unknown status : " + status);
         }
         stepsTotal = stepsWalkInside + stepsWalkOutside + stepsRunInside + stepsRunOutside;
     }

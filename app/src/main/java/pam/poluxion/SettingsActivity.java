@@ -24,9 +24,8 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import pam.poluxion.data.FirebaseHelper;
+import pam.poluxion.helper.FirebaseHelper;
 import pam.poluxion.data.GeneralClass;
-import pam.poluxion.models.LoginActivity;
 import pam.poluxion.models.User;
 import pam.poluxion.widgets.DotSlider;
 import pam.poluxion.widgets.OnSwipeTouchListener;

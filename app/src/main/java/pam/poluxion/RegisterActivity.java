@@ -1,4 +1,4 @@
-package pam.poluxion.models;
+package pam.poluxion;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,11 +31,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Calendar;
 
-import pam.poluxion.MainActivity;
-import pam.poluxion.R;
-import pam.poluxion.SettingsActivity;
-import pam.poluxion.TrackerActivity;
-import pam.poluxion.data.FirebaseHelper;
+import pam.poluxion.helper.FirebaseHelper;
 import pam.poluxion.data.GeneralClass;
 import pam.poluxion.widgets.OnSwipeTouchListener;
 

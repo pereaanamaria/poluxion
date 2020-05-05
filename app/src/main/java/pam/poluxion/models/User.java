@@ -107,7 +107,7 @@ public class User {
     public void setHeight(double height) {this.height = height;}
     public double getHeight() {return height;}
     
-    void setID(String ID) {
+    public void setID(String ID) {
         this.ID = ID;
     }
 

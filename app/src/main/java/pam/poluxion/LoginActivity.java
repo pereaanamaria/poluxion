@@ -1,4 +1,4 @@
-package pam.poluxion.models;
+package pam.poluxion;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,10 +23,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import pam.poluxion.MainActivity;
-import pam.poluxion.R;
-import pam.poluxion.SettingsActivity;
-import pam.poluxion.TrackerActivity;
 import pam.poluxion.data.GeneralClass;
 import pam.poluxion.widgets.OnSwipeTouchListener;
 

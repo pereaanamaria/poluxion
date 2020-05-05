@@ -11,7 +11,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -21,7 +20,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import pam.poluxion.data.GeneralClass;
-import pam.poluxion.models.LoginActivity;
 import pam.poluxion.models.StepCounter;
 import pam.poluxion.models.User;
 import pam.poluxion.widgets.DotSlider;
