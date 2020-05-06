@@ -113,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:buttonTint="@color/colorPrimaryDark"
-                android:checked="false"
+                android:checked="true"
                 android:text="@string/male"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp" />
@@ -129,6 +129,30 @@
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp" />
         </RadioGroup>
+
+        <EditText
+            android:id="@+id/weightRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:hint="@string/weight"
+            android:inputType="number|numberSigned|numberDecimal"
+            android:textColor="@color/colorPrimaryDark"
+            android:textColorHint="@color/colorPrimary"
+            app:backgroundTint="@color/colorPrimary" />
+
+        <EditText
+            android:id="@+id/heightRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:hint="@string/height"
+            android:inputType="number|numberSigned|numberDecimal"
+            android:textColor="@color/colorPrimaryDark"
+            android:textColorHint="@color/colorPrimary"
+            app:backgroundTint="@color/colorPrimary" />
 
         <EditText
             android:id="@+id/passwordRegister"

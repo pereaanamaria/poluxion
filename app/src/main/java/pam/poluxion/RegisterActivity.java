@@ -40,12 +40,12 @@ public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "SettingsActivity";
 
     private EditText emailET, passwordET, confirmPasswordET;
-    private EditText nameET, lastNameET, dobET;
+    private EditText nameET, lastNameET, dobET, weightET, heightET;
     private RadioButton maleRB, femaleRB;
 
     private FirebaseAuth mAuth;
 
-    private String name, lastName, dob, gender;
+    private String name, lastName, dob, gender, weight, height;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +64,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         nameET = findViewById(R.id.nameRegister);
         lastNameET = findViewById(R.id.lastNameRegister);
+        weightET = findViewById(R.id.weightRegister);
+        heightET = findViewById(R.id.heightRegister);
 
         dobET = findViewById(R.id.birthday);
         getDobET();
@@ -106,6 +108,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         name = nameET.getText().toString();
         lastName = lastNameET.getText().toString();
+        weight = weightET.getText().toString();
+        height = heightET.getText().toString();
         dob = dobET.getText().toString();
 
 
@@ -136,6 +140,16 @@ public class RegisterActivity extends AppCompatActivity {
 
         if(TextUtils.isEmpty(dob)) {
             Toast.makeText(RegisterActivity.this, "Enter date of birth.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(TextUtils.isEmpty(weight)) {
+            Toast.makeText(RegisterActivity.this, "Enter weight.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(TextUtils.isEmpty(height)) {
+            Toast.makeText(RegisterActivity.this, "Enter height.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -174,10 +188,10 @@ public class RegisterActivity extends AppCompatActivity {
                                         GeneralClass.getUserObject().setGender(gender);
                                         firebaseHelper.inputString(firebaseUser.getUid() + "/dob", dob);
                                         GeneralClass.getUserObject().setAge(dob);
-                                        firebaseHelper.inputDouble(firebaseUser.getUid() + "/weight", "65.0");
-                                        GeneralClass.getUserObject().setWeight(65.0);
-                                        firebaseHelper.inputDouble(firebaseUser.getUid() + "/height", "170.0");
-                                        GeneralClass.getUserObject().setHeight(170.0);
+                                        firebaseHelper.inputDouble(firebaseUser.getUid() + "/weight", weight);
+                                        GeneralClass.getUserObject().setWeight(Double.parseDouble(weight));
+                                        firebaseHelper.inputDouble(firebaseUser.getUid() + "/height", height);
+                                        GeneralClass.getUserObject().setHeight(Double.parseDouble(weight));
 
                                         GeneralClass.getUserObject().setID(firebaseUser.getUid());
                                         Log.e(TAG, "Updating... : " + firebaseUser.getUid());

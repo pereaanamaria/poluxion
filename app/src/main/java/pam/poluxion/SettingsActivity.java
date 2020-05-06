@@ -16,6 +16,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -49,7 +51,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        final FirebaseUser firebaseUser = mAuth.getCurrentUser();
         if(firebaseUser != null) {
             Log.e(TAG,"userID = " + firebaseUser.getUid());
             GeneralClass.getUserObject().updateData(firebaseUser.getUid());
@@ -83,6 +85,29 @@ public class SettingsActivity extends AppCompatActivity {
                 Toast.makeText(SettingsActivity.this, "Logged out successfully.", Toast.LENGTH_SHORT).show();
 
                 enterNewActivity(LoginActivity.class);
+            }
+        });
+
+        RadioGroup radioGroup = findViewById(R.id.units);
+        final RadioButton ugm3RB = findViewById(R.id.ugm3);
+        final RadioButton ppbRB = findViewById(R.id.ppb);
+
+        if(GeneralClass.getAirData().getUnitMeasurement().equals("ppb")) {
+            ppbRB.setChecked(true);
+        } else {
+            ugm3RB.setChecked(true);
+        }
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if(ugm3RB.isChecked()) {
+                    GeneralClass.getAirData().setUnitMeasurement("ugm3");
+                }
+                if(ppbRB.isChecked()) {
+                    GeneralClass.getAirData().setUnitMeasurement("ppb");
+                }
             }
         });
 
@@ -230,6 +255,7 @@ public class SettingsActivity extends AppCompatActivity {
                         setHeightListener();
                     }
                 });
+
             }
         }, 500);   //0.5 seconds
     }

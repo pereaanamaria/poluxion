@@ -45,6 +45,7 @@ import pam.poluxion.BuildConfig;
 import pam.poluxion.R;
 import pam.poluxion.data.GeneralClass;
 import pam.poluxion.helper.Splash;
+import pam.poluxion.models.AirData;
 import pam.poluxion.models.StepCounter;
 import pam.poluxion.steps.StepDetector;
 import pam.poluxion.steps.StepListener;
@@ -69,7 +70,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
 
     private StepDetector stepDetector;
     private StepCounter stepCounter = GeneralClass.getStepCounterObject();
-    //private AirData airData = GeneralClass.getAirData();
+    private AirData airData;
 
     private myTransitionReceiver mTransitionsReceiver = new myTransitionReceiver();
 
@@ -81,6 +82,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        airData = GeneralClass.getAirData();
         getSavedData();
         startStepCounting();
         startForeground();
@@ -210,6 +212,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
             } else {
                 saveData();
             }
+            airData.setUnitMeasurement(sharedPreferences.getString("units","ugm3"));
         } else {
             initData();
         }
@@ -225,6 +228,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         editor.putInt("stepWO",stepCounter.getStepsWalkOutside());
         editor.putInt("stepRI",stepCounter.getStepsRunInside());
         editor.putInt("stepRO",stepCounter.getStepsRunOutside());
+        editor.putString("units",airData.getUnitMeasurement());
         editor.apply();
 
         Log.e(TAG,"saveData");

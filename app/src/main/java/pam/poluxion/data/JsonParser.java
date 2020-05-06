@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
@@ -33,9 +34,10 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
     private Map<String, Double> iaqiData = new HashMap<>();
 
     private String urlStr;
+    @SuppressLint("StaticFieldLeak")
     private Button clicked;
 
-    public JsonParser(String urlStr) {
+    JsonParser(String urlStr) {
         this.urlStr = urlStr;
     }
 
@@ -75,7 +77,6 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
                 JSONObject obj = new JSONObject(result.getString("data"));
                 String str = obj.get("aqi").toString();
                 postAQI(str);
-                //Log.e(TAG, "AQI = " + str);
             } catch (Exception e) {
                 Log.e(TAG, "No AQI", e);
             }
@@ -91,7 +92,6 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
                         str = null;
                     }
                     postIAQI(iaqiDataType, str);
-                    //Log.e(TAG, iaqiDataType + " = " + str);
                 } catch (Exception e) {
                     Log.e(TAG, "No " + iaqiDataType);
                 }
@@ -112,8 +112,7 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
                     @Override
                     public void onClick(View v) {
                         MainActivity.measurementTV.setText(iaqiData.get(iaqiType) + " ");
-                        MainActivity.unitsTV.setText(GeneralClass.getAirData().getUnitMeasurement());
-                        //Log.e("IAQI", iaqiType + "btn clicked");
+                        MainActivity.unitsTV.setText(GeneralClass.getAirData().getUnitMeasurement(iaqiType));
                         setButtonNotClicked(clicked);
                         clicked = btn;
                         setButtonClicked(clicked);
@@ -121,7 +120,7 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
                 });
                 if (iaqiType.equals("pm10")) {
                     MainActivity.measurementTV.setText(iaqiData.get(iaqiType) + " ");
-                    MainActivity.unitsTV.setText(GeneralClass.getAirData().getUnitMeasurement());
+                    MainActivity.unitsTV.setText(GeneralClass.getAirData().getUnitMeasurement(iaqiType));
                     clicked = btn;
                     setButtonClicked(clicked);
                 }
@@ -129,8 +128,6 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
                 iaqiData.put(iaqiType, 0.0);
                 MainActivity.btnSlider.removeView(btn);
             }
-            //double valueIaqi = iaqiData.get(iaqiType);
-            //Log.e(TAG, iaqiType + " data set = " + valueIaqi);
         } catch (Exception e) {
             Log.e(TAG, iaqiType + " does not exist.");
         }
@@ -158,10 +155,7 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
         }
 
         double progr = AQI / 3.5;
-        //Log.e(TAG, "Progress unaltered = " + progr);
         progress = 100 - (int) progr;
-        //progress = AQI;
-        //Log.e(TAG, "Progress altered = " + progress);
 
         ProgressAnimation anim = new ProgressAnimation(MainActivity.arcProgressBar, 0, progress);
         anim.setDuration(1000);
@@ -175,7 +169,6 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
     private void postAQI(String aqi) {
         AQI = Integer.parseInt(aqi);
         MainActivity.nrAqiTV.setText(aqi);
-        //Log.e(TAG, "AQI data set = " + AQI);
         getAQIPercentage();
         GeneralClass.getAirData().setAQI(AQI);
     }
@@ -183,17 +176,14 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
     private void postPressure(String pressure) {
         double Pressure = Double.parseDouble(pressure);
         MainActivity.pressureTV.setText(pressure + " ");
-        //Log.e(TAG, "Pressure data set = " + Pressure);
         GeneralClass.getAirData().setPressure(Pressure);
     }
 
     private void postTemperature(String temperature) {
         double temp = Double.parseDouble(temperature);
-        //Log.e(TAG, temp + "");
+        GeneralClass.getAirData().setTemperature(temp);
         int Temperature = (int) Math.floor(temp);
         MainActivity.temperatureTV.setText(Temperature + " ");
-        //Log.e(TAG, "Temperature data set = " + Temperature);
-        GeneralClass.getAirData().setTemperature(Temperature);
     }
 
     private void postIAQI(String iaqiType, String iaqiValue) {

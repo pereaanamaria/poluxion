@@ -174,7 +174,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:gravity="end"
-                                    android:text="@string/mb"
+                                    android:text="@string/hPa"
                                     android:textColor="@color/colorPrimaryDark"
                                     android:textSize="15sp" />
                             </LinearLayout>
@@ -271,7 +271,8 @@
                             style="?android:attr/borderlessButtonStyle"
                             android:layout_width="85dp"
                             android:layout_height="30dp"
-                            android:background="@android:color/transparent"
+                            android:background="@color/colorPrimary"
+                            android:textColor="@color/colorAccent"
                             android:text="@string/pm10"
                             android:textSize="12sp" />
 
@@ -280,7 +281,8 @@
                             style="?android:attr/borderlessButtonStyle"
                             android:layout_width="85dp"
                             android:layout_height="30dp"
-                            android:background="@android:color/transparent"
+                            android:background="@color/colorPrimary"
+                            android:textColor="@color/colorAccent"
                             android:text="@string/pm2_5"
                             android:textSize="12sp" />
 
@@ -289,7 +291,8 @@
                             style="?android:attr/borderlessButtonStyle"
                             android:layout_width="85dp"
                             android:layout_height="30dp"
-                            android:background="@android:color/transparent"
+                            android:background="@color/colorPrimary"
+                            android:textColor="@color/colorAccent"
                             android:text="@string/pm1"
                             android:textSize="12sp" />
 
@@ -298,7 +301,8 @@
                             style="?android:attr/borderlessButtonStyle"
                             android:layout_width="85dp"
                             android:layout_height="30dp"
-                            android:background="@android:color/transparent"
+                            android:background="@color/colorPrimary"
+                            android:textColor="@color/colorAccent"
                             android:text="@string/o3"
                             android:textSize="12sp" />
 
@@ -307,7 +311,8 @@
                             style="?android:attr/borderlessButtonStyle"
                             android:layout_width="85dp"
                             android:layout_height="30dp"
-                            android:background="@android:color/transparent"
+                            android:background="@color/colorPrimary"
+                            android:textColor="@color/colorAccent"
                             android:text="@string/no2"
                             android:textSize="12sp" />
 
@@ -316,7 +321,8 @@
                             style="?android:attr/borderlessButtonStyle"
                             android:layout_width="85dp"
                             android:layout_height="30dp"
-                            android:background="@android:color/transparent"
+                            android:background="@color/colorPrimary"
+                            android:textColor="@color/colorAccent"
                             android:text="@string/so2"
                             android:textSize="12sp" />
 
@@ -325,7 +331,8 @@
                             style="?android:attr/borderlessButtonStyle"
                             android:layout_width="85dp"
                             android:layout_height="30dp"
-                            android:background="@android:color/transparent"
+                            android:background="@color/colorPrimary"
+                            android:textColor="@color/colorAccent"
                             android:text="@string/co2"
                             android:textSize="12sp" />
 
@@ -334,7 +341,8 @@
                             style="?android:attr/borderlessButtonStyle"
                             android:layout_width="85dp"
                             android:layout_height="30dp"
-                            android:background="@android:color/transparent"
+                            android:background="@color/colorPrimary"
+                            android:textColor="@color/colorAccent"
                             android:text="@string/co"
                             android:textSize="12sp" />
 
@@ -343,7 +351,8 @@
                             style="?android:attr/borderlessButtonStyle"
                             android:layout_width="85dp"
                             android:layout_height="30dp"
-                            android:background="@android:color/transparent"
+                            android:background="@color/colorPrimary"
+                            android:textColor="@color/colorAccent"
                             android:text="@string/nh3"
                             android:textSize="12sp" />
 
@@ -352,7 +361,8 @@
                             style="?android:attr/borderlessButtonStyle"
                             android:layout_width="85dp"
                             android:layout_height="30dp"
-                            android:background="@android:color/transparent"
+                            android:background="@color/colorPrimary"
+                            android:textColor="@color/colorAccent"
                             android:text="@string/pb"
                             android:textSize="12sp" />
 
@@ -361,7 +371,8 @@
                             style="?android:attr/borderlessButtonStyle"
                             android:layout_width="85dp"
                             android:layout_height="30dp"
-                            android:background="@android:color/transparent"
+                            android:background="@color/colorPrimary"
+                            android:textColor="@color/colorAccent"
                             android:text="@string/voc"
                             android:textSize="12sp" />
 

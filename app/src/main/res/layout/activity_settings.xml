@@ -155,7 +155,6 @@
                     android:buttonTint="@color/colorPrimaryDark"
                     android:checked="false"
                     android:text="@string/ppb"
-                    android:textAllCaps="true"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="18sp" />
 

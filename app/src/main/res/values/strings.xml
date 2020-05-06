@@ -19,7 +19,7 @@
     <string name="um3"> μg/m³</string>
     <string name="ppb"> ppb</string>
     <string name="C"> °C</string>
-    <string name="mb"> mb</string>
+    <string name="hPa"> hPa</string>
     <string name="activity">activity</string>
     <string name="tracker">tracker</string>
     <string name="total_steps">Total steps</string>
