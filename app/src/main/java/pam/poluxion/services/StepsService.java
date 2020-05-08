@@ -70,7 +70,6 @@ public class StepsService extends Service implements SensorEventListener, StepLi
 
     private StepDetector stepDetector;
     private StepCounter stepCounter = GeneralClass.getStepCounterObject();
-    private AirData airData;
 
     private myTransitionReceiver mTransitionsReceiver = new myTransitionReceiver();
 
@@ -82,8 +81,6 @@ public class StepsService extends Service implements SensorEventListener, StepLi
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        airData = GeneralClass.getAirData();
-        getSavedData();
         startStepCounting();
         startForeground();
         initList();
@@ -95,7 +92,6 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         getSavedData();
         createNotificationChannel();
         displayNotification();
-        //airData = GeneralClass.getAirData();
     }
 
 
@@ -212,26 +208,21 @@ public class StepsService extends Service implements SensorEventListener, StepLi
             } else {
                 saveData();
             }
-            airData.setUnitMeasurement(sharedPreferences.getString("units","ugm3"));
         } else {
             initData();
         }
-        Log.e(TAG,"getSavedData");
     }
 
     private void saveData() {
         SharedPreferences sharedPreferences = getSharedPreferences("myPref",MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
-        editor.putString("date",getCurrentDate());
-        editor.putInt("stepWI",stepCounter.getStepsWalkInside());
-        editor.putInt("stepWO",stepCounter.getStepsWalkOutside());
-        editor.putInt("stepRI",stepCounter.getStepsRunInside());
-        editor.putInt("stepRO",stepCounter.getStepsRunOutside());
-        editor.putString("units",airData.getUnitMeasurement());
+        editor.putString("date", getCurrentDate());
+        editor.putInt("stepWI", stepCounter.getStepsWalkInside());
+        editor.putInt("stepWO", stepCounter.getStepsWalkOutside());
+        editor.putInt("stepRI", stepCounter.getStepsRunInside());
+        editor.putInt("stepRO", stepCounter.getStepsRunOutside());
         editor.apply();
-
-        Log.e(TAG,"saveData");
     }
 
     private void initData() {
@@ -240,6 +231,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         stepCounter.setStepsWalkOutside(0);
         stepCounter.setStepsRunInside(0);
         stepCounter.setStepsRunOutside(0);
+
         saveData();
     }
 

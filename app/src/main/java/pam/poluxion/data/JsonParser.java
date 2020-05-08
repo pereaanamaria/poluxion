@@ -96,22 +96,63 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
                     Log.e(TAG, "No " + iaqiDataType);
                 }
             }
-
-            GeneralClass.getAirData().setPolluants(iaqiData);
         }
     }
 
-    private void iaqiButtonListener(final String iaqiType, String iaqiValue, final Button btn) {
+    private void postAQI(String aqi) {
+        AQI = Integer.parseInt(aqi);
+        MainActivity.nrAqiTV.setText(aqi);
+        getAQIPercentage();
+        GeneralClass.getAirData().setAQI(AQI);
+    }
+
+    private void postPressure(String pressure) {
+        double Pressure = Double.parseDouble(pressure);
+        MainActivity.pressureTV.setText(pressure + " ");
+        GeneralClass.getAirData().setPressure(Pressure);
+    }
+
+    private void postTemperature(String temperature) {
+        double temp = Double.parseDouble(temperature);
+        GeneralClass.getAirData().setTemperature(temp);
+        int Temperature = (int) Math.floor(temp);
+        MainActivity.temperatureTV.setText(Temperature + " ");
+    }
+
+    private void postIAQI(String iaqiType, String iaqiValue) {
+        Button btn = null;
+        switch (iaqiType) {
+            case "pm10": btn = MainActivity.pm10Btn; break;
+            case "pm25": btn = MainActivity.pm25Btn; break;
+            case "pm1": btn = MainActivity.pm1Btn; break;
+            case "no2": btn = MainActivity.no2Btn; break;
+            case "so2": btn = MainActivity.so2Btn; break;
+            case "o3": btn = MainActivity.o3Btn; break;
+            case "co": btn = MainActivity.coBtn; break;
+            case "co2": btn = MainActivity.co2Btn; break;
+            case "nh3": btn = MainActivity.nh3Btn; break;
+            case "pb": btn = MainActivity.pbBtn; break;
+            case "voc": btn = MainActivity.vocBtn; break;
+            case "t": postTemperature(iaqiValue); break;
+            case "p": postPressure(iaqiValue); break;
+            default: Log.e(TAG, "Unknown IAQI");
+        }
+        if (btn != null) {
+            iaqiButtonListener(iaqiType, iaqiValue, btn);
+        }
+    }
+
+    private void iaqiButtonListener(final String iaqiType, final String iaqiValue, final Button btn) {
         try {
             if (iaqiValue != null) {
-                double iaqi = Double.parseDouble(iaqiValue);
+                final double iaqi = Double.parseDouble(iaqiValue);
                 iaqiData.put(iaqiType, iaqi);
                 btn.setVisibility(View.VISIBLE);
                 setButtonNotClicked(btn);
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        MainActivity.measurementTV.setText(iaqiData.get(iaqiType) + " ");
+                        MainActivity.measurementTV.setText(GeneralClass.getAirData().getPolluant(iaqiType, iaqiData.get(iaqiType)) + " ");
                         MainActivity.unitsTV.setText(GeneralClass.getAirData().getUnitMeasurement(iaqiType));
                         setButtonNotClicked(clicked);
                         clicked = btn;
@@ -119,7 +160,7 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
                     }
                 });
                 if (iaqiType.equals("pm10")) {
-                    MainActivity.measurementTV.setText(iaqiData.get(iaqiType) + " ");
+                    MainActivity.measurementTV.setText(GeneralClass.getAirData().getPolluant(iaqiType, iaqiData.get(iaqiType)) + " ");
                     MainActivity.unitsTV.setText(GeneralClass.getAirData().getUnitMeasurement(iaqiType));
                     clicked = btn;
                     setButtonClicked(clicked);
@@ -164,49 +205,6 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
         MainActivity.arcProgressBar.setProgress(progress);
         MainActivity.arcProgressBar.setBottomText(status);
         MainActivity.arcProgressTV.setText(status2);
-    }
-
-    private void postAQI(String aqi) {
-        AQI = Integer.parseInt(aqi);
-        MainActivity.nrAqiTV.setText(aqi);
-        getAQIPercentage();
-        GeneralClass.getAirData().setAQI(AQI);
-    }
-
-    private void postPressure(String pressure) {
-        double Pressure = Double.parseDouble(pressure);
-        MainActivity.pressureTV.setText(pressure + " ");
-        GeneralClass.getAirData().setPressure(Pressure);
-    }
-
-    private void postTemperature(String temperature) {
-        double temp = Double.parseDouble(temperature);
-        GeneralClass.getAirData().setTemperature(temp);
-        int Temperature = (int) Math.floor(temp);
-        MainActivity.temperatureTV.setText(Temperature + " ");
-    }
-
-    private void postIAQI(String iaqiType, String iaqiValue) {
-        Button btn = null;
-        switch (iaqiType) {
-            case "pm10": btn = MainActivity.pm10Btn; break;
-            case "pm25": btn = MainActivity.pm25Btn; break;
-            case "pm1": btn = MainActivity.pm1Btn; break;
-            case "no2": btn = MainActivity.no2Btn; break;
-            case "so2": btn = MainActivity.so2Btn; break;
-            case "o3": btn = MainActivity.o3Btn; break;
-            case "co": btn = MainActivity.coBtn; break;
-            case "co2": btn = MainActivity.co2Btn; break;
-            case "nh3": btn = MainActivity.nh3Btn; break;
-            case "pb": btn = MainActivity.pbBtn; break;
-            case "voc": btn = MainActivity.vocBtn; break;
-            case "t": postTemperature(iaqiValue); break;
-            case "p": postPressure(iaqiValue); break;
-            default: Log.e(TAG, "Unknown IAQI");
-        }
-        if (btn != null) {
-            iaqiButtonListener(iaqiType, iaqiValue, btn);
-        }
     }
 
     private void setButtonClicked(Button btn) {

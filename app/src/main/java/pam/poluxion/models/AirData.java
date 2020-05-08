@@ -1,20 +1,15 @@
 package pam.poluxion.models;
 
-import android.util.Log;
-
 import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.Map;
 
 public class AirData {
 
     private static final String TAG = "AirData";
-    private static final DecimalFormat df2 = new DecimalFormat("#.##");
+    private static final DecimalFormat df1 = new DecimalFormat("#.0");
 
     private int AQI;
     private double pressure, temperature;
-    private Map<String,Double> polluants;
-    private String unitMeasurement;
+    private String unitMeasurement = null;
 
     public void setAQI(int AQI) {this.AQI = AQI;}
     public int getAQI() {return AQI;}
@@ -25,9 +20,7 @@ public class AirData {
     public void setPressure(double pressure) {this.pressure = pressure;}
     public double getPressure() {return pressure;}
 
-    public void setPolluants(Map<String, Double> polluants) {this.polluants = polluants;}
-
-    public String getPolluant(String iaqiType) {
+    public String getPolluant(String iaqiType, double iaqiValue) {
         String finalFormat = "";
         if(unitMeasurement.equals("μg/m³")) {
             switch(iaqiType) {
@@ -38,25 +31,21 @@ public class AirData {
                 case "co2" :
                 case "o3" :
                 case "pb" :
-                    finalFormat = df2.format(fromPpbToUgm3(iaqiType, polluants.get(iaqiType))); break;
-                default : finalFormat = df2.format(polluants.get(iaqiType));
+                    finalFormat = df1.format(fromPpbToUgm3(iaqiType, iaqiValue)); break;
+                default : finalFormat = df1.format(iaqiValue);
             }
         }
         if(unitMeasurement.equals("ppb")) {
-            finalFormat = df2.format(polluants.get(iaqiType));
+            finalFormat = df1.format(iaqiValue);
         }
         return finalFormat;
     }
 
     public void setUnitMeasurement(String unitMeasurement) {
-        try {
-            if (unitMeasurement.equals("ugm3")) {
-                this.unitMeasurement = "μg/m³";
-            } else {
-                this.unitMeasurement = unitMeasurement;
-            }
-        } catch (Exception e) {
+        if (unitMeasurement.equals("ugm3")) {
             this.unitMeasurement = "μg/m³";
+        } else {
+            this.unitMeasurement = unitMeasurement;
         }
     }
 
@@ -71,8 +60,9 @@ public class AirData {
             case "pm1" :
             case "voc" :
                 return "μg/m³";
+            default:
+                return unitMeasurement;
         }
-        return unitMeasurement;
     }
 
     private double fromPpbToUgm3(String iaqiType, double val) {
@@ -88,7 +78,7 @@ public class AirData {
         return (0.082057338 * (273.15 + temperature)) / molarWeight;
     }
 
-    private double getMolarWeight(String M) {
+    public double getMolarWeight(String M) {
         switch (M) {
             case "co" : return 28.0;
             case "o3" : return 48.0;

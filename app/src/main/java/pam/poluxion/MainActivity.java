@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -110,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         createDotSlider();
 
+        getUnits();
+
         //map is requested
         if (isServicesOK()) {
             initMap();
@@ -123,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         startService(new Intent(getApplicationContext(), StepsService.class));
+        Log.e(TAG, "onCreate");
 
     }
 
@@ -189,5 +193,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 enterNewActivity(TrackerActivity.class);
             }
         });
+    }
+
+    private void getUnits() {
+        SharedPreferences sharedPreferences = getSharedPreferences("myPrefUnits",MODE_PRIVATE);
+        String units = sharedPreferences.getString("units","ugm3");
+        if(GeneralClass.getAirData().getUnitMeasurement() == null ) {
+            GeneralClass.getAirData().setUnitMeasurement(units);
+        }
     }
 }
