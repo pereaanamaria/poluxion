@@ -25,12 +25,19 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
 
     private static final String TAG = "JsonParser";
 
+    private static final int GOOD = 0;
+    private static final int MODERATE = 1;
+    private static final int UNHEALTHY_1 = 2;
+    private static final int UNHEALTHY_2 = 3;
+    private static final int VERY_UNHEALTHY = 4;
+    private static final int HAZARDOUS = 5;
+
     private static final int colorAccent = Color.rgb(255,255,255);
     private static final int colorPrimary = Color.rgb(142, 171, 140);
     private static final int colorPrimaryDarker = Color.rgb(75,89,73);
 
     private int AQI;
-    private String[] iaqiDataTypes = {"pm10", "pm1", "pm25", "no2", "so2", "nh3", "co", "co2", "o3", "pb", "voc", "p", "t"};
+    private String[] iaqiDataTypes = {"co", "co2", "nh3", "no2", "o3", "pb", "pm10", "pm25", "pm1", "so2", "voc", "p", "t"};
     private Map<String, Double> iaqiData = new HashMap<>();
 
     private String urlStr;
@@ -96,6 +103,11 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
                     Log.e(TAG, "No " + iaqiDataType);
                 }
             }
+
+            if(iaqiData.size() == 0) {
+                MainActivity.buttonLayout.removeView(MainActivity.measurementTV);
+                MainActivity.buttonLayout.removeView(MainActivity.unitsTV);
+            }
         }
     }
 
@@ -147,6 +159,9 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
             if (iaqiValue != null) {
                 final double iaqi = Double.parseDouble(iaqiValue);
                 iaqiData.put(iaqiType, iaqi);
+                if(iaqiType.equals("pm10") || iaqiType.equals("pm25") || iaqiType.equals("pm1")) {
+                    GeneralClass.getStepCounterObject().setPmConcentration(iaqi);
+                }
                 btn.setVisibility(View.VISIBLE);
                 setButtonNotClicked(btn);
                 btn.setOnClickListener(new View.OnClickListener() {
@@ -159,14 +174,14 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
                         setButtonClicked(clicked);
                     }
                 });
-                if (iaqiType.equals("pm10")) {
+                if (iaqiData.size() == 1) {
+                    MainActivity.buttonLayout.removeView(MainActivity.errorDataTextTV);
                     MainActivity.measurementTV.setText(GeneralClass.getAirData().getPolluant(iaqiType, iaqiData.get(iaqiType)) + " ");
                     MainActivity.unitsTV.setText(GeneralClass.getAirData().getUnitMeasurement(iaqiType));
                     clicked = btn;
                     setButtonClicked(clicked);
                 }
             } else {
-                iaqiData.put(iaqiType, 0.0);
                 MainActivity.btnSlider.removeView(btn);
             }
         } catch (Exception e) {
@@ -179,19 +194,28 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
         int progress;
         if (AQI <= 50) {
             status = "Good";
+            GeneralClass.getAirData().setStatus(GOOD);
         } else if (AQI <= 100) {
             status = "Moderate";
+            GeneralClass.getAirData().setStatus(MODERATE);
         } else if (AQI <= 150) {
             status = "Unhealthy";
-            status2 += "Active children and adults, and people with respiratory disease, such as asthma, should limit prolonged outdoor exertion.";
+            GeneralClass.getAirData().setStatus(UNHEALTHY_1);
+            //status2 += "Active children and adults, and people with respiratory disease, such as asthma, should limit prolonged outdoor exertion.";
+            status2 += "Prolonged running or cycling activities are not advisable.";
         } else if (AQI <= 200) {
             status = "Unhealthy";
-            status2 += "Active children and adults, and people with respiratory disease, such as asthma, should avoid prolonged outdoor exertion.";
+            GeneralClass.getAirData().setStatus(UNHEALTHY_2);
+            //status2 += "Active children and adults, and people with respiratory disease, such as asthma, should avoid prolonged outdoor exertion.";
+            status2 += "Running or cycling activities are not advisable.";
         } else if (AQI <= 300) {
             status = "Very Unhealthy";
-            status2 += "Active children and adults, and people with respiratory disease, such as asthma, should avoid all outdoor exertion.";
+            GeneralClass.getAirData().setStatus(VERY_UNHEALTHY);
+            //status2 += "Active children and adults, and people with respiratory disease, such as asthma, should avoid all outdoor exertion.";
+            status2 += "Outdoor activities are not advisable.";
         } else {
             status = "Hazardous";
+            GeneralClass.getAirData().setStatus(HAZARDOUS);
             status2 += "Everyone should avoid all outdoor exertion.";
         }
 

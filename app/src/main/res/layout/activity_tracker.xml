@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="20sp"
+        android:layout_marginTop="10sp"
         android:layout_marginBottom="15sp"
         android:background="@color/colorAccent"
         android:gravity="center"
@@ -24,7 +24,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/sliderDot"
-        android:layout_margin="25dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
         android:fillViewport="true"
         android:gravity="center"
         android:orientation="vertical"
@@ -60,7 +62,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="30dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -112,35 +114,95 @@
                     android:textSize="30sp" />
             </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="end"
-            android:layout_marginTop="50dp"
-            android:layout_marginBottom="25dp">
-
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/BPI"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="20sp" />
+                android:layout_gravity="center"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="40dp"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/bpi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="30sp" />
+                <pam.poluxion.widgets.ArcProgress
+                    android:id="@+id/exposure_progress"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="start"
+                    custom:arc_bottom_text="Exposure"
+                    custom:arc_progress="0" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/percent"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="20sp" />
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/bpi"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorPrimaryDarker"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/BPI"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="15sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/walkingTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorPrimaryDarker"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/walk_mins"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="15sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/runningTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorPrimaryDarker"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/run_mins"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="15sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -153,8 +215,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="start"
                     android:textColor="@color/colorPrimaryDarker"
-                    android:textStyle="bold"
-                    android:textSize="23sp" />
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -162,7 +224,7 @@
                     android:gravity="start"
                     android:text="@string/walk_inside_bpi"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="18sp" />
+                    android:textSize="15sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -176,8 +238,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="start"
                     android:textColor="@color/colorPrimaryDarker"
-                    android:textStyle="bold"
-                    android:textSize="23sp" />
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -185,7 +247,7 @@
                     android:gravity="start"
                     android:text="@string/walk_outside_bpi"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="18sp" />
+                    android:textSize="15sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -199,8 +261,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="start"
                     android:textColor="@color/colorPrimaryDarker"
-                    android:textStyle="bold"
-                    android:textSize="23sp" />
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -208,9 +270,8 @@
                     android:gravity="start"
                     android:text="@string/run_inside_bpi"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="18sp" />
+                    android:textSize="15sp" />
             </LinearLayout>
-
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -223,8 +284,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="start"
                     android:textColor="@color/colorPrimaryDarker"
-                    android:textStyle="bold"
-                    android:textSize="23sp" />
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -232,9 +293,8 @@
                     android:gravity="start"
                     android:text="@string/run_outside_bpi"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="18sp" />
+                    android:textSize="15sp" />
             </LinearLayout>
-
 
         </LinearLayout>
     </ScrollView>

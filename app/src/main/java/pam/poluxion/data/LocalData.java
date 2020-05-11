@@ -22,6 +22,5 @@ public class LocalData {
         //searchUrl = "https://api.waqi.info/feed/Melbourne/?token="+AqicnApi;
         JsonParser parser = new JsonParser(searchUrl);
         parser.execute();
-        parser = null;
     }
 }

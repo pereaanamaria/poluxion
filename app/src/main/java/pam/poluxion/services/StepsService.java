@@ -45,7 +45,6 @@ import pam.poluxion.BuildConfig;
 import pam.poluxion.R;
 import pam.poluxion.data.GeneralClass;
 import pam.poluxion.helper.Splash;
-import pam.poluxion.models.AirData;
 import pam.poluxion.models.StepCounter;
 import pam.poluxion.steps.StepDetector;
 import pam.poluxion.steps.StepListener;
@@ -165,8 +164,6 @@ public class StepsService extends Service implements SensorEventListener, StepLi
 
             NotificationChannel notificationChannel = new NotificationChannel(NOTIF_CHANNEL_ID,name,importance);
             notificationChannel.setDescription(description);
-            //notificationChannel.enableLights(true);
-            //notificationChannel.setLightColor(Color.WHITE);
 
             NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             assert notificationManager != null;
@@ -180,7 +177,9 @@ public class StepsService extends Service implements SensorEventListener, StepLi
 
     private NotificationCompat.Builder getChannelNotification() {
         Intent resultIntent = new Intent(this, Splash.class);
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 1000, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 1000,
+                resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK),
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
         return new NotificationCompat.Builder(this, NOTIF_CHANNEL_ID)
                 .setContentTitle("You are " + mTransitionsReceiver.getDetectedActivity().toLowerCase())
@@ -341,7 +340,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
                 case DetectedActivity.STILL: return "Still";
                 case DetectedActivity.WALKING: return "Walking";
                 case DetectedActivity.IN_VEHICLE: return "In vehicle";
-                case DetectedActivity.ON_BICYCLE: return "On bicycle";
+                case DetectedActivity.ON_BICYCLE: return "Cycling";
                 case DetectedActivity.RUNNING: return "Running";
                 default: return "Unknown";
             }

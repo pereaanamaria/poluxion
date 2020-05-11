@@ -52,11 +52,10 @@ public class ArcProgress extends View {
     private final float default_bottom_text_size;
     private final float default_stroke_width;
     private final String default_suffix_text;
-    private final int default_max = 100;
+    private final int default_max = 360;
     private final float default_arc_angle = 360 * 0.8f;
     private float default_text_size;
     private final int min_size;
-    private String status;
 
     private static final String INSTANCE_STATE = "saved_instance";
     private static final String INSTANCE_STROKE_WIDTH = "stroke_width";

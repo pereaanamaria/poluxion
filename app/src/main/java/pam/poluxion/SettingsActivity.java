@@ -116,6 +116,12 @@ public class SettingsActivity extends AppCompatActivity {
         start();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
     private void setWeightListener() {
         FirebaseHelper firebaseHelper = GeneralClass.getFirebaseHelperObject();
         FirebaseUser firebaseUser = mAuth.getCurrentUser();

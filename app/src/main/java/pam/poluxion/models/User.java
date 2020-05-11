@@ -10,7 +10,7 @@ import pam.poluxion.data.GeneralClass;
 public class User {
     private static final String TAG = "User";
     private static final double AVERAGE_WALKING_SPEED = 1.3888;  // 5km/h ~= 1.38 m/s
-    private static final DecimalFormat df2 = new DecimalFormat("#.##");
+    private static final DecimalFormat df2 = new DecimalFormat("0.00");
 
     private double weight, height;
     private int age;
@@ -58,7 +58,7 @@ public class User {
         }
 
         double temp = (VEMSt/CVt) * 100.0;
-        return " " + df2.format(temp);
+        return df2.format(temp) + " ";
     }
 
     public void setNameUser(String nameUser) {this.nameUser = nameUser;}

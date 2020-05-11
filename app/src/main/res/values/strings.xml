@@ -50,9 +50,10 @@
     <string name="walk_outside_bpi"> walking steps outside</string>
     <string name="run_inside_bpi"> running steps inside</string>
     <string name="run_outside_bpi"> running steps outside</string>
-    <string name="BPI">BPI : </string>
-    <string name="percent">%</string>
-    <string name="error_text">We are sorry, but the application is not functional at the moment. Please check your internet connection and then restart the application.</string>
+    <string name="walk_mins"> min of walking</string>
+    <string name="run_mins"> min of running</string>
+    <string name="BPI"> % BPI</string>
+    <string name="error_text">Data could not be retrieved correctly. \nUnknown location by the data provider or lack of internet connectivity.</string>
     <string name="exit">Exit</string>
     <string name="cancel">Cancel</string>
     <string name="set">Set</string>

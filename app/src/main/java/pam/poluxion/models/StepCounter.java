@@ -10,7 +10,8 @@ public class StepCounter {
     private static final int RUN_INSIDE = 2;
     private static final int RUN_OUTSIDE = 3;
 
-    private int stepsTotal;
+    private double pmConcentration;
+
     private int stepsWalkInside = 0;
     private int stepsWalkOutside = 0;
     private int stepsRunInside = 0;
@@ -28,39 +29,37 @@ public class StepCounter {
             case RUN_OUTSIDE: stepsRunOutside++; break;
             default: Log.e(TAG,"Unknown status : " + status);
         }
-        stepsTotal = stepsWalkInside + stepsWalkOutside + stepsRunInside + stepsRunOutside;
     }
 
     public int getSteps() {
-        stepsTotal = stepsWalkInside + stepsWalkOutside + stepsRunInside + stepsRunOutside;
-        return stepsTotal;
+        return stepsWalkInside + stepsWalkOutside + stepsRunInside + stepsRunOutside;
     }
 
-    public int getStepsWalkInside() {
-        return stepsWalkInside;
+    public int getWalkMin() {return (stepsWalkInside + stepsWalkOutside) / 100;}
+    public int getRunMin() {return (stepsRunInside + stepsRunOutside) / 150;}
+
+    public void setPmConcentration(double pmConcentration) {this.pmConcentration = pmConcentration;}
+    public double getIntakeDose() {
+        double temp = pmConcentration * getRespiratoryFrequency(WALK_INSIDE) * getWalkMin() +
+                pmConcentration * getRespiratoryFrequency(RUN_INSIDE) * getRunMin();
+        Log.e(TAG, "getIntakeDose : " + temp + " for pm = " + pmConcentration);
+        return temp / 1000;
     }
-    public void setStepsWalkInside(int stepsWalkInside) {
-        this.stepsWalkInside = stepsWalkInside;
+    //breaths per min
+    private int getRespiratoryFrequency(int status) {
+        if(status == WALK_INSIDE || status == WALK_OUTSIDE) {return 25;}
+        else {return 45;}
     }
 
-    public int getStepsWalkOutside() {
-        return stepsWalkOutside;
-    }
-    public void setStepsWalkOutside(int stepsWalkOutside) {
-        this.stepsWalkOutside = stepsWalkOutside;
-    }
+    public int getStepsWalkInside() {return stepsWalkInside;}
+    public void setStepsWalkInside(int stepsWalkInside) {this.stepsWalkInside = stepsWalkInside;}
 
-    public int getStepsRunInside() {
-        return stepsRunInside;
-    }
-    public void setStepsRunInside(int stepsRunInside) {
-        this.stepsRunInside = stepsRunInside;
-    }
+    public int getStepsWalkOutside() {return stepsWalkOutside;}
+    public void setStepsWalkOutside(int stepsWalkOutside) {this.stepsWalkOutside = stepsWalkOutside;}
 
-    public int getStepsRunOutside() {
-        return stepsRunOutside;
-    }
-    public void setStepsRunOutside(int stepsRunOutside) {
-        this.stepsRunOutside = stepsRunOutside;
-    }
+    public int getStepsRunInside() {return stepsRunInside;}
+    public void setStepsRunInside(int stepsRunInside) {this.stepsRunInside = stepsRunInside;}
+
+    public int getStepsRunOutside() {return stepsRunOutside;}
+    public void setStepsRunOutside(int stepsRunOutside) {this.stepsRunOutside = stepsRunOutside;}
 }

@@ -39,12 +39,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int ERROR_DIALOG_REQUEST = 9001;
 
     @SuppressLint("StaticFieldLeak")
-    public static TextView locationTV, temperatureTV, nrAqiTV, pressureTV,arcProgressTV,measurementTV,unitsTV;
+    public static TextView locationTV, temperatureTV, nrAqiTV, pressureTV,arcProgressTV,measurementTV,unitsTV,errorDataTextTV;
     public static ArcProgress arcProgressBar;
     @SuppressLint("StaticFieldLeak")
     public static Button pm10Btn, pm25Btn, pm1Btn, no2Btn, nh3Btn, coBtn, co2Btn, o3Btn, so2Btn, vocBtn, pbBtn;
     @SuppressLint("StaticFieldLeak")
-    public static LinearLayout all, btnSlider, sliderDots;
+    public static LinearLayout all, btnSlider, sliderDots, buttonLayout;
     @SuppressLint("StaticFieldLeak")
     public static ScrollView mainScroll;
     @SuppressLint("StaticFieldLeak")
@@ -72,7 +72,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         addSwipe(all);
         addSwipe(sliderDots);
 
-        addSwipe(findViewById(R.id.buttonLayout));
+        buttonLayout = findViewById(R.id.buttonLayout);
+        addSwipe(buttonLayout);
         addSwipe(findViewById(R.id.headerLayout));
         addSwipe(findViewById(R.id.nameLayout));
         addSwipe(findViewById(R.id.dataLayout));
@@ -87,11 +88,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         pressureTV = findViewById(R.id.pressure);
         measurementTV = findViewById(R.id.measurement);
         unitsTV = findViewById(R.id.units);
+        errorDataTextTV = findViewById(R.id.errorDataText);
 
         addSwipe(measurementTV);
         addSwipe(unitsTV);
+        addSwipe(errorDataTextTV);
 
         arcProgressBar = findViewById(R.id.arc_progress);
+        arcProgressBar.setMax(100);
         arcProgressTV = findViewById(R.id.arc_progressTV);
 
         addSwipe(arcProgressBar);
@@ -128,6 +132,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         startService(new Intent(getApplicationContext(), StepsService.class));
         Log.e(TAG, "onCreate");
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
     }
 
     //initialises the map

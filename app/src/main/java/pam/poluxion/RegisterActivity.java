@@ -101,6 +101,12 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
     private void createNewAccount() {
         String email = emailET.getText().toString();
         String password = passwordET.getText().toString();
