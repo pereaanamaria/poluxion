@@ -82,7 +82,7 @@ public class TrackerActivity extends AppCompatActivity implements SensorEventLis
 
 
         exposureArc = findViewById(R.id.exposure_progress);
-        exposureArc.setMax(100);
+        exposureArc.setMax(10);
 
         double progress = GeneralClass.getStepCounterObject().getIntakeDose();
         int progressInt = (int) Math.floor(progress);
