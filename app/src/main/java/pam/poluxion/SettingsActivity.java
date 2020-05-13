@@ -169,13 +169,8 @@ public class SettingsActivity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     private void addSwipe(View view) {
         view.setOnTouchListener(new OnSwipeTouchListener(SettingsActivity.this) {
-            public void onSwipeRight() {
-                enterNewActivity(TrackerActivity.class);
-            }
-
-            public void onSwipeLeft() {
-                enterNewActivity(MainActivity.class);
-            }
+            public void onSwipeRight() {enterNewActivity(TrackerActivity.class);}
+            public void onSwipeLeft() {enterNewActivity(MainActivity.class);}
         });
     }
 

@@ -38,6 +38,12 @@
             android:exported="true"
             android:permission="TODO"
             tools:ignore="ExportedService" />
+        <service
+            android:name=".services.LocationService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="TODO"
+            tools:ignore="ExportedService" />
 
         <activity
             android:name=".helper.Splash"

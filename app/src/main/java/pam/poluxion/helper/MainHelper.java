@@ -47,9 +47,7 @@ public class MainHelper extends MainActivity {
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
 
     private static final float DEFAULT_ZOOM = 15f;
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
 
-    private boolean mLocationPermissionGranted = false;   //location permission flag (false by default)
     private GoogleMap mMap;
     private LatLng current;    //current position of the device
 
@@ -65,7 +63,6 @@ public class MainHelper extends MainActivity {
 
         getLocationPermission();
     }
-
 
     //gets the current position of the device
     private void getDeviceLocation() {
@@ -135,16 +132,14 @@ public class MainHelper extends MainActivity {
 
             Address obj = addresses.get(0);
             String add;
-            if(obj.getLocality() != null) {
+            if (obj.getLocality() != null) {
                 add = obj.getLocality() + ", " + obj.getCountryName();
                 LocalData localData = new LocalData(obj.getLocality());
             } else {
                 add = obj.getAdminArea() + ", " + obj.getCountryName();
                 LocalData localData = new LocalData(obj.getAdminArea());
             }
-
-            Log.e("IGA", "Address : " + obj);
-
+            //Log.e("IGA", "Address : " + obj);
             MainActivity.locationTV.setText(add);
         } catch (IOException e) {
             e.printStackTrace();
@@ -227,37 +222,16 @@ public class MainHelper extends MainActivity {
         String[] permissions = {FINE_LOCATION, COARSE_LOCATION};
 
         Log.d(TAG, "getLocationPermissions: Getting location permissions");
-        if (ContextCompat.checkSelfPermission(context.getApplicationContext(),
-                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {   //checks if FINE_LOCATION permission was granted
-            if (ContextCompat.checkSelfPermission(context.getApplicationContext(),
-                    COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {   //checks if COARSE_LOCATION permission was granted
+        if (ContextCompat.checkSelfPermission(context.getApplicationContext(),FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {   //checks if FINE_LOCATION permission was granted
+            if (ContextCompat.checkSelfPermission(context.getApplicationContext(),COARSE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {   //checks if COARSE_LOCATION permission was granted
                 mLocationPermissionGranted = true;    //sets the flag
             } else {
-                ActivityCompat.requestPermissions(activity, permissions, LOCATION_PERMISSION_REQUEST_CODE);
+                ActivityCompat.requestPermissions(activity, permissions, PERMISSION_ACCESS_COARSE_LOCATION);
             }
         } else {
-            ActivityCompat.requestPermissions(activity, permissions, LOCATION_PERMISSION_REQUEST_CODE);
-        }
-    }
-
-    //requests permission to access LOCATION
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.d(TAG, "onRequestPermissionResult: Called");
-
-        mLocationPermissionGranted = false;
-
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0) {
-                for (int grantResult : grantResults) {
-                    if (grantResult != PackageManager.PERMISSION_GRANTED) {
-                        Log.d(TAG, "onRequestPermissionResult: Permission failed");
-                        return;
-                    }
-                }
-                mLocationPermissionGranted = true;
-                Log.d(TAG, "onRequestPermissionResult: Permission granted");
-                //initMap();
-            }
+            ActivityCompat.requestPermissions(activity, permissions, PERMISSION_ACCESS_FINE_LOCATION);
         }
     }
 }

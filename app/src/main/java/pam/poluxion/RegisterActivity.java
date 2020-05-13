@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Calendar;
+import java.util.Objects;
 
 import pam.poluxion.helper.FirebaseHelper;
 import pam.poluxion.data.GeneralClass;
@@ -238,7 +239,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                 DatePickerDialog dialog = new DatePickerDialog(RegisterActivity.this,
                         android.R.style.Theme_Holo_Light_Dialog_MinWidth, date, year,month,day);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialog.show();
             }
         });
@@ -247,12 +248,8 @@ public class RegisterActivity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     private void addSwipe(View view) {
         view.setOnTouchListener(new OnSwipeTouchListener(RegisterActivity.this) {
-            public void onSwipeRight() {
-                enterNewActivity(TrackerActivity.class);
-            }
-            public void onSwipeLeft() {
-                enterNewActivity(MainActivity.class);
-            }
+            public void onSwipeRight() {enterNewActivity(TrackerActivity.class);}
+            public void onSwipeLeft() {enterNewActivity(MainActivity.class);}
         });
     }
 

@@ -13,15 +13,8 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 
-import pam.poluxion.widgets.Utils;
-
-import java.text.DecimalFormat;
-
 import pam.poluxion.R;
 
-/**
- * Created by bruce on 11/6/14.
- */
 public class ArcProgress extends View {
     private Paint paint;
     protected Paint textPaint;
@@ -52,8 +45,6 @@ public class ArcProgress extends View {
     private final float default_bottom_text_size;
     private final float default_stroke_width;
     private final String default_suffix_text;
-    private final int default_max = 360;
-    private final float default_arc_angle = 360 * 0.8f;
     private float default_text_size;
     private final int min_size;
 
@@ -72,14 +63,8 @@ public class ArcProgress extends View {
     private static final String INSTANCE_ARC_ANGLE = "arc_angle";
     private static final String INSTANCE_SUFFIX = "suffix";
 
-    public ArcProgress(Context context) {
-        this(context, null);
-    }
-
-    public ArcProgress(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
+    public ArcProgress(Context context) {this(context, null);}
+    public ArcProgress(Context context, AttributeSet attrs) {this(context, attrs, 0);}
     public ArcProgress(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
@@ -104,7 +89,9 @@ public class ArcProgress extends View {
         textColor = attributes.getColor(R.styleable.ArcProgress_arc_text_color, default_text_color);
         unfinishedStrokeColor = attributes.getColor(R.styleable.ArcProgress_arc_unfinished_color, default_unfinished_color);
         textSize = attributes.getDimension(R.styleable.ArcProgress_arc_text_size, default_text_size);
+        float default_arc_angle = 360 * 0.8f;
         arcAngle = attributes.getFloat(R.styleable.ArcProgress_arc_angle, default_arc_angle);
+        int default_max = 360;
         setMax(attributes.getInt(R.styleable.ArcProgress_arc_max, default_max));
         setProgress(attributes.getInt(R.styleable.ArcProgress_arc_progress, 0));
         strokeWidth = attributes.getDimension(R.styleable.ArcProgress_arc_stroke_width, default_stroke_width);
@@ -135,39 +122,26 @@ public class ArcProgress extends View {
         super.invalidate();
     }
 
-    public float getStrokeWidth() {
-        return strokeWidth;
-    }
-
+    public float getStrokeWidth() {return strokeWidth;}
     public void setStrokeWidth(float strokeWidth) {
         this.strokeWidth = strokeWidth;
         this.invalidate();
     }
 
-    public float getSuffixTextSize() {
-        return suffixTextSize;
-    }
-
+    public float getSuffixTextSize() {return suffixTextSize;}
     public void setSuffixTextSize(float suffixTextSize) {
         this.suffixTextSize = suffixTextSize;
         this.invalidate();
     }
 
-    public String getBottomText() {
-        return bottomText;
-    }
-
+    public String getBottomText() {return bottomText;}
     public void setBottomText(String bottomText) {
         this.bottomText = bottomText;
         this.invalidate();
     }
 
-    public int getProgress() {
-        return progress;
-    }
-
+    public int getProgress() {return progress;}
     public void setProgress(int progress) {
-        //this.progress = Float.valueOf(new DecimalFormat("#").format(progress));
         this.progress = progress;
         if (this.progress > getMax()) {
             this.progress %= getMax();
@@ -175,10 +149,7 @@ public class ArcProgress extends View {
         invalidate();
     }
 
-    public int getMax() {
-        return max;
-    }
-
+    public int getMax() {return max;}
     public void setMax(int max) {
         if (max > 0) {
             this.max = max;
@@ -186,87 +157,58 @@ public class ArcProgress extends View {
         }
     }
 
-    public float getBottomTextSize() {
-        return bottomTextSize;
-    }
-
+    public float getBottomTextSize() {return bottomTextSize;}
     public void setBottomTextSize(float bottomTextSize) {
         this.bottomTextSize = bottomTextSize;
         this.invalidate();
     }
 
-    public float getTextSize() {
-        return textSize;
-    }
-
+    public float getTextSize() {return textSize;}
     public void setTextSize(float textSize) {
         this.textSize = textSize;
         this.invalidate();
     }
 
-    public int getTextColor() {
-        return textColor;
-    }
-
+    public int getTextColor() {return textColor;}
     public void setTextColor(int textColor) {
         this.textColor = textColor;
         this.invalidate();
     }
 
-    public int getFinishedStrokeColor() {
-        return finishedStrokeColor;
-    }
-
+    public int getFinishedStrokeColor() {return finishedStrokeColor;}
     public void setFinishedStrokeColor(int finishedStrokeColor) {
         this.finishedStrokeColor = finishedStrokeColor;
         this.invalidate();
     }
 
-    public int getUnfinishedStrokeColor() {
-        return unfinishedStrokeColor;
-    }
-
+    public int getUnfinishedStrokeColor() {return unfinishedStrokeColor;}
     public void setUnfinishedStrokeColor(int unfinishedStrokeColor) {
         this.unfinishedStrokeColor = unfinishedStrokeColor;
         this.invalidate();
     }
 
-    public float getArcAngle() {
-        return arcAngle;
-    }
-
+    public float getArcAngle() {return arcAngle;}
     public void setArcAngle(float arcAngle) {
         this.arcAngle = arcAngle;
         this.invalidate();
     }
 
-    public String getSuffixText() {
-        return suffixText;
-    }
-
+    public String getSuffixText() {return suffixText;}
     public void setSuffixText(String suffixText) {
         this.suffixText = suffixText;
         this.invalidate();
     }
 
-    public float getSuffixTextPadding() {
-        return suffixTextPadding;
-    }
-
+    public float getSuffixTextPadding() {return suffixTextPadding;}
     public void setSuffixTextPadding(float suffixTextPadding) {
         this.suffixTextPadding = suffixTextPadding;
         this.invalidate();
     }
 
     @Override
-    protected int getSuggestedMinimumHeight() {
-        return min_size;
-    }
-
+    protected int getSuggestedMinimumHeight() {return min_size;}
     @Override
-    protected int getSuggestedMinimumWidth() {
-        return min_size;
-    }
+    protected int getSuggestedMinimumWidth() {return min_size;}
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {

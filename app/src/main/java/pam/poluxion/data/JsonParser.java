@@ -25,13 +25,6 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
 
     private static final String TAG = "JsonParser";
 
-    private static final int GOOD = 0;
-    private static final int MODERATE = 1;
-    private static final int UNHEALTHY_1 = 2;
-    private static final int UNHEALTHY_2 = 3;
-    private static final int VERY_UNHEALTHY = 4;
-    private static final int HAZARDOUS = 5;
-
     private static final int colorAccent = Color.rgb(255,255,255);
     private static final int colorPrimary = Color.rgb(142, 171, 140);
     private static final int colorPrimaryDarker = Color.rgb(75,89,73);
@@ -154,13 +147,26 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
         }
     }
 
-    private void iaqiButtonListener(final String iaqiType, final String iaqiValue, final Button btn) {
+    private void iaqiButtonListener(final String iaqiType, String iaqiValue, final Button btn) {
         try {
+            if(GeneralClass.getStepCounterObject().isIndoor()) {
+                if (iaqiType.equals("pm25")) {
+                    iaqiValue = "8.7"; //average indoor ug/m3 concentration
+                }
+                if (iaqiType.equals("no2")) {
+                    iaqiValue = "10.2"; //average indoor ug/m3 concentration
+                }
+            }
             if (iaqiValue != null) {
                 final double iaqi = Double.parseDouble(iaqiValue);
-                iaqiData.put(iaqiType, iaqi);
                 if(iaqiType.equals("pm10") || iaqiType.equals("pm25") || iaqiType.equals("pm1")) {
                     GeneralClass.getStepCounterObject().setPmConcentration(iaqi);
+                }
+                if(GeneralClass.getStepCounterObject().isIndoor() && iaqiType.equals("no2")) {
+                    double value = GeneralClass.getAirData().fromUgm3ToPpb("no2",iaqi);
+                    iaqiData.put(iaqiType, value);
+                } else {
+                    iaqiData.put(iaqiType, iaqi);
                 }
                 btn.setVisibility(View.VISIBLE);
                 setButtonNotClicked(btn);
@@ -194,28 +200,19 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
         int progress;
         if (AQI <= 50) {
             status = "Good";
-            GeneralClass.getAirData().setStatus(GOOD);
         } else if (AQI <= 100) {
             status = "Moderate";
-            GeneralClass.getAirData().setStatus(MODERATE);
         } else if (AQI <= 150) {
             status = "Unhealthy";
-            GeneralClass.getAirData().setStatus(UNHEALTHY_1);
-            //status2 += "Active children and adults, and people with respiratory disease, such as asthma, should limit prolonged outdoor exertion.";
-            status2 += "Prolonged running or cycling activities are not advisable.";
+            status2 += "Active children and adults, and people with respiratory disease, such as asthma, should limit prolonged outdoor exertion.";
         } else if (AQI <= 200) {
             status = "Unhealthy";
-            GeneralClass.getAirData().setStatus(UNHEALTHY_2);
-            //status2 += "Active children and adults, and people with respiratory disease, such as asthma, should avoid prolonged outdoor exertion.";
-            status2 += "Running or cycling activities are not advisable.";
+            status2 += "Active children and adults, and people with respiratory disease, such as asthma, should avoid prolonged outdoor exertion.";
         } else if (AQI <= 300) {
             status = "Very Unhealthy";
-            GeneralClass.getAirData().setStatus(VERY_UNHEALTHY);
-            //status2 += "Active children and adults, and people with respiratory disease, such as asthma, should avoid all outdoor exertion.";
-            status2 += "Outdoor activities are not advisable.";
+            status2 += "Active children and adults, and people with respiratory disease, such as asthma, should avoid all outdoor exertion.";
         } else {
             status = "Hazardous";
-            GeneralClass.getAirData().setStatus(HAZARDOUS);
             status2 += "Everyone should avoid all outdoor exertion.";
         }
 

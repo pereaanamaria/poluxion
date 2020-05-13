@@ -17,6 +17,8 @@ public class StepCounter {
     private int stepsRunInside = 0;
     private int stepsRunOutside = 0;
 
+    private boolean indoor = true;
+
     public StepCounter() {
         Log.e(TAG,"Successfully created");
     }
@@ -40,15 +42,9 @@ public class StepCounter {
 
     public void setPmConcentration(double pmConcentration) {this.pmConcentration = pmConcentration;}
     public double getIntakeDose() {
-        double temp = pmConcentration * getRespiratoryFrequency(WALK_INSIDE) * getWalkMin() +
-                pmConcentration * getRespiratoryFrequency(RUN_INSIDE) * getRunMin();
-        Log.e(TAG, "getIntakeDose : " + temp + " for pm = " + pmConcentration);
+        double temp = 25 * (pmConcentration * stepsWalkOutside + 8.7 * stepsWalkInside) / 100 +
+                45 * (pmConcentration * stepsRunOutside + 8.7 * stepsRunInside) / 150;
         return temp / 1000;
-    }
-    //breaths per min
-    private int getRespiratoryFrequency(int status) {
-        if(status == WALK_INSIDE || status == WALK_OUTSIDE) {return 25;}
-        else {return 45;}
     }
 
     public int getStepsWalkInside() {return stepsWalkInside;}
@@ -62,4 +58,7 @@ public class StepCounter {
 
     public int getStepsRunOutside() {return stepsRunOutside;}
     public void setStepsRunOutside(int stepsRunOutside) {this.stepsRunOutside = stepsRunOutside;}
+
+    public boolean isIndoor() {return indoor;}
+    public void setIndoor(boolean indoor) {this.indoor = indoor;}
 }

@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -33,13 +34,18 @@ import pam.poluxion.widgets.ArcProgress;
 import pam.poluxion.widgets.DotSlider;
 import pam.poluxion.widgets.OnSwipeTouchListener;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String TAG = "MainActivity";
     private static final int ERROR_DIALOG_REQUEST = 9001;
 
+    protected final static int PERMISSION_ACCESS_COARSE_LOCATION = 1;
+    protected final static int PERMISSION_ACCESS_FINE_LOCATION = 2;
+
+    protected boolean mLocationPermissionGranted = false;   //location permission flag (false by default)
+
     @SuppressLint("StaticFieldLeak")
-    public static TextView locationTV, temperatureTV, nrAqiTV, pressureTV,arcProgressTV,measurementTV,unitsTV,errorDataTextTV;
+    public static TextView locationTV, temperatureTV, nrAqiTV, pressureTV, arcProgressTV, measurementTV, unitsTV, errorDataTextTV;
     public static ArcProgress arcProgressBar;
     @SuppressLint("StaticFieldLeak")
     public static Button pm10Btn, pm25Btn, pm1Btn, no2Btn, nh3Btn, coBtn, co2Btn, o3Btn, so2Btn, vocBtn, pbBtn;
@@ -80,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         addSwipe(findViewById(R.id.divider1));
         addSwipe(findViewById(R.id.divider2));
 
-        mainHelper = new MainHelper(this,this, getIntent());
+        mainHelper = new MainHelper(this, this, getIntent());
 
         locationTV = findViewById(R.id.location);
         temperatureTV = findViewById(R.id.temperature);
@@ -125,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Initialize Firebase Auth
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
-        if(firebaseUser != null) {
+        if (firebaseUser != null) {
             GeneralClass.getUserObject().updateData(firebaseUser.getUid());
         }
 
@@ -144,16 +150,31 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void initMap() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         Log.d(TAG, "initMap: Initializing map");
+        assert mapFragment != null;
         mapFragment.getMapAsync(MainActivity.this);
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {mainHelper.onMapReady(googleMap);}
-
+    public void onMapReady(GoogleMap googleMap) {
+        mainHelper.onMapReady(googleMap);
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        mainHelper.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        switch (requestCode) {
+            case PERMISSION_ACCESS_COARSE_LOCATION:
+            case PERMISSION_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+            }
+        }
     }
 
     //Google services are being checked in order to make map requests
@@ -186,29 +207,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int width = displayMetrics.widthPixels;
 
-        new DotSlider(this,width,sliderDots,1);
+        new DotSlider(this, width, sliderDots, 1);
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void addSwipe(View view) {
         view.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
             public void onSwipeRight() {
-                if(firebaseUser != null) {
+                if (firebaseUser != null) {
                     enterNewActivity(SettingsActivity.class);
                 } else {
                     enterNewActivity(LoginActivity.class);
                 }
             }
-            public void onSwipeLeft() {
-                enterNewActivity(TrackerActivity.class);
-            }
+            public void onSwipeLeft() {enterNewActivity(TrackerActivity.class);}
         });
     }
 
     private void getUnits() {
-        SharedPreferences sharedPreferences = getSharedPreferences("myPrefUnits",MODE_PRIVATE);
-        String units = sharedPreferences.getString("units","ugm3");
-        if(GeneralClass.getAirData().getUnitMeasurement() == null ) {
+        SharedPreferences sharedPreferences = getSharedPreferences("myPrefUnits", MODE_PRIVATE);
+        String units = sharedPreferences.getString("units", "ugm3");
+        if (GeneralClass.getAirData().getUnitMeasurement() == null) {
             GeneralClass.getAirData().setUnitMeasurement(units);
         }
     }

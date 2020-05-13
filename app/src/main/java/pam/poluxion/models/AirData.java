@@ -6,17 +6,9 @@ public class AirData {
     private static final String TAG = "AirData";
     private static final DecimalFormat df1 = new DecimalFormat("0.0");
 
-    private static final int GOOD = 0;
-    private static final int MODERATE = 1;
-    private static final int UNHEALTHY_1 = 2;
-    private static final int UNHEALTHY_2 = 3;
-    private static final int VERY_UNHEALTHY = 4;
-    private static final int HAZARDOUS = 5;
-
     private int AQI;
     private double pressure, temperature;
     private String unitMeasurement = null;
-    private int status;
 
     public void setAQI(int AQI) {this.AQI = AQI;}
     public int getAQI() {return AQI;}
@@ -56,8 +48,6 @@ public class AirData {
         }
     }
 
-    public void setStatus(int status) {this.status = status;}
-
     public String getUnitMeasurement() {return unitMeasurement;}
     public String getUnitMeasurement(String iaqiType) {
         switch(iaqiType) {
@@ -72,7 +62,7 @@ public class AirData {
     }
 
     private double fromPpbToUgm3(String iaqiType, double val) {return val / getConstant(iaqiType);}
-    private double fromUgm3ToPpb(String iaqiType, double val) {return val * getConstant(iaqiType);}
+    public double fromUgm3ToPpb(String iaqiType, double val) {return val * getConstant(iaqiType);}
 
     private double getConstant(String M) {
         double molarWeight = getMolarWeight(M);
@@ -82,11 +72,11 @@ public class AirData {
     private double getMolarWeight(String M) {
         switch (M) {
             case "co" : return 28.0;
+            case "co2" : return 44.0;
+            case "nh3" : return 17.0;
+            case "no2" : return 46.0;
             case "o3" : return 48.0;
             case "so2" : return 64.0;
-            case "no2" : return 46.0;
-            case "nh3" : return 17.0;
-            case "co2" : return 44.0;
             case "pb" : return 207.0;
         }
         return -1.0;

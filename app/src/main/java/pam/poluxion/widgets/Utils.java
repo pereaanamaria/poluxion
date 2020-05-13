@@ -2,18 +2,16 @@ package pam.poluxion.widgets;
 
 import android.content.res.Resources;
 
+final class Utils {
 
-public final class Utils {
+    private Utils() {}
 
-    private Utils() {
-    }
-
-    public static float dp2px(Resources resources, float dp) {
+    static float dp2px(Resources resources, float dp) {
         final float scale = resources.getDisplayMetrics().density;
         return  dp * scale + 0.5f;
     }
 
-    public static float sp2px(Resources resources, float sp){
+    static float sp2px(Resources resources, float sp){
         final float scale = resources.getDisplayMetrics().scaledDensity;
         return sp * scale;
     }

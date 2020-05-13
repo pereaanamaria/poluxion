@@ -1,7 +1,6 @@
 package pam.poluxion.widgets;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;

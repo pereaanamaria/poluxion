@@ -1,15 +1,13 @@
 package pam.poluxion.steps;
 
 public class SensorFilter {
-
-    private SensorFilter() {
-    }
+    private SensorFilter() {}
 
     //sums x,y,z coordinates
-    public static float sum(float[] array) {
+    static float sum(float[] array) {
         float retval = 0;
-        for (int i = 0; i < array.length; i++) {
-            retval += array[i];
+        for (float v : array) {
+            retval += v;
         }
         return retval;
     }
@@ -24,19 +22,17 @@ public class SensorFilter {
     }
 
     //normalization of the vector
-    public static float norm(float[] array) {
+    static float norm(float[] array) {
         float retval = 0;
-        for (int i = 0; i < array.length; i++) {
-            retval += array[i] * array[i];
+        for (float v : array) {
+            retval += v * v;
         }
         return (float) Math.sqrt(retval);
     }
 
-
     //finds the intersection of the coordinates
-    public static float dot(float[] a, float[] b) {
-        float retval = a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-        return retval;
+    static float dot(float[] a, float[] b) {
+        return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
     }
 
     //normalization formula
@@ -48,5 +44,4 @@ public class SensorFilter {
         }
         return retval;
     }
-
 }

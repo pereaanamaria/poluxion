@@ -31,7 +31,7 @@ import pam.poluxion.widgets.ProgressAnimation;
 
 public class TrackerActivity extends AppCompatActivity implements SensorEventListener{
     private static final String TAG = "TrackerActivity";
-    private static final DecimalFormat df3 = new DecimalFormat("#.000");
+    private static final DecimalFormat df3 = new DecimalFormat("#.000 l");
 
     private LinearLayout sliderDots;
     private TextView walkIn, walkOut, runIn, runOut, total;
@@ -41,8 +41,7 @@ public class TrackerActivity extends AppCompatActivity implements SensorEventLis
     private User user = GeneralClass.getUserObject();
 
     private FirebaseUser firebaseUser;
-
-    private int progress = (int) stepCounter.getIntakeDose();
+    private ArcProgress exposureArc;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -80,6 +79,20 @@ public class TrackerActivity extends AppCompatActivity implements SensorEventLis
         bpi = findViewById(R.id.bpi);
         kms = findViewById(R.id.km);
         cals = findViewById(R.id.cal);
+
+
+        exposureArc = findViewById(R.id.exposure_progress);
+        exposureArc.setMax(100);
+
+        double progress = GeneralClass.getStepCounterObject().getIntakeDose();
+        int progressInt = (int) Math.floor(progress);
+        double decimals = progress - Math.floor(progress);
+
+        ProgressAnimation anim = new ProgressAnimation(exposureArc, 0, progressInt);
+        anim.setDuration(500);
+        exposureArc.startAnimation(anim);
+        exposureArc.setSuffixText(df3.format(decimals));
+        exposureArc.setProgress(progressInt);
 
         displayInfo();
     }
@@ -125,24 +138,17 @@ public class TrackerActivity extends AppCompatActivity implements SensorEventLis
         cals.setText(user.getCals());
         bpi.setText(user.getBPI());
 
-        ArcProgress exposureArc = findViewById(R.id.exposure_progress);
-        exposureArc.setMax(100);
-        double decimals = stepCounter.getIntakeDose() - (double) progress;
+        double progress = GeneralClass.getStepCounterObject().getIntakeDose();
+        int progressInt = (int) Math.floor(progress);
+        double decimals = progress - Math.floor(progress);
         exposureArc.setSuffixText(df3.format(decimals));
-
-        ProgressAnimation anim = new ProgressAnimation(exposureArc, 0, progress);
-        anim.setDuration(1000);
-        exposureArc.startAnimation(anim);
-
-        exposureArc.setProgress(progress);
+        exposureArc.setProgress(progressInt);
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void addSwipe(View view) {
         view.setOnTouchListener(new OnSwipeTouchListener(TrackerActivity.this) {
-            public void onSwipeRight() {
-                enterNewActivity(MainActivity.class);
-            }
+            public void onSwipeRight() {enterNewActivity(MainActivity.class);}
             public void onSwipeLeft() {
                 if(firebaseUser != null) {
                     enterNewActivity(SettingsActivity.class);
