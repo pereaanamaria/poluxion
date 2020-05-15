@@ -137,6 +137,7 @@ public class MainHelper extends MainActivity {
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+            getDeviceLocation();
         }
     }
 

@@ -48,6 +48,14 @@ public class FirebaseHelper {
         Log.e(TAG, "Successfully created");
     }
 
+    public void inputInt(String child, int value) {
+        myRef.child(child).setValue(value);
+    }
+
+    public void inputDouble(String child, double value) {
+        myRef.child(child).setValue(value);
+    }
+
     public void inputDouble(String child, String value) {
         double temp = Double.parseDouble(value);
         myRef.child(child).setValue(temp);

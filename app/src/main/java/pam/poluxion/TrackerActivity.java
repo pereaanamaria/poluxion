@@ -71,18 +71,29 @@ public class TrackerActivity extends AppCompatActivity implements SensorEventLis
         walkOut = findViewById(R.id.walkingOutside);
         runIn = findViewById(R.id.runningInside);
         runOut = findViewById(R.id.runningOutside);
+        addSwipe(walkIn);
+        addSwipe(walkOut);
+        addSwipe(runIn);
+        addSwipe(runOut);
 
         walkMins = findViewById(R.id.walkingTime);
         runMins = findViewById(R.id.runningTime);
+        addSwipe(walkMins);
+        addSwipe(runMins);
 
         total = findViewById(R.id.totalSteps);
         bpi = findViewById(R.id.bpi);
         kms = findViewById(R.id.km);
         cals = findViewById(R.id.cal);
+        addSwipe(total);
+        addSwipe(bpi);
+        addSwipe(kms);
+        addSwipe(cals);
 
 
         exposureArc = findViewById(R.id.exposure_progress);
         exposureArc.setMax(100);
+        addSwipe(exposureArc);
 
         double progress = GeneralClass.getStepCounterObject().getIntakeDose();
         int progressInt = (int) Math.floor(progress);

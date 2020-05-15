@@ -81,6 +81,7 @@ public class SettingsActivity extends AppCompatActivity {
                 user.setWeight(170.0);
                 user.setGender("male");
                 user.setAge(30);
+                user.setID("0_Unknown user");
 
                 mAuth.signOut();
                 Toast.makeText(SettingsActivity.this, "Logged out successfully.", Toast.LENGTH_SHORT).show();

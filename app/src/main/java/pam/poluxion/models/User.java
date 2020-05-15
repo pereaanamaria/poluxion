@@ -13,7 +13,7 @@ public class User {
 
     private double weight, height;
     private int age;
-    private String nameUser, lastNameUser, gender, ID;
+    private String nameUser, lastNameUser, gender, ID = "0_Unknown user";
 
     public User() {
         weight = 65.0; //default values : kg
@@ -107,9 +107,8 @@ public class User {
     public void setHeight(double height) {this.height = height;}
     public double getHeight() {return height;}
     
-    public void setID(String ID) {
-        this.ID = ID;
-    }
+    public void setID(String ID) {this.ID = ID;}
+    public String getID() {return ID;}
 
     public void updateData(String ID) {
         this.ID = ID;

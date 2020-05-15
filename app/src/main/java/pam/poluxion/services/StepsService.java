@@ -45,8 +45,10 @@ import java.util.Objects;
 import pam.poluxion.BuildConfig;
 import pam.poluxion.R;
 import pam.poluxion.data.GeneralClass;
+import pam.poluxion.helper.FirebaseHelper;
 import pam.poluxion.helper.Splash;
 import pam.poluxion.models.StepCounter;
+import pam.poluxion.models.User;
 import pam.poluxion.steps.StepDetector;
 import pam.poluxion.steps.StepListener;
 
@@ -71,8 +73,11 @@ public class StepsService extends Service implements SensorEventListener, StepLi
     private String lastRegisteredDate;
 
     private StepDetector stepDetector;
+    private User user = GeneralClass.getUserObject();
     private StepCounter stepCounter = GeneralClass.getStepCounterObject();
+    private FirebaseHelper firebaseHelper = GeneralClass.getFirebaseHelperObject();
     private int AQI = 0;
+    int index = 0;
 
     private TransitionReceiver mTransitionsReceiver = new TransitionReceiver();
 
@@ -173,7 +178,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
             }
         }
 
-        if (stepCounter.getSteps() % 100 == 0 && stepCounter.getSteps() != 0) {
+        if (stepCounter.getSteps() % 100 == 0 && stepCounter.getSteps() != 0 && AQI != 0) {
             saveData();
         }
 
@@ -184,6 +189,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         if(GeneralClass.getAirData().getAQI() != AQI && GeneralClass.getAirData().getAQI() != 0) {
             AQI = GeneralClass.getAirData().getAQI();
             displayNotification();
+            saveData();
         }
     }
 
@@ -248,6 +254,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
                 stepCounter.setStepsWalkOutside(sharedPreferences.getInt("stepWO", 0));
                 stepCounter.setStepsRunInside(sharedPreferences.getInt("stepRI", 0));
                 stepCounter.setStepsRunOutside(sharedPreferences.getInt("stepRO", 0));
+                index = sharedPreferences.getInt("index", 0);
             } else {
                 saveData();
             }
@@ -257,6 +264,8 @@ public class StepsService extends Service implements SensorEventListener, StepLi
     }
 
     private void saveData() {
+        index += 1;
+
         SharedPreferences sharedPreferences = getSharedPreferences("myPref", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
@@ -265,7 +274,17 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         editor.putInt("stepWO", stepCounter.getStepsWalkOutside());
         editor.putInt("stepRI", stepCounter.getStepsRunInside());
         editor.putInt("stepRO", stepCounter.getStepsRunOutside());
+        editor.putInt("index", index);
         editor.apply();
+
+        firebaseHelper.inputInt(user.getID()+"/storage/"+getCurrentDate()+"/stepWI",stepCounter.getStepsWalkInside());
+        firebaseHelper.inputInt(user.getID()+"/storage/"+getCurrentDate()+"/stepWO",stepCounter.getStepsWalkOutside());
+        firebaseHelper.inputInt(user.getID()+"/storage/"+getCurrentDate()+"/stepRI",stepCounter.getStepsRunInside());
+        firebaseHelper.inputInt(user.getID()+"/storage/"+getCurrentDate()+"/stepRO",stepCounter.getStepsRunOutside());
+        firebaseHelper.inputInt(user.getID()+"/storage/"+getCurrentDate()+"/AQI/"+index,AQI);
+        firebaseHelper.inputDouble(user.getID()+"/storage/"+getCurrentDate()+"/BPI",stepCounter.getIntakeDose());
+        firebaseHelper.inputString(user.getID()+"/storage/"+getCurrentDate()+"/cals",user.getCals());
+        firebaseHelper.inputString(user.getID()+"/storage/"+getCurrentDate()+"/km",user.getKm());
     }
 
     private void initData() {
@@ -274,6 +293,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         stepCounter.setStepsWalkOutside(0);
         stepCounter.setStepsRunInside(0);
         stepCounter.setStepsRunOutside(0);
+        index = 0;
 
         saveData();
     }
