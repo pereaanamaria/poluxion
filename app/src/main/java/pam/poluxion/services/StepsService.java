@@ -1,8 +1,6 @@
 package pam.poluxion.services;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -28,10 +26,8 @@ import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.location.ActivityRecognition;
-import com.google.android.gms.location.ActivityTransition;
-import com.google.android.gms.location.ActivityTransitionEvent;
-import com.google.android.gms.location.ActivityTransitionRequest;
-import com.google.android.gms.location.ActivityTransitionResult;
+import com.google.android.gms.location.ActivityRecognitionClient;
+import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,7 +39,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 import pam.poluxion.BuildConfig;
@@ -115,8 +110,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         // Registers the DownloadStateReceiver and its intent filters
         LocalBroadcastManager.getInstance(this).registerReceiver(mSatelliteStateReceiver, satelliteStatusIntentFilter);
 
-        //return super.onStartCommand(intent, flags, startId);
-        return Service.START_STICKY;
+        return START_STICKY;
     }
 
     private void startForeground() {
@@ -279,20 +273,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
     }
 
     private void initList() {
-        List<ActivityTransition> transitions = new ArrayList<>();
-
-        transitions.add(addTransitions(DetectedActivity.IN_VEHICLE, ActivityTransition.ACTIVITY_TRANSITION_ENTER));
-        transitions.add(addTransitions(DetectedActivity.IN_VEHICLE, ActivityTransition.ACTIVITY_TRANSITION_EXIT));
-        transitions.add(addTransitions(DetectedActivity.ON_BICYCLE, ActivityTransition.ACTIVITY_TRANSITION_ENTER));
-        transitions.add(addTransitions(DetectedActivity.ON_BICYCLE, ActivityTransition.ACTIVITY_TRANSITION_EXIT));
-        transitions.add(addTransitions(DetectedActivity.WALKING, ActivityTransition.ACTIVITY_TRANSITION_ENTER));
-        transitions.add(addTransitions(DetectedActivity.WALKING, ActivityTransition.ACTIVITY_TRANSITION_EXIT));
-        transitions.add(addTransitions(DetectedActivity.RUNNING, ActivityTransition.ACTIVITY_TRANSITION_ENTER));
-        transitions.add(addTransitions(DetectedActivity.RUNNING, ActivityTransition.ACTIVITY_TRANSITION_EXIT));
-        transitions.add(addTransitions(DetectedActivity.STILL, ActivityTransition.ACTIVITY_TRANSITION_ENTER));
-        transitions.add(addTransitions(DetectedActivity.STILL, ActivityTransition.ACTIVITY_TRANSITION_EXIT));
-
-        ActivityTransitionRequest request = new ActivityTransitionRequest(transitions);
+        ActivityRecognitionClient request = new ActivityRecognitionClient(this);
 
         Intent intent = new Intent(TRANSITION_ACTION_RECEIVER);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(StepsService.this, 0, intent, 0);
@@ -301,9 +282,9 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         registerTransitionApi(request, pendingIntent);
     }
 
-    private void registerTransitionApi(ActivityTransitionRequest request, PendingIntent pendingIntent) {
+    private void registerTransitionApi(ActivityRecognitionClient request, PendingIntent pendingIntent) {
         // pendingIntent is the instance of PendingIntent where the app receives callbacks.
-        Task<Void> task = ActivityRecognition.getClient(this).requestActivityTransitionUpdates(request, pendingIntent);
+        Task<Void> task = request.requestActivityUpdates(0, pendingIntent);
 
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -322,7 +303,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
 
     private void unregisterTransitionApi(final PendingIntent pendingIntent) {
         // pendingIntent is the instance of PendingIntent where the app receives callbacks.
-        final Task<Void> task = ActivityRecognition.getClient(this).removeActivityTransitionUpdates(pendingIntent);
+        final Task<Void> task = ActivityRecognition.getClient(this).removeActivityUpdates(pendingIntent);
 
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -339,13 +320,8 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         });
     }
 
-    private ActivityTransition addTransitions(int detectedActivity, int activityTransition) {
-        return new ActivityTransition.Builder().setActivityType(detectedActivity)
-                .setActivityTransition(activityTransition).build();
-    }
-
     private static class TransitionReceiver extends BroadcastReceiver {
-        private String status = "still";
+        private String status = "Still";
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -356,50 +332,26 @@ public class StepsService extends Service implements SensorEventListener, StepLi
                 return;
             }
 
-            Log.e(TAG, "Got here");
+            if (ActivityRecognitionResult.hasResult(intent)) {
+                ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
 
-            if (ActivityTransitionResult.hasResult(intent)) {
-                ActivityTransitionResult result = ActivityTransitionResult.extractResult(intent);
-                assert result != null;
-                for (ActivityTransitionEvent event : result.getTransitionEvents()) {
-                    String theActivity = toActivityString(event.getActivityType());
-                    String transType = toTransitionType(event.getTransitionType());
-                    if (transType.equals("ENTER")) {
-                        status = theActivity;
-                    }
-                }
+                DetectedActivity mostProbableActivity = result.getMostProbableActivity();
+                int activityType = mostProbableActivity.getType();
+
+                status = toActivityString(activityType);
             }
         }
 
-        public String getDetectedActivity() {
-            return status;
-        }
+        public String getDetectedActivity() {return status;}
 
         private String toActivityString(int activity) {
             switch (activity) {
-                case DetectedActivity.STILL:
-                    return "Still";
-                case DetectedActivity.WALKING:
-                    return "Walking";
-                case DetectedActivity.IN_VEHICLE:
-                    return "In vehicle";
-                case DetectedActivity.ON_BICYCLE:
-                    return "Cycling";
-                case DetectedActivity.RUNNING:
-                    return "Running";
-                default:
-                    return "Unknown";
-            }
-        }
-
-        private String toTransitionType(int transitionType) {
-            switch (transitionType) {
-                case ActivityTransition.ACTIVITY_TRANSITION_ENTER:
-                    return "ENTER";
-                case ActivityTransition.ACTIVITY_TRANSITION_EXIT:
-                    return "EXIT";
-                default:
-                    return "UNKNOWN";
+                case DetectedActivity.STILL: return "Still";
+                case DetectedActivity.IN_VEHICLE: return "In vehicle";
+                case DetectedActivity.ON_BICYCLE: return "Cycling";
+                case DetectedActivity.RUNNING: return "Running";
+                case DetectedActivity.TILTING: return "Tilting";
+                default: return "Walking";
             }
         }
     }
