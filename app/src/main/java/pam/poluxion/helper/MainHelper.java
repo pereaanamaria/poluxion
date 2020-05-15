@@ -111,7 +111,7 @@ public class MainHelper extends MainActivity {
                 public void run() {
                     crossfade(MainActivity.mainScroll);
                 }
-            }, 2000);   //2 seconds
+            }, 1000);   //1 seconds
         } else {
             MainActivity.loadingPanel.setVisibility(View.GONE);
             Handler handler = new Handler();
@@ -119,7 +119,7 @@ public class MainHelper extends MainActivity {
                 public void run() {
                     MainActivity.mainScroll.setVisibility(View.VISIBLE);
                 }
-            }, 300);   //0.3 seconds
+            }, 700);   //0.7 seconds
         }
     }
 

@@ -31,7 +31,7 @@ import pam.poluxion.widgets.ProgressAnimation;
 
 public class TrackerActivity extends AppCompatActivity implements SensorEventListener{
     private static final String TAG = "TrackerActivity";
-    private static final DecimalFormat df3 = new DecimalFormat("#.000 l");
+    private static final DecimalFormat df3 = new DecimalFormat("#.000 BPI");
 
     private LinearLayout sliderDots;
     private TextView walkIn, walkOut, runIn, runOut, total;
@@ -82,7 +82,7 @@ public class TrackerActivity extends AppCompatActivity implements SensorEventLis
 
 
         exposureArc = findViewById(R.id.exposure_progress);
-        exposureArc.setMax(10);
+        exposureArc.setMax(100);
 
         double progress = GeneralClass.getStepCounterObject().getIntakeDose();
         int progressInt = (int) Math.floor(progress);

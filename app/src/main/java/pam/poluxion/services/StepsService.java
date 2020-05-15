@@ -35,6 +35,7 @@ import com.google.android.gms.tasks.Task;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,6 +57,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
     private static final String TAG = "StepsService";
     // Intents action that will be fired when transitions are triggered
     private final String TRANSITION_ACTION_RECEIVER = BuildConfig.APPLICATION_ID + "TRANSITION_ACTION_RECEIVER";
+    private static final DecimalFormat df3 = new DecimalFormat("0.000");
 
     private static final int NOTIF_ID = 1;
     private static final String NOTIF_CHANNEL_ID = "Channel_Id";
@@ -65,10 +67,12 @@ public class StepsService extends Service implements SensorEventListener, StepLi
     private static final int RUN_INSIDE = 2;
     private static final int RUN_OUTSIDE = 3;
 
+
     private String lastRegisteredDate;
 
     private StepDetector stepDetector;
     private StepCounter stepCounter = GeneralClass.getStepCounterObject();
+    private int AQI;
 
     private TransitionReceiver mTransitionsReceiver = new TransitionReceiver();
 
@@ -92,6 +96,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        AQI = GeneralClass.getAirData().getAQI();
         startStepCounting();
         startForeground();
         initList();
@@ -117,7 +122,9 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         GeneralClass.setStepCounter(stepCounter);
         getSavedData();
         createNotificationChannel();
-        displayNotification();
+        if(AQI != 0) {
+            displayNotification();
+        }
     }
 
     private void startStepCounting() {
@@ -172,7 +179,9 @@ public class StepsService extends Service implements SensorEventListener, StepLi
             saveData();
         }
 
-        displayNotification();
+        if(stepCounter.getSteps() % 500 == 0) {
+            displayNotification();
+        }
     }
 
     @Override
@@ -213,8 +222,8 @@ public class StepsService extends Service implements SensorEventListener, StepLi
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         return new NotificationCompat.Builder(this, NOTIF_CHANNEL_ID)
-                .setContentTitle("You are " + mTransitionsReceiver.getDetectedActivity().toLowerCase())
-                .setContentText("Your steps : " + stepCounter.getSteps())
+                .setContentTitle(AQI + " AQI")
+                .setContentText("BPI : " + df3.format(stepCounter.getIntakeDose()))
                 .setSmallIcon(R.drawable.poluxion)
                 .setAutoCancel(true)
                 .setContentIntent(resultPendingIntent)
