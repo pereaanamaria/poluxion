@@ -1,17 +1,11 @@
 package pam.poluxion;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -33,7 +27,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 import pam.poluxion.helper.MainHelper;
 import pam.poluxion.data.GeneralClass;
-import pam.poluxion.helper.Splash;
 import pam.poluxion.services.StepsService;
 import pam.poluxion.widgets.ArcProgress;
 import pam.poluxion.widgets.DotSlider;

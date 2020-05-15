@@ -1,11 +1,9 @@
 package pam.poluxion.helper;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Address;
 import android.location.Geocoder;
@@ -17,8 +15,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -108,7 +104,7 @@ public class MainHelper extends MainActivity {
                 public void run() {
                     crossfade(MainActivity.mainScroll);
                 }
-            }, 1000);   //1 seconds
+            }, 2000);   //2 seconds
         } else {
             MainActivity.loadingPanel.setVisibility(View.GONE);
             Handler handler = new Handler();
@@ -116,7 +112,7 @@ public class MainHelper extends MainActivity {
                 public void run() {
                     MainActivity.mainScroll.setVisibility(View.VISIBLE);
                 }
-            }, 700);   //0.7 seconds
+            }, 1000);   //1 seconds
         }
     }
 

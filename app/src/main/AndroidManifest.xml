@@ -49,7 +49,7 @@
         <activity
             android:name=".helper.Splash"
             android:configChanges="orientation"
-            android:screenOrientation="fullSensor">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -60,7 +60,7 @@
             android:name=".MainActivity"
             android:configChanges="orientation"
             android:launchMode="singleTop"
-            android:screenOrientation="fullSensor">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAINACTIVITY" />
                 <action android:name="android.intent.action.SEND" />
@@ -71,19 +71,19 @@
         <activity
             android:name=".LoginActivity"
             android:configChanges="orientation"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".RegisterActivity"
             android:configChanges="orientation"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SettingsActivity"
             android:configChanges="orientation"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".TrackerActivity"
             android:configChanges="orientation"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

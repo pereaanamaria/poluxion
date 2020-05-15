@@ -122,9 +122,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         GeneralClass.setStepCounter(stepCounter);
         getSavedData();
         createNotificationChannel();
-        if(AQI != 0) {
-            displayNotification();
-        }
+        displayNotification();
     }
 
     private void startStepCounting() {

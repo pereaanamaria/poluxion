@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -51,17 +50,7 @@ public class Splash extends Activity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == PERMISSION_ACCESS_FINE_LOCATION) {
-            splashTimer = new Timer();
-            splashTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    Splash.this.finish();
-                    Intent intent = new Intent(Splash.this, MainActivity.class);
-                    intent.putExtra("Msg", "Just started");
-                    startActivity(intent);
-                }
-            }, DELAY);
-            scheduled = true;
+            start();
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
@@ -74,12 +63,27 @@ public class Splash extends Activity {
                 == PackageManager.PERMISSION_GRANTED) {   //checks if FINE_LOCATION permission was granted
             if (ContextCompat.checkSelfPermission(getApplicationContext(),COARSE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {   //checks if COARSE_LOCATION permission was granted
+                start();
             } else {
                 ActivityCompat.requestPermissions(this, permissions, PERMISSION_ACCESS_COARSE_LOCATION);
             }
         } else {
             ActivityCompat.requestPermissions(this, permissions, PERMISSION_ACCESS_FINE_LOCATION);
         }
+    }
+
+    private void start() {
+        splashTimer = new Timer();
+        splashTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Splash.this.finish();
+                Intent intent = new Intent(Splash.this, MainActivity.class);
+                intent.putExtra("Msg", "Just started");
+                startActivity(intent);
+            }
+        }, DELAY);
+        scheduled = true;
     }
 
     @Override
