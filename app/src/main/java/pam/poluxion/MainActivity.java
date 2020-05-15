@@ -33,6 +33,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import pam.poluxion.helper.MainHelper;
 import pam.poluxion.data.GeneralClass;
+import pam.poluxion.helper.Splash;
 import pam.poluxion.services.StepsService;
 import pam.poluxion.widgets.ArcProgress;
 import pam.poluxion.widgets.DotSlider;
@@ -173,20 +174,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_ACCESS_COARSE_LOCATION:
-            case PERMISSION_ACCESS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-            }
+        if (requestCode == PERMISSION_ACCESS_FINE_LOCATION || requestCode == PERMISSION_REQUEST_ACTIVITY_RECOGNITION) {
+            MainActivity.this.finish();
+            Intent intent = new Intent(this,Splash.class);
+            intent.putExtra("Msg", "Just started");
+            startActivity(intent);
         }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     //Google services are being checked in order to make map requests
