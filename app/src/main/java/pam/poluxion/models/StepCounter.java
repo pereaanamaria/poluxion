@@ -18,6 +18,7 @@ public class StepCounter {
     private int stepsRunOutside = 0;
 
     private boolean indoor = true;
+    private boolean walking = true;
 
     public StepCounter() {
         Log.e(TAG,"Successfully created");
@@ -25,10 +26,10 @@ public class StepCounter {
 
     public void countTotal(int status) {
         switch (status) {
-            case WALK_INSIDE: stepsWalkInside++; break;
-            case WALK_OUTSIDE: stepsWalkOutside++; break;
-            case RUN_INSIDE: stepsRunInside++; break;
-            case RUN_OUTSIDE: stepsRunOutside++; break;
+            case WALK_INSIDE: walking = true; stepsWalkInside++; break;
+            case WALK_OUTSIDE: walking = true; stepsWalkOutside++; break;
+            case RUN_INSIDE: walking = false; stepsRunInside++; break;
+            case RUN_OUTSIDE: walking = false; stepsRunOutside++; break;
             default: Log.e(TAG,"Unknown status : " + status);
         }
     }
@@ -45,6 +46,22 @@ public class StepCounter {
         double temp = 25 * (pmConcentration * stepsWalkOutside + 8.7 * stepsWalkInside) / 100 +
                 45 * (pmConcentration * stepsRunOutside + 8.7 * stepsRunInside) / 150;
         return temp / 1000;
+    }
+
+    int getStepsPerMin() {
+        if(walking) {
+            return 100;
+        } else {
+            return 150;
+        }
+    }
+
+    double getAverageSpeed() {
+        if(walking) {
+            return 1.3888;  // 5 km/h ~= 1.38 m/s
+        } else {
+            return 6.6666;  // 24 km/h ~= 6.66 m/s
+        }
     }
 
     public int getStepsWalkInside() {return stepsWalkInside;}

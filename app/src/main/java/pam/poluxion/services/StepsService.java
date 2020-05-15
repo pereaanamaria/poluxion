@@ -57,7 +57,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
     private static final String TAG = "StepsService";
     // Intents action that will be fired when transitions are triggered
     private final String TRANSITION_ACTION_RECEIVER = BuildConfig.APPLICATION_ID + "TRANSITION_ACTION_RECEIVER";
-    private static final DecimalFormat df3 = new DecimalFormat("0.000");
+    private static final DecimalFormat df2 = new DecimalFormat("0.00");
 
     private static final int NOTIF_ID = 1;
     private static final String NOTIF_CHANNEL_ID = "Channel_Id";
@@ -72,7 +72,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
 
     private StepDetector stepDetector;
     private StepCounter stepCounter = GeneralClass.getStepCounterObject();
-    private int AQI;
+    private int AQI = 0;
 
     private TransitionReceiver mTransitionsReceiver = new TransitionReceiver();
 
@@ -179,7 +179,12 @@ public class StepsService extends Service implements SensorEventListener, StepLi
             saveData();
         }
 
-        if(stepCounter.getSteps() % 500 == 0) {
+        if(stepCounter.getSteps() % 500 == 0 && stepCounter.getSteps() != 0) {
+            displayNotification();
+        }
+
+        if(GeneralClass.getAirData().getAQI() != AQI && GeneralClass.getAirData().getAQI() != 0) {
+            AQI = GeneralClass.getAirData().getAQI();
             displayNotification();
         }
     }
@@ -223,7 +228,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
 
         return new NotificationCompat.Builder(this, NOTIF_CHANNEL_ID)
                 .setContentTitle(AQI + " AQI")
-                .setContentText("BPI : " + df3.format(stepCounter.getIntakeDose()))
+                .setContentText("BPI : " + df2.format(stepCounter.getIntakeDose()))
                 .setSmallIcon(R.drawable.poluxion)
                 .setAutoCancel(true)
                 .setContentIntent(resultPendingIntent)

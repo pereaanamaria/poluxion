@@ -9,7 +9,6 @@ import pam.poluxion.data.GeneralClass;
 
 public class User {
     private static final String TAG = "User";
-    private static final double AVERAGE_WALKING_SPEED = 1.3888;  // 5km/h ~= 1.38 m/s
     private static final DecimalFormat df2 = new DecimalFormat("0.00");
 
     private double weight, height;
@@ -34,8 +33,9 @@ public class User {
     }
 
     public String getCals() {
-        double calPerMin = (0.035 * weight) + (0.029 * weight * ((AVERAGE_WALKING_SPEED * AVERAGE_WALKING_SPEED) / height));
-        double stepsPerMin = 110;
+        double speed = GeneralClass.getStepCounterObject().getAverageSpeed();
+        double calPerMin = (0.035 * weight) + (0.029 * weight * ((speed * speed) / height));
+        double stepsPerMin = GeneralClass.getStepCounterObject().getStepsPerMin();
 
         double temp = (calPerMin * GeneralClass.getStepCounterObject().getSteps()) / stepsPerMin;
         if (Double.isNaN(temp)) {

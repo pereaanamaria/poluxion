@@ -31,7 +31,7 @@ import pam.poluxion.widgets.ProgressAnimation;
 
 public class TrackerActivity extends AppCompatActivity implements SensorEventListener{
     private static final String TAG = "TrackerActivity";
-    private static final DecimalFormat df3 = new DecimalFormat("#.000 BPI");
+    private static final DecimalFormat df2 = new DecimalFormat("#.00 BPI");
 
     private LinearLayout sliderDots;
     private TextView walkIn, walkOut, runIn, runOut, total;
@@ -91,7 +91,7 @@ public class TrackerActivity extends AppCompatActivity implements SensorEventLis
         ProgressAnimation anim = new ProgressAnimation(exposureArc, 0, progressInt);
         anim.setDuration(500);
         exposureArc.startAnimation(anim);
-        exposureArc.setSuffixText(df3.format(decimals));
+        exposureArc.setSuffixText(df2.format(decimals));
         exposureArc.setProgress(progressInt);
 
         displayInfo();
@@ -141,7 +141,7 @@ public class TrackerActivity extends AppCompatActivity implements SensorEventLis
         double progress = GeneralClass.getStepCounterObject().getIntakeDose();
         int progressInt = (int) Math.floor(progress);
         double decimals = progress - Math.floor(progress);
-        exposureArc.setSuffixText(df3.format(decimals));
+        exposureArc.setSuffixText(df2.format(decimals));
         exposureArc.setProgress(progressInt);
     }
 
