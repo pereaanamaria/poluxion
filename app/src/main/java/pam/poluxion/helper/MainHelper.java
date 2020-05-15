@@ -43,9 +43,6 @@ public class MainHelper extends MainActivity {
 
     private static final String TAG = "MainHelper";
 
-    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-    private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
-
     private static final float DEFAULT_ZOOM = 15f;
 
     private GoogleMap mMap;
@@ -61,7 +58,7 @@ public class MainHelper extends MainActivity {
         this.activity = activity;
         this.intent = intent;
 
-        getLocationPermission();
+        //getLocationPermission();
     }
 
     //gets the current position of the device
@@ -206,32 +203,9 @@ public class MainHelper extends MainActivity {
         if (mLocationPermissionGranted) {
             getDeviceLocation();
 
-            if (ActivityCompat.checkSelfPermission(context, FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(context, COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setAllGesturesEnabled(true);
             mMap.getUiSettings().setIndoorLevelPickerEnabled(true);
-        }
-    }
-
-    //gets permission to use GPS and Location
-    private void getLocationPermission() {
-        String[] permissions = {FINE_LOCATION, COARSE_LOCATION};
-
-        Log.d(TAG, "getLocationPermissions: Getting location permissions");
-        if (ContextCompat.checkSelfPermission(context.getApplicationContext(),FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {   //checks if FINE_LOCATION permission was granted
-            if (ContextCompat.checkSelfPermission(context.getApplicationContext(),COARSE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {   //checks if COARSE_LOCATION permission was granted
-                mLocationPermissionGranted = true;    //sets the flag
-            } else {
-                ActivityCompat.requestPermissions(activity, permissions, PERMISSION_ACCESS_COARSE_LOCATION);
-            }
-        } else {
-            ActivityCompat.requestPermissions(activity, permissions, PERMISSION_ACCESS_FINE_LOCATION);
         }
     }
 }

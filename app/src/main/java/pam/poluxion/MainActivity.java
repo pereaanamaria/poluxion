@@ -44,11 +44,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final String TAG = "MainActivity";
     private static final int ERROR_DIALOG_REQUEST = 9001;
 
-    protected final static int PERMISSION_ACCESS_COARSE_LOCATION = 1;
-    protected final static int PERMISSION_ACCESS_FINE_LOCATION = 2;
-    private static final int PERMISSION_REQUEST_ACTIVITY_RECOGNITION = 3;
-
-    protected boolean mLocationPermissionGranted = false;   //location permission flag (false by default)
+    protected boolean mLocationPermissionGranted = true;   //location permission flag (false by default)
 
     @SuppressLint("StaticFieldLeak")
     public static TextView locationTV, temperatureTV, nrAqiTV, pressureTV, arcProgressTV, measurementTV, unitsTV, errorDataTextTV;
@@ -129,13 +125,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         getUnits();
 
-        boolean runningQOrLater = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q;
-        if (runningQOrLater) {
-            if( PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION)) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACTIVITY_RECOGNITION},PERMISSION_REQUEST_ACTIVITY_RECOGNITION);
-            }
-        }
-
         //map is requested
         if (isServicesOK()) {
             initMap();
@@ -170,17 +159,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mainHelper.onMapReady(googleMap);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == PERMISSION_ACCESS_FINE_LOCATION || requestCode == PERMISSION_REQUEST_ACTIVITY_RECOGNITION) {
-            MainActivity.this.finish();
-            Intent intent = new Intent(this,Splash.class);
-            intent.putExtra("Msg", "Just started");
-            startActivity(intent);
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     //Google services are being checked in order to make map requests
