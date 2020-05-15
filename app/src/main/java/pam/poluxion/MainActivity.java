@@ -1,13 +1,17 @@
 package pam.poluxion;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -41,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     protected final static int PERMISSION_ACCESS_COARSE_LOCATION = 1;
     protected final static int PERMISSION_ACCESS_FINE_LOCATION = 2;
+    private static final int PERMISSION_REQUEST_ACTIVITY_RECOGNITION = 3;
 
     protected boolean mLocationPermissionGranted = false;   //location permission flag (false by default)
 
@@ -58,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private MainHelper mainHelper;
     private FirebaseUser firebaseUser;
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,6 +127,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         createDotSlider();
 
         getUnits();
+
+        boolean runningQOrLater = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q;
+        if (runningQOrLater) {
+            if( PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION)) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACTIVITY_RECOGNITION},PERMISSION_REQUEST_ACTIVITY_RECOGNITION);
+            }
+        }
 
         //map is requested
         if (isServicesOK()) {

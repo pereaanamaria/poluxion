@@ -10,7 +10,8 @@ public class LocalData {
     private String searchUrl;
 
     public LocalData(String locality) {
-        searchUrl = "https://api.waqi.info/feed/"+locality+"/?token="+AqicnApi;
+        //searchUrl = "https://api.waqi.info/feed/"+locality+"/?token="+AqicnApi;
+        searchUrl = "https://api.waqi.info/feed/here/?token="+AqicnApi;
         getData();
 
         Log.e(TAG,"Successfully created");

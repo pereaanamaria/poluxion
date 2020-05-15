@@ -1,6 +1,8 @@
 package pam.poluxion.services;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -86,15 +88,12 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         }
 
         @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-        }
+        public void onServiceDisconnected(ComponentName arg0) {}
     };
 
     @Nullable
     @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
+    public IBinder onBind(Intent intent) {return null;}
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -116,7 +115,8 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         // Registers the DownloadStateReceiver and its intent filters
         LocalBroadcastManager.getInstance(this).registerReceiver(mSatelliteStateReceiver, satelliteStatusIntentFilter);
 
-        return super.onStartCommand(intent, flags, startId);
+        //return super.onStartCommand(intent, flags, startId);
+        return Service.START_STICKY;
     }
 
     private void startForeground() {
@@ -197,7 +197,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Personal Notifications";
             String description = "Include all the personal notificationa";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            int importance = NotificationManager.IMPORTANCE_NONE;
 
             NotificationChannel notificationChannel = new NotificationChannel(NOTIF_CHANNEL_ID, name, importance);
             notificationChannel.setDescription(description);
@@ -223,7 +223,9 @@ public class StepsService extends Service implements SensorEventListener, StepLi
                 .setContentText("Your steps : " + stepCounter.getSteps())
                 .setSmallIcon(R.drawable.poluxion)
                 .setAutoCancel(true)
-                .setContentIntent(resultPendingIntent);
+                .setContentIntent(resultPendingIntent)
+                .setVibrate(new long[] {0L})
+                .setSound(null);
     }
 
 
