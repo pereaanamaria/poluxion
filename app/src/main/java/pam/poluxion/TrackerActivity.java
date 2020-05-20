@@ -128,14 +128,14 @@ public class TrackerActivity extends AppCompatActivity implements SensorEventLis
     private void displayInfo() {
 
         if(stepCounter.getWalkMin() < 60) {
-            walkMins.setText(stepCounter.getWalkMin() + " ");
+            walkMins.setText(stepCounter.getWalkMin() + " min ");
         } else {
-            walkMins.setText(stepCounter.getWalkMin() / 60 + "h and " + stepCounter.getWalkMin() % 60 + " ");
+            walkMins.setText(stepCounter.getWalkMin() / 60 + "h " + stepCounter.getWalkMin() % 60 + " min ");
         }
         if(stepCounter.getRunMin() < 60) {
-            runMins.setText(stepCounter.getRunMin() + " ");
+            runMins.setText(stepCounter.getRunMin() + " min ");
         } else {
-            runMins.setText(stepCounter.getRunMin() / 60 + "h and " + stepCounter.getRunMin() % 60 + " ");
+            runMins.setText(stepCounter.getRunMin() / 60 + "h " + stepCounter.getRunMin() % 60 + " min ");
         }
 
         walkIn.setText(stepCounter.getStepsWalkInside() + " ");
@@ -147,7 +147,7 @@ public class TrackerActivity extends AppCompatActivity implements SensorEventLis
 
         kms.setText(user.getKm());
         cals.setText(user.getCals());
-        bpi.setText(user.getBPI());
+        //bpi.setText(user.getBPI());
 
         double progress = GeneralClass.getStepCounterObject().getIntakeDose();
         int progressInt = (int) Math.floor(progress);

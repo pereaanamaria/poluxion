@@ -50,8 +50,8 @@
     <string name="walk_outside_bpi"> walking steps outside</string>
     <string name="run_inside_bpi"> running steps inside</string>
     <string name="run_outside_bpi"> running steps outside</string>
-    <string name="walk_mins"> min of walking</string>
-    <string name="run_mins"> min of running</string>
+    <string name="walk_mins">of walking</string>
+    <string name="run_mins">of running</string>
     <string name="BPI"> % BPI</string>
     <string name="error_text">Data could not be retrieved correctly. \nUnknown location by the data provider or lack of internet connectivity.</string>
     <string name="exit">Exit</string>

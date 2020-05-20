@@ -33,18 +33,30 @@ public class User {
     }
 
     public String getCals() {
-        double speed = GeneralClass.getStepCounterObject().getAverageSpeed();
-        double calPerMin = (0.035 * weight) + (0.029 * weight * ((speed * speed) / height));
-        double stepsPerMin = GeneralClass.getStepCounterObject().getStepsPerMin();
-
-        double temp = (calPerMin * GeneralClass.getStepCounterObject().getSteps()) / stepsPerMin;
+        double temp = getCalsWalking() + getCalsRunning();
         if (Double.isNaN(temp)) {
             return "0.0 cal";
         }
         return df2.format(temp) + " cal";
     }
 
-    public String getBPI() {
+    private double getCalsWalking() {
+        double speed = 1.3888;  // 5 km/h ~= 1.38 m/s
+        double calPerMin = (0.035 * weight) + (0.029 * weight * ((speed * speed) / height));
+        double stepsPerMin = 100;
+
+        return (calPerMin * GeneralClass.getStepCounterObject().getSteps()) / stepsPerMin;
+    }
+
+    private double getCalsRunning() {
+        double speed = 6.6666;  // 24 km/h ~= 6.66 m/s
+        double calPerMin = (0.035 * weight) + (0.029 * weight * ((speed * speed) / height));
+        double stepsPerMin = 150;
+
+        return (calPerMin * GeneralClass.getStepCounterObject().getSteps()) / stepsPerMin;
+    }
+
+    /*public String getBPI() {
         double VEMSt = 0.0, CVt = 500.0;
         if(gender != null) {
             if (gender.equals("male")) {
@@ -59,7 +71,7 @@ public class User {
 
         double temp = (VEMSt/CVt) * 100.0;
         return df2.format(temp) + " ";
-    }
+    }*/
 
     public void setNameUser(String nameUser) {this.nameUser = nameUser;}
     public String getNameUser() {return nameUser;}
