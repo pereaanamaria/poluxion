@@ -308,7 +308,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         ActivityRecognitionClient request = new ActivityRecognitionClient(this);
 
         Intent intent = new Intent(TRANSITION_ACTION_RECEIVER);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(StepsService.this, 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(StepsService.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         registerReceiver(mTransitionsReceiver, new IntentFilter(TRANSITION_ACTION_RECEIVER));
 
         registerTransitionApi(request, pendingIntent);
