@@ -7,7 +7,7 @@ public class StepDetector {
 
     //sensitivity of the steps
     private static final float STEP_THRESHOLD = 20;
-    private static final int STEP_DELAY_NS = 200000000;
+    private static final int STEP_DELAY_NS = 200000000; //0.2 s
 
     private int accelRingCounter = 0;
     private float[] accelRingX = new float[ACCEL_RING_SIZE];

@@ -51,27 +51,10 @@ public class User {
     private double getCalsRunning() {
         double speed = 6.6666;  // 24 km/h ~= 6.66 m/s
         double calPerMin = (0.035 * weight) + (0.029 * weight * ((speed * speed) / height));
-        double stepsPerMin = 150;
+        double stepsPerMin = 160;
 
         return (calPerMin * GeneralClass.getStepCounterObject().getSteps()) / stepsPerMin;
     }
-
-    /*public String getBPI() {
-        double VEMSt = 0.0, CVt = 500.0;
-        if(gender != null) {
-            if (gender.equals("male")) {
-                VEMSt = height * 0.036 - age * 0.031 - 1.41;
-                CVt = height * 0.052 - age * 0.028 - 3.2;
-            }
-            if (gender.equals("female")) {
-                VEMSt = height * 0.026 - age * 0.028 - 0.36;
-                CVt = height * 0.049 - age * 0.019 - 3.76;
-            }
-        }
-
-        double temp = (VEMSt/CVt) * 100.0;
-        return df2.format(temp) + " ";
-    }*/
 
     public void setNameUser(String nameUser) {this.nameUser = nameUser;}
     public String getNameUser() {return nameUser;}

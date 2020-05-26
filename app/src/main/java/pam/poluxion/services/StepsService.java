@@ -145,10 +145,10 @@ public class StepsService extends Service implements SensorEventListener, StepLi
     @Override
     public void onDestroy() {
         super.onDestroy();
+        saveData();
         Intent intent = new Intent(TRANSITION_ACTION_RECEIVER);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(StepsService.this, 0, intent, 0);
         unregisterTransitionApi(pendingIntent);
-        saveData();
 
         unbindService(serviceConnection);
 
@@ -202,8 +202,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-    }
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

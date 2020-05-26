@@ -38,12 +38,12 @@ public class StepCounter {
     }
 
     public int getWalkMin() {return (stepsWalkInside + stepsWalkOutside) / 100;}
-    public int getRunMin() {return (stepsRunInside + stepsRunOutside) / 150;}
+    public int getRunMin() {return (stepsRunInside + stepsRunOutside) / 160;}
 
     public void setPmConcentration(double pmConcentration) {this.pmConcentration = pmConcentration;}
     public double getIntakeDose() {
         double temp = 25 * (pmConcentration * stepsWalkOutside + 8.7 * stepsWalkInside) / 100 +
-                45 * (pmConcentration * stepsRunOutside + 8.7 * stepsRunInside) / 150;
+                45 * (pmConcentration * stepsRunOutside + 8.7 * stepsRunInside) / 160;
         return temp / 1000;
     }
 

@@ -35,7 +35,7 @@ public class TrackerActivity extends AppCompatActivity implements SensorEventLis
 
     private LinearLayout sliderDots;
     private TextView walkIn, walkOut, runIn, runOut, total;
-    private TextView bpi, kms, cals, walkMins, runMins;
+    private TextView kms, cals, walkMins, runMins;
 
     private StepCounter stepCounter = GeneralClass.getStepCounterObject();
     private User user = GeneralClass.getUserObject();
@@ -82,11 +82,9 @@ public class TrackerActivity extends AppCompatActivity implements SensorEventLis
         addSwipe(runMins);
 
         total = findViewById(R.id.totalSteps);
-        bpi = findViewById(R.id.bpi);
         kms = findViewById(R.id.km);
         cals = findViewById(R.id.cal);
         addSwipe(total);
-        addSwipe(bpi);
         addSwipe(kms);
         addSwipe(cals);
 
@@ -147,7 +145,6 @@ public class TrackerActivity extends AppCompatActivity implements SensorEventLis
 
         kms.setText(user.getKm());
         cals.setText(user.getCals());
-        //bpi.setText(user.getBPI());
 
         double progress = GeneralClass.getStepCounterObject().getIntakeDose();
         int progressInt = (int) Math.floor(progress);
