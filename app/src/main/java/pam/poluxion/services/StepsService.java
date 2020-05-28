@@ -40,6 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import pam.poluxion.BuildConfig;
@@ -364,25 +365,41 @@ public class StepsService extends Service implements SensorEventListener, StepLi
             }
 
             if (ActivityRecognitionResult.hasResult(intent)) {
+                int walkConfidence = 0, runConfidence = 0;
                 ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
 
                 DetectedActivity mostProbableActivity = result.getMostProbableActivity();
                 int activityType = mostProbableActivity.getType();
 
-                status = toActivityString(activityType);
+                List<DetectedActivity> probableActivities = result.getProbableActivities();
+                for(DetectedActivity activity : probableActivities) {
+                    if(activity.getType() == DetectedActivity.WALKING) {
+                        walkConfidence = activity.getConfidence();
+                    } else if(activity.getType() == DetectedActivity.RUNNING) {
+                        runConfidence = activity.getConfidence();
+                    }
+
+                }
+
+                status = toActivityString(activityType, walkConfidence, runConfidence);
             }
         }
 
         public String getDetectedActivity() {return status;}
 
-        private String toActivityString(int activity) {
+        private String toActivityString(int activity, int walkConfidence, int runConfidence) {
             switch (activity) {
                 case DetectedActivity.STILL: return "Still";
                 case DetectedActivity.IN_VEHICLE: return "In vehicle";
                 case DetectedActivity.ON_BICYCLE: return "Cycling";
-                case DetectedActivity.RUNNING: return "Running";
                 case DetectedActivity.TILTING: return "Tilting";
-                default: return "Walking";
+                case DetectedActivity.RUNNING: return "Running";
+                case DetectedActivity.WALKING: return "Walking";
+                default: if(walkConfidence > runConfidence) {
+                    return "Walking";
+                } else {
+                    return "Running";
+                }
             }
         }
     }
