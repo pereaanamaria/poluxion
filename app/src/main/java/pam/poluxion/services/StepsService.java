@@ -395,7 +395,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
                 case DetectedActivity.TILTING: return "Tilting";
                 case DetectedActivity.RUNNING: return "Running";
                 case DetectedActivity.WALKING: return "Walking";
-                default: if(walkConfidence > runConfidence) {
+                default: if(walkConfidence >= runConfidence) {
                     return "Walking";
                 } else {
                     return "Running";
