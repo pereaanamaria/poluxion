@@ -20,6 +20,7 @@ public class GeneralClass extends Application {
     private static StepCounter stepCounter;
     private static AirData airData;
 
+    //creates instances of objects to be used throughout the entire project
     @SuppressLint("HardwareIds")
     public GeneralClass(@NotNull Context context) {
         airData = new AirData();
@@ -36,6 +37,7 @@ public class GeneralClass extends Application {
 
     @Contract(pure = true)
     public static StepCounter getStepCounterObject(){return stepCounter;}
+    //StepCounter is reset in StepsService
     public static void setStepCounter(StepCounter stepCounter) {GeneralClass.stepCounter = stepCounter;}
 
     @Contract(pure = true)

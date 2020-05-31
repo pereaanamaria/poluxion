@@ -35,8 +35,10 @@ public class Splash extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        //creates general class
         new GeneralClass(this);
 
+        //checks activity recognition permission for Android versions greater than Q
         boolean runningQOrLater = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q;
         if (runningQOrLater) {
             if( PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION)) {
@@ -44,6 +46,7 @@ public class Splash extends Activity {
             }
         }
 
+        //gets GPS and location permissions
         getLocationPermission();
     }
 
@@ -72,6 +75,7 @@ public class Splash extends Activity {
         }
     }
 
+    //starts app if permission granted
     private void start() {
         splashTimer = new Timer();
         splashTimer.schedule(new TimerTask() {

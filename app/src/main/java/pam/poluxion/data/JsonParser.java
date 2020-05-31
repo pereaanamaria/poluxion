@@ -37,9 +37,7 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
     @SuppressLint("StaticFieldLeak")
     private Button clicked;
 
-    JsonParser(String urlStr) {
-        this.urlStr = urlStr;
-    }
+    JsonParser(String urlStr) {this.urlStr = urlStr;}
 
     @Override
     protected JSONObject doInBackground(Void... params) {
@@ -57,7 +55,7 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
 
             return new JSONObject(stringBuffer.toString());
         } catch (Exception ex) {
-            Log.e("App", "yourDataTask", ex);
+            Log.e(TAG, "yourDataTask", ex);
             return null;
         } finally {
             if (bufferedReader != null) {
@@ -73,6 +71,7 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
     @Override
     protected void onPostExecute(JSONObject result) {
         if (result != null) {
+            //get AQI value from API
             try {
                 JSONObject obj = new JSONObject(result.getString("data"));
                 String str = obj.get("aqi").toString();
@@ -81,6 +80,7 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
                 Log.e(TAG, "No AQI", e);
             }
 
+            //get IAQI value from API
             for (String iaqiDataType : iaqiDataTypes) {
                 try {
                     JSONObject obj = new JSONObject(result.getString("data"));
@@ -97,6 +97,7 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
                 }
             }
 
+            //remove layouts and display error message
             if(iaqiData.size() == 0) {
                 MainActivity.buttonLayout.removeView(MainActivity.measurementTV);
                 MainActivity.buttonLayout.removeView(MainActivity.unitsTV);
@@ -104,6 +105,7 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
         }
     }
 
+    //display AQI value
     private void postAQI(String aqi) {
         AQI = Integer.parseInt(aqi);
         MainActivity.nrAqiTV.setText(aqi);
@@ -111,12 +113,14 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
         GeneralClass.getAirData().setAQI(AQI);
     }
 
+    //display pressure value
     private void postPressure(String pressure) {
         double Pressure = Double.parseDouble(pressure);
         MainActivity.pressureTV.setText(pressure + " ");
         GeneralClass.getAirData().setPressure(Pressure);
     }
 
+    //display temperature value
     private void postTemperature(String temperature) {
         double temp = Double.parseDouble(temperature);
         GeneralClass.getAirData().setTemperature(temp);
@@ -124,6 +128,7 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
         MainActivity.temperatureTV.setText(Temperature + " ");
     }
 
+    //display IAQI value
     private void postIAQI(String iaqiType, String iaqiValue) {
         Button btn = null;
         switch (iaqiType) {
@@ -147,6 +152,7 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
         }
     }
 
+    //set button listener for each available IAQI
     private void iaqiButtonListener(final String iaqiType, String iaqiValue, final Button btn) {
         try {
             if(GeneralClass.getStepCounterObject().isIndoor()) {
@@ -173,7 +179,7 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        MainActivity.measurementTV.setText(GeneralClass.getAirData().getPolluant(iaqiType, iaqiData.get(iaqiType)) + " ");
+                        MainActivity.measurementTV.setText(GeneralClass.getAirData().getPollutant(iaqiType, iaqiData.get(iaqiType)) + " ");
                         MainActivity.unitsTV.setText(GeneralClass.getAirData().getUnitMeasurement(iaqiType));
                         setButtonNotClicked(clicked);
                         clicked = btn;
@@ -182,12 +188,13 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
                 });
                 if (iaqiData.size() == 1) {
                     MainActivity.buttonLayout.removeView(MainActivity.errorDataTextTV);
-                    MainActivity.measurementTV.setText(GeneralClass.getAirData().getPolluant(iaqiType, iaqiData.get(iaqiType)) + " ");
+                    MainActivity.measurementTV.setText(GeneralClass.getAirData().getPollutant(iaqiType, iaqiData.get(iaqiType)) + " ");
                     MainActivity.unitsTV.setText(GeneralClass.getAirData().getUnitMeasurement(iaqiType));
                     clicked = btn;
                     setButtonClicked(clicked);
                 }
             } else {
+                //remove button for no value of the iaqiType
                 MainActivity.btnSlider.removeView(btn);
             }
         } catch (Exception e) {
@@ -195,6 +202,7 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
         }
     }
 
+    //set AQI progress arc
     private void getAQIPercentage() {
         String status, status2 = "";
         int progress;
@@ -219,6 +227,7 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
         double progr = AQI / 3.5;
         progress = 100 - (int) progr;
 
+        //add animation to progress arc
         ProgressAnimation anim = new ProgressAnimation(MainActivity.arcProgressBar, 0, progress);
         anim.setDuration(1000);
         MainActivity.arcProgressBar.startAnimation(anim);
@@ -228,6 +237,7 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
         MainActivity.arcProgressTV.setText(status2);
     }
 
+    //style clicked button
     private void setButtonClicked(Button btn) {
         GradientDrawable gradientDrawable = new GradientDrawable();
         gradientDrawable.setStroke(3,colorPrimary);
@@ -236,6 +246,7 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
         btn.setBackground(gradientDrawable);
     }
 
+    //style not clicked button
     private void setButtonNotClicked(Button btn) {
         GradientDrawable gradientDrawable = new GradientDrawable();
         gradientDrawable.setColor(colorPrimary);

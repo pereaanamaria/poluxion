@@ -60,6 +60,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
     private static final String TAG = "StepsService";
     // Intents action that will be fired when transitions are triggered
     private final String TRANSITION_ACTION_RECEIVER = BuildConfig.APPLICATION_ID + "TRANSITION_ACTION_RECEIVER";
+
     private static final DecimalFormat df2 = new DecimalFormat("0.00");
 
     private static final int NOTIF_ID = 1;
@@ -70,7 +71,6 @@ public class StepsService extends Service implements SensorEventListener, StepLi
     private static final int RUN_INSIDE = 2;
     private static final int RUN_OUTSIDE = 3;
 
-
     private String lastRegisteredDate;
 
     private StepDetector stepDetector;
@@ -78,10 +78,10 @@ public class StepsService extends Service implements SensorEventListener, StepLi
     private StepCounter stepCounter = GeneralClass.getStepCounterObject();
     private FirebaseHelper firebaseHelper = GeneralClass.getFirebaseHelperObject();
     private int AQI = 0;
-    int index = 0;
+    private int index = 0;
 
+    //broadcast receivers
     private TransitionReceiver mTransitionsReceiver = new TransitionReceiver();
-
     private SatelliteStateReceiver mSatelliteStateReceiver = new SatelliteStateReceiver();
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -105,7 +105,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         AQI = GeneralClass.getAirData().getAQI();
         startStepCounting();
         startForeground();
-        initList();
+        initActivityRecognition();
 
         // Bind to the BoundService
         Intent intentLocation = new Intent(this, LocationService.class);
@@ -159,10 +159,12 @@ public class StepsService extends Service implements SensorEventListener, StepLi
     //step counting
     @Override
     public void step(long timeNs) {
+        //new day init
         if (!lastRegisteredDate.equals(getCurrentDate())) {
             initData();
         }
 
+        //for DetectedActivity.WALKING
         if (mTransitionsReceiver.getDetectedActivity().equals("Walking")) {
             if (stepCounter.isIndoor()) {
                 stepCounter.countTotal(WALK_INSIDE);
@@ -171,6 +173,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
             }
         }
 
+        //for DetectedActivity.RUNNING
         if (mTransitionsReceiver.getDetectedActivity().equals("Running")) {
             if (stepCounter.isIndoor()) {
                 stepCounter.countTotal(RUN_INSIDE);
@@ -179,14 +182,17 @@ public class StepsService extends Service implements SensorEventListener, StepLi
             }
         }
 
+        //data saving
         if (stepCounter.getSteps() % 100 == 0 && stepCounter.getSteps() != 0 && AQI != 0) {
             saveData();
         }
 
+        //notification displaying
         if(stepCounter.getSteps() % 500 == 0 && stepCounter.getSteps() != 0) {
             displayNotification();
         }
 
+        //change notification display
         if(GeneralClass.getAirData().getAQI() != AQI && GeneralClass.getAirData().getAQI() != 0) {
             AQI = GeneralClass.getAirData().getAQI();
             displayNotification();
@@ -194,9 +200,9 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         }
     }
 
+    //accelerometer update based on new event
     @Override
     public void onSensorChanged(SensorEvent event) {
-        //if accelerometer sensor's state changes, a possible new step is being detected
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             stepDetector.updateAccel(event.timestamp, event.values[0], event.values[1], event.values[2]);
         }
@@ -207,8 +213,8 @@ public class StepsService extends Service implements SensorEventListener, StepLi
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Personal Notifications";
-            String description = "Include all the personal notificationa";
+            CharSequence name = "Poluxion data";
+            String description = "Includes AQI and BPI value";
             int importance = NotificationManager.IMPORTANCE_NONE;
 
             NotificationChannel notificationChannel = new NotificationChannel(NOTIF_CHANNEL_ID, name, importance);
@@ -224,6 +230,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         startForeground(NOTIF_ID, getChannelNotification().build());
     }
 
+    //notification building with description, text and icon
     private NotificationCompat.Builder getChannelNotification() {
         Intent resultIntent = new Intent(this, Splash.class);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 1000,
@@ -232,7 +239,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
 
         return new NotificationCompat.Builder(this, NOTIF_CHANNEL_ID)
                 .setContentTitle(AQI + " AQI")
-                .setContentText("BPI : " + df2.format(stepCounter.getIntakeDose()))
+                .setContentText("BPI : " + df2.format(stepCounter.getBPI()))
                 .setSmallIcon(R.drawable.poluxion)
                 .setAutoCancel(true)
                 .setContentIntent(resultPendingIntent)
@@ -240,8 +247,9 @@ public class StepsService extends Service implements SensorEventListener, StepLi
                 .setSound(null);
     }
 
-
+    //reading saved data from shared preferences
     private void getSavedData() {
+        //shared preferences file => myPref
         SharedPreferences sharedPreferences = getSharedPreferences("myPref", MODE_PRIVATE);
         lastRegisteredDate = sharedPreferences.getString("date", null);
 
@@ -259,10 +267,12 @@ public class StepsService extends Service implements SensorEventListener, StepLi
                 saveData();
             }
         } else {
+            //init all attributes if new day
             initData();
         }
     }
 
+    //save data on shared preferences
     private void saveData() {
         index += 1;
 
@@ -277,16 +287,18 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         editor.putInt("index", index);
         editor.apply();
 
+        //save on firebase for data analysis
         firebaseHelper.inputInt(user.getID()+"/storage/"+getCurrentDate()+"/stepWI",stepCounter.getStepsWalkInside());
         firebaseHelper.inputInt(user.getID()+"/storage/"+getCurrentDate()+"/stepWO",stepCounter.getStepsWalkOutside());
         firebaseHelper.inputInt(user.getID()+"/storage/"+getCurrentDate()+"/stepRI",stepCounter.getStepsRunInside());
         firebaseHelper.inputInt(user.getID()+"/storage/"+getCurrentDate()+"/stepRO",stepCounter.getStepsRunOutside());
         firebaseHelper.inputInt(user.getID()+"/storage/"+getCurrentDate()+"/AQI/"+index,AQI);
-        firebaseHelper.inputDouble(user.getID()+"/storage/"+getCurrentDate()+"/BPI",stepCounter.getIntakeDose());
+        firebaseHelper.inputDouble(user.getID()+"/storage/"+getCurrentDate()+"/BPI",stepCounter.getBPI());
         firebaseHelper.inputString(user.getID()+"/storage/"+getCurrentDate()+"/cals",user.getCals());
         firebaseHelper.inputString(user.getID()+"/storage/"+getCurrentDate()+"/km",user.getKm());
     }
 
+    //new day initiation of all attributes
     private void initData() {
         lastRegisteredDate = getCurrentDate();
         stepCounter.setStepsWalkInside(0);
@@ -298,13 +310,15 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         saveData();
     }
 
+    //format current date display
     private String getCurrentDate() {
         Date c = Calendar.getInstance().getTime();
         @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
         return df.format(c);
     }
 
-    private void initList() {
+    //register to Activity Recognition API on start
+    private void initActivityRecognition() {
         ActivityRecognitionClient request = new ActivityRecognitionClient(this);
 
         Intent intent = new Intent(TRANSITION_ACTION_RECEIVER);
@@ -314,6 +328,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         registerTransitionApi(request, pendingIntent);
     }
 
+    //registering
     private void registerTransitionApi(ActivityRecognitionClient request, PendingIntent pendingIntent) {
         // pendingIntent is the instance of PendingIntent where the app receives callbacks.
         Task<Void> task = request.requestActivityUpdates(0, pendingIntent);
@@ -333,6 +348,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         });
     }
 
+    //unregistering
     private void unregisterTransitionApi(final PendingIntent pendingIntent) {
         // pendingIntent is the instance of PendingIntent where the app receives callbacks.
         final Task<Void> task = ActivityRecognition.getClient(this).removeActivityUpdates(pendingIntent);
@@ -352,6 +368,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         });
     }
 
+    //read activity recognition result and return activity status
     private static class TransitionReceiver extends BroadcastReceiver {
         private String status = "Still";
 
@@ -368,9 +385,11 @@ public class StepsService extends Service implements SensorEventListener, StepLi
                 int walkConfidence = 0, runConfidence = 0;
                 ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
 
+                //most probable activity
                 DetectedActivity mostProbableActivity = result.getMostProbableActivity();
                 int activityType = mostProbableActivity.getType();
 
+                //UNKNOWN and ON_FOOT cases
                 List<DetectedActivity> probableActivities = result.getProbableActivities();
                 for(DetectedActivity activity : probableActivities) {
                     if(activity.getType() == DetectedActivity.WALKING) {
@@ -385,8 +404,10 @@ public class StepsService extends Service implements SensorEventListener, StepLi
             }
         }
 
+        //returns activity status to step counter
         public String getDetectedActivity() {return status;}
 
+        //from activity type (int) to status (String)
         private String toActivityString(int activity, int walkConfidence, int runConfidence) {
             switch (activity) {
                 case DetectedActivity.STILL: return "Still";
@@ -395,7 +416,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
                 case DetectedActivity.TILTING: return "Tilting";
                 case DetectedActivity.RUNNING: return "Running";
                 case DetectedActivity.WALKING: return "Walking";
-                default: if(walkConfidence >= runConfidence) {
+                default: if(walkConfidence > runConfidence) {
                     return "Walking";
                 } else {
                     return "Running";
@@ -404,21 +425,20 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         }
     }
 
+    //verifies if user is indoor or outdoor based on satellite signal strength
     private static class SatelliteStateReceiver extends BroadcastReceiver {
         float avg1 = -1.0f, avg2 = -1.0f, avg3 = -1.0f;
         private boolean isAutoIndoor = true;
 
-        // Prevents instantiation
-        public SatelliteStateReceiver() {
-        }
+        //prevents instantiation
+        public SatelliteStateReceiver() {}
 
-        // Called when the BroadcastReceiver gets an Intent it's registered to receive
+        //called when the BroadcastReceiver gets an Intent it's registered to receive
         @Override
         public void onReceive(Context context, Intent intent) {
-            //Log.d(TAG,intent.getExtras().toString());
             ArrayList<SatelliteStatus> satellites = (ArrayList<SatelliteStatus>) intent.getExtras().getSerializable(SATELLITES_DATA);
             if (satellites != null && satellites.size() > 0) {
-                int cnt1 = 0, cnt2 = 0;
+                int cnt1 = 0;
                 float max = 0.0f, avg = 0.0f;
                 for (int i = 0; i < satellites.size(); i++) {
                     if (satellites.get(i).snr > 0.0f) {
@@ -427,8 +447,6 @@ public class StepsService extends Service implements SensorEventListener, StepLi
                         }
                         avg += satellites.get(i).snr;
                         cnt1++;
-                    } else {
-                        cnt2++;
                     }
                 }
                 if (cnt1 > 0) {

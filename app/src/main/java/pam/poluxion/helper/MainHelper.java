@@ -53,11 +53,9 @@ public class MainHelper extends MainActivity {
         this.context = context;
         this.activity = activity;
         this.intent = intent;
-
-        //getLocationPermission();
     }
 
-    //gets the current position of the device
+    //localises user through GPS
     private void getDeviceLocation() {
         Log.d(TAG, "getDeviceLocation: getting the device's current location");
 
@@ -98,6 +96,7 @@ public class MainHelper extends MainActivity {
             Log.e(TAG, "getDeviceLocation: Security exception: " + e.getMessage());
         }
 
+        //different layout display from Splash activity
         if (Objects.equals(intent.getStringExtra("Msg"), "Just started")) {
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -105,7 +104,7 @@ public class MainHelper extends MainActivity {
                     crossfade(MainActivity.mainScroll);
                 }
             }, 2000);   //2 seconds
-        } else {
+        } else {  //normal layout display
             MainActivity.loadingPanel.setVisibility(View.GONE);
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -116,6 +115,7 @@ public class MainHelper extends MainActivity {
         }
     }
 
+    //creates LocalData object and gets API data
     public void getAddress(double lat, double lng) {
         Thread thread = new Thread();
         thread.start();
@@ -128,9 +128,11 @@ public class MainHelper extends MainActivity {
             if (obj.getLocality() != null) {
                 add = obj.getLocality() + ", " + obj.getCountryName();
                 LocalData localData = new LocalData(obj.getLocality());
+                localData.execute();
             } else {
                 add = obj.getAdminArea() + ", " + obj.getCountryName();
                 LocalData localData = new LocalData(obj.getAdminArea());
+                localData.execute();
             }
             //Log.e("IGA", "Address : " + obj);
             MainActivity.locationTV.setText(add);
@@ -141,6 +143,7 @@ public class MainHelper extends MainActivity {
         }
     }
 
+    //layout display animation
     private void crossfade(ViewGroup layout) {
         // Set the content view to 0% opacity but visible, so that it is visible
         // (but fully transparent) during the animation.
@@ -168,7 +171,6 @@ public class MainHelper extends MainActivity {
         refresh();
         getDeviceLocation();
     }
-
     private void refresh() {
         final Handler handler = new Handler();
         final Runnable runnable = new Runnable() {

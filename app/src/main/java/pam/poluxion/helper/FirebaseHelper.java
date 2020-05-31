@@ -22,11 +22,13 @@ public class FirebaseHelper {
     private double weight, height;
     private String name, lastName, gender, dob;
 
+    //creates firebase connection
     public FirebaseHelper(Context context) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();  //stores Firebase instance into database variable
         String FirebaseUrl = context.getString(R.string.firebase_database_url);
         myRef = database.getReferenceFromUrl(FirebaseUrl);
 
+        //checks if the app is connected to firebase
         DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
         connectedRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -48,24 +50,22 @@ public class FirebaseHelper {
         Log.e(TAG, "Successfully created");
     }
 
-    public void inputInt(String child, int value) {
-        myRef.child(child).setValue(value);
-    }
+    //general method for int values input
+    public void inputInt(String child, int value) {myRef.child(child).setValue(value);}
 
+    //general methods for double values input
     public void inputDouble(String child, double value) {
         myRef.child(child).setValue(value);
     }
-
     public void inputDouble(String child, String value) {
         double temp = Double.parseDouble(value);
         myRef.child(child).setValue(temp);
     }
 
-    public void inputString(String child, String value) {
-        myRef.child(child).setValue(value);
-    }
+    //general method for String value input
+    public void inputString(String child, String value) {myRef.child(child).setValue(value);}
 
-
+    //read user's height from firebase
     public double readHeight(String child) {
         myRef.child(child + "/height").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -82,6 +82,7 @@ public class FirebaseHelper {
         return height;
     }
 
+    //read user's weight from firebase
     public double readWeight(String child) {
         myRef.child(child + "/weight").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -98,6 +99,7 @@ public class FirebaseHelper {
         return weight;
     }
 
+    //read user's date of birth from firebase
     public String readDOB(String child) {
         myRef.child(child + "/dob").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -114,6 +116,7 @@ public class FirebaseHelper {
         return dob;
     }
 
+    //read user's name from firebase
     public String readName(String child) {
         myRef.child(child + "/name").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -130,6 +133,7 @@ public class FirebaseHelper {
         return name;
     }
 
+    //read user's last name from firebase
     public String readLastName(String child) {
         myRef.child(child + "/lastName").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -146,6 +150,7 @@ public class FirebaseHelper {
         return lastName;
     }
 
+    //read user's gender from firebase
     public String readGender(String child) {
         myRef.child(child + "/gender").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

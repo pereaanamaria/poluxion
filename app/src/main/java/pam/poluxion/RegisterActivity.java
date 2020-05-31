@@ -82,6 +82,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        //creates new account
         confirmPasswordET.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -93,6 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        //enters LoginActivity
         TextView takeToLogin = findViewById(R.id.takeToLogin);
         takeToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,22 +121,22 @@ public class RegisterActivity extends AppCompatActivity {
         height = heightET.getText().toString();
         dob = dobET.getText().toString();
 
-
+        //checks if name field is empty
         if(TextUtils.isEmpty(name)) {
             Toast.makeText(RegisterActivity.this, "Enter name.", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        //checks if last name field is empty
         if(TextUtils.isEmpty(lastName)) {
             Toast.makeText(RegisterActivity.this, "Enter last name.", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        //checks if email field is empty
         if(TextUtils.isEmpty(email)) {
             Toast.makeText(RegisterActivity.this, "Enter email.", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        //checks if gender was chosen
         if (maleRB.isChecked())
         {
             gender = "male";
@@ -144,35 +146,37 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(RegisterActivity.this, "Select gender.", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        //checks if date of birth was picked
         if(TextUtils.isEmpty(dob)) {
             Toast.makeText(RegisterActivity.this, "Enter date of birth.", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        //checks if weight field is empty
         if(TextUtils.isEmpty(weight)) {
             Toast.makeText(RegisterActivity.this, "Enter weight.", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        //checks if height field is empty
         if(TextUtils.isEmpty(height)) {
             Toast.makeText(RegisterActivity.this, "Enter height.", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        //checks if password field is empty
         if(TextUtils.isEmpty(password)) {
             Toast.makeText(RegisterActivity.this, "Enter password.", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        //checks if password confirmation field is empty
         if(TextUtils.isEmpty(confirmPassword)) {
             Toast.makeText(RegisterActivity.this, "Confirm password.", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        //checks if passwords are identical
         if(!password.equals(confirmPassword)){
             Toast.makeText(RegisterActivity.this, "Passwords are not identical.", Toast.LENGTH_SHORT).show();
         } else {
+            //creates new account if email is unique
+            //creates user profile in firebase based on authentication ID
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
@@ -210,6 +214,7 @@ public class RegisterActivity extends AppCompatActivity {
                             }
 
                             if (task.isSuccessful()) {
+                                //enters MainActivity
                                 enterNewActivity(MainActivity.class);
                             }
                         }
@@ -217,6 +222,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
+    //gets date of birth string using calendar widget
     private void getDobET() {
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -229,6 +235,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         };
 
+        //adds listener to DOB field
         dobET.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -245,6 +252,8 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    //swipe right => TrackerActivity
+    //swipe left => MainActivity
     @SuppressLint("ClickableViewAccessibility")
     private void addSwipe(View view) {
         view.setOnTouchListener(new OnSwipeTouchListener(RegisterActivity.this) {
@@ -253,6 +262,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    //enters activityClass
     private void enterNewActivity(Class activityClass) {
         RegisterActivity.this.finish();
         Intent intent = new Intent(RegisterActivity.this,activityClass);

@@ -150,9 +150,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mainHelper.onMapReady(googleMap);
-    }
+    public void onMapReady(GoogleMap googleMap) {mainHelper.onMapReady(googleMap);}
 
     //Google services are being checked in order to make map requests
     public boolean isServicesOK() {
@@ -172,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return false;
     }
 
+    //enters activityClass
     private void enterNewActivity(Class activityClass) {
         MainActivity.this.finish();
         Intent intent = new Intent(MainActivity.this, activityClass);
@@ -179,14 +178,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         startActivity(intent);
     }
 
+    //creates dot slider on the bottom of the layout
     private void createDotSlider() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int width = displayMetrics.widthPixels;
-
         new DotSlider(this, width, sliderDots, 1);
     }
 
+    //swipe right => SettingsActivity/LoginActivity
+    //swipe left => TrackerActivity
     @SuppressLint("ClickableViewAccessibility")
     private void addSwipe(View view) {
         view.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
@@ -201,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+    //reads unit measurement type set on SettingsActivity from shared preferences
     private void getUnits() {
         SharedPreferences sharedPreferences = getSharedPreferences("myPrefUnits", MODE_PRIVATE);
         String units = sharedPreferences.getString("units", "ugm3");

@@ -15,6 +15,7 @@ public class User {
     private int age;
     private String nameUser, lastNameUser, gender, ID = "0_Unknown user";
 
+    //creates default user profile
     public User() {
         weight = 65.0; //default values : kg
         height = 170.0;  //default values : cm
@@ -24,6 +25,7 @@ public class User {
         Log.e(TAG,"Successfully created");
     }
 
+    //gets distance based on number of steps
     public String getKm() {
         // 1 step == 0.762 m
         // 1 step == 0.762/1000 km
@@ -32,14 +34,14 @@ public class User {
         return df2.format(temp) + " km";
     }
 
+    //total calories burnt
     public String getCals() {
         double temp = getCalsWalking() + getCalsRunning();
-        if (Double.isNaN(temp)) {
-            return "0.0 cal";
-        }
+        if (Double.isNaN(temp)) {return "0.0 cal";}
         return df2.format(temp) + " cal";
     }
 
+    //calories burnt while walking
     private double getCalsWalking() {
         double speed = 1.3888;  // 5 km/h ~= 1.38 m/s
         double calPerMin = (0.035 * weight) + (0.029 * weight * ((speed * speed) / height));
@@ -48,6 +50,7 @@ public class User {
         return (calPerMin * GeneralClass.getStepCounterObject().getSteps()) / stepsPerMin;
     }
 
+    //calories burnt while running
     private double getCalsRunning() {
         double speed = 6.6666;  // 24 km/h ~= 6.66 m/s
         double calPerMin = (0.035 * weight) + (0.029 * weight * ((speed * speed) / height));
@@ -56,15 +59,19 @@ public class User {
         return (calPerMin * GeneralClass.getStepCounterObject().getSteps()) / stepsPerMin;
     }
 
+    //user name getter and setter
     public void setNameUser(String nameUser) {this.nameUser = nameUser;}
     public String getNameUser() {return nameUser;}
 
+    //last name getter and setter
     public void setLastNameUser(String lastNameUser) {this.lastNameUser = lastNameUser;}
     public String getLastNameUser() {return lastNameUser;}
 
+    //age getter and setter
     public void setAge(int age) {this.age = age;}
     public void setAge(String dobStr) {this.age = getAgeFromDob(dobStr);}
     public int getAge() {return age;}
+    //date of birth to age conversion
     private int getAgeFromDob(String dobStr){
         Calendar dob = Calendar.getInstance();
         Calendar today = Calendar.getInstance();
@@ -93,18 +100,23 @@ public class User {
         return age;
     }
 
+    //user gender getter and setter
     public void setGender(String gender) {this.gender = gender;}
     public String getGender() {return gender;}
 
+    //user weight getter and setter
     public void setWeight(double weight) {this.weight = weight;}
     public double getWeight() {return weight;}
 
+    //user height getter and setter
     public void setHeight(double height) {this.height = height;}
     public double getHeight() {return height;}
-    
+
+    //user login ID getter and setter
     public void setID(String ID) {this.ID = ID;}
     public String getID() {return ID;}
 
+    //retrieves data existent in firebase and updates user profile
     public void updateData(String ID) {
         this.ID = ID;
         nameUser = GeneralClass.getFirebaseHelperObject().readName(ID);

@@ -10,16 +10,20 @@ public class AirData {
     private double pressure, temperature;
     private String unitMeasurement = null;
 
+    //AQI getter and setter
     public void setAQI(int AQI) {this.AQI = AQI;}
     public int getAQI() {return AQI;}
 
+    //temperature getter and setter
     public void setTemperature(double temperature) {this.temperature = temperature;}
     public double getTemperature() {return temperature;}
 
+    //pressure getter and setter
     public void setPressure(double pressure) {this.pressure = pressure;}
     public double getPressure() {return pressure;}
 
-    public String getPolluant(String iaqiType, double iaqiValue) {
+    //displays pollutant value based on unit measurement
+    public String getPollutant(String iaqiType, double iaqiValue) {
         String finalFormat = "";
         if(unitMeasurement.equals("μg/m³")) {
             switch(iaqiType) {
@@ -40,6 +44,7 @@ public class AirData {
         return finalFormat;
     }
 
+    //unit measurement getter and setter
     public void setUnitMeasurement(String unitMeasurement) {
         if (unitMeasurement.equals("ugm3")) {
             this.unitMeasurement = "μg/m³";
@@ -47,7 +52,6 @@ public class AirData {
             this.unitMeasurement = unitMeasurement;
         }
     }
-
     public String getUnitMeasurement() {return unitMeasurement;}
     public String getUnitMeasurement(String iaqiType) {
         switch(iaqiType) {
@@ -61,14 +65,17 @@ public class AirData {
         }
     }
 
+    //value conversions based on unit measurements
     private double fromPpbToUgm3(String iaqiType, double val) {return val / getConstant(iaqiType);}
     public double fromUgm3ToPpb(String iaqiType, double val) {return val * getConstant(iaqiType);}
 
+    //creates molar constant for conversion
     private double getConstant(String M) {
         double molarWeight = getMolarWeight(M);
         return (0.082057338 * (273.15 + temperature)) / molarWeight;
     }
 
+    //gets pollutant molar weight
     private double getMolarWeight(String M) {
         switch (M) {
             case "co" : return 28.0;

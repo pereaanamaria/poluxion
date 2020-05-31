@@ -7,7 +7,7 @@ public class SatelliteStatus {
   public int id;
   private float azimuth;
   private float elevation;
-  public float snr;
+  float snr;
   private boolean used;
   private int constellation;
 

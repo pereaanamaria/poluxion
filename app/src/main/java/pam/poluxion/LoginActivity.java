@@ -54,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        //signs user in if login is successful
         passwordET.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -65,7 +66,8 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        TextView createNewAccount = (TextView) findViewById(R.id.createNewAccount);
+        //enters RegisterActivity
+        TextView createNewAccount = findViewById(R.id.createNewAccount);
         createNewAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,6 +82,7 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
+    //signs user in by checking email and password
     private void signIn() {
         String email = emailET.getText().toString();
         String password = passwordET.getText().toString();
@@ -94,6 +97,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        //firebase email and password authentication
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -106,6 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
+                                    //updates user profile based on ID
                                     FirebaseUser firebaseUser = mAuth.getCurrentUser();
                                     Log.e(TAG, "Start Updating... : " + firebaseUser.getUid());
                                     GeneralClass.getUserObject().updateData(firebaseUser.getUid());
@@ -118,6 +123,7 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                         }
 
+                        //enters MainActivity
                         if(task.isSuccessful()) {
                             enterNewActivity(MainActivity.class);
                             Toast.makeText(LoginActivity.this, "Logged in successfully.", Toast.LENGTH_SHORT).show();
@@ -126,6 +132,8 @@ public class LoginActivity extends AppCompatActivity {
                 });
    }
 
+    //swipe right => TrackerActivity
+    //swipe left => MainActivity
     @SuppressLint("ClickableViewAccessibility")
     private void addSwipe(View view) {
         view.setOnTouchListener(new OnSwipeTouchListener(LoginActivity.this) {
@@ -134,6 +142,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    //enters activityClass
     private void enterNewActivity(Class activityClass) {
         LoginActivity.this.finish();
         Intent intent = new Intent(LoginActivity.this, activityClass);

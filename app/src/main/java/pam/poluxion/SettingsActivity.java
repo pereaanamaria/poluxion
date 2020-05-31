@@ -76,7 +76,7 @@ public class SettingsActivity extends AppCompatActivity {
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //make default again
+                //sets default user profile on logout
                 user.setWeight(65.0);
                 user.setWeight(170.0);
                 user.setGender("male");
@@ -86,6 +86,7 @@ public class SettingsActivity extends AppCompatActivity {
                 mAuth.signOut();
                 Toast.makeText(SettingsActivity.this, "Logged out successfully.", Toast.LENGTH_SHORT).show();
 
+                //enters LoginActivity
                 enterNewActivity(LoginActivity.class);
             }
         });
@@ -100,6 +101,7 @@ public class SettingsActivity extends AppCompatActivity {
             ugm3RB.setChecked(true);
         }
 
+        //changes unit measurement preference
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
         {
             @Override
@@ -110,6 +112,7 @@ public class SettingsActivity extends AppCompatActivity {
                 if(ppbRB.isChecked()) {
                     GeneralClass.getAirData().setUnitMeasurement("ppb");
                 }
+                //saves in shared preferences
                 saveUnits();
             }
         });
@@ -123,6 +126,7 @@ public class SettingsActivity extends AppCompatActivity {
         finish();
     }
 
+    //changes user's weight and updates firebase
     private void setWeightListener() {
         FirebaseHelper firebaseHelper = GeneralClass.getFirebaseHelperObject();
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
@@ -138,13 +142,14 @@ public class SettingsActivity extends AppCompatActivity {
         user.setWeight(Double.parseDouble(str));
 
         weightET.getText().clear();
-
+        //display new value as hint
         double weight = user.getWeight();
         weightET.setHint(weight + " kg");
 
         Toast.makeText(SettingsActivity.this, "Weight value has been set.", Toast.LENGTH_SHORT).show();
     }
 
+    //changes user's height and updates firebase
     private void setHeightListener() {
         FirebaseHelper firebaseHelper = GeneralClass.getFirebaseHelperObject();
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
@@ -160,13 +165,15 @@ public class SettingsActivity extends AppCompatActivity {
         user.setHeight(Double.parseDouble(str));
 
         heightET.getText().clear();
-
+        //display new value as hint
         double height = user.getHeight();
         heightET.setHint(height + " cm");
 
         Toast.makeText(SettingsActivity.this, "Height value has been set.", Toast.LENGTH_SHORT).show();
     }
 
+    //swipe right => TrackerActivity
+    //swipe left => MainActivity
     @SuppressLint("ClickableViewAccessibility")
     private void addSwipe(View view) {
         view.setOnTouchListener(new OnSwipeTouchListener(SettingsActivity.this) {
@@ -175,6 +182,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
+    //enters activityClass
     private void enterNewActivity(Class activityClass) {
         SettingsActivity.this.finish();
         Intent intent = new Intent(SettingsActivity.this, activityClass);
@@ -182,14 +190,15 @@ public class SettingsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    //creates dot slider on the bottom of the layout
     private void createDotSlider() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int width = displayMetrics.widthPixels;
-
         new DotSlider(this, width, sliderDots, 0);
     }
 
+    //animates layout display
     private void crossfade(ViewGroup layout) {
         // Set the content view to 0% opacity but visible, so that it is visible
         // (but fully transparent) during the animation.
@@ -206,6 +215,7 @@ public class SettingsActivity extends AppCompatActivity {
         loadingPanelSettings.setVisibility(View.GONE);
     }
 
+    //displays layout with a 0.5s delay
     private void start() {
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -264,6 +274,7 @@ public class SettingsActivity extends AppCompatActivity {
         }, 500);   //0.5 seconds
     }
 
+    //saves unit measurement preference in shared preferences file myPrefUnits
     private void saveUnits() {
         SharedPreferences sharedPreferences = getSharedPreferences("myPrefUnits",MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();

@@ -30,13 +30,10 @@ public class LocationService extends Service {
     private boolean locationStarted = false;
     GnssStatus.Callback gnssStatusListener = null;
 
-    public LocationService() {
-    }
+    public LocationService() {}
 
     class LocalBinder extends Binder {
-        LocationService getService() {
-            return LocationService.this;
-        }
+        LocationService getService() {return LocationService.this;}
     }
 
     private IBinder binder = new LocalBinder();

@@ -88,15 +88,16 @@ public class TrackerActivity extends AppCompatActivity implements SensorEventLis
         addSwipe(kms);
         addSwipe(cals);
 
-
+        //creates BPI progress arc
         exposureArc = findViewById(R.id.exposure_progress);
         exposureArc.setMax(100);
         addSwipe(exposureArc);
 
-        double progress = GeneralClass.getStepCounterObject().getIntakeDose();
+        double progress = GeneralClass.getStepCounterObject().getBPI();
         int progressInt = (int) Math.floor(progress);
         double decimals = progress - Math.floor(progress);
 
+        //animates progress arc
         ProgressAnimation anim = new ProgressAnimation(exposureArc, 0, progressInt);
         anim.setDuration(500);
         exposureArc.startAnimation(anim);
@@ -112,6 +113,7 @@ public class TrackerActivity extends AppCompatActivity implements SensorEventLis
         finish();
     }
 
+    //displays step count updates when accelerometer updates
     @Override
     public void onSensorChanged(SensorEvent event) {
         //if accelerometer sensor's state changes, a possible new step is being detected
@@ -124,7 +126,7 @@ public class TrackerActivity extends AppCompatActivity implements SensorEventLis
     public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
     private void displayInfo() {
-
+        //updates walking/running min filed
         if(stepCounter.getWalkMin() < 60) {
             walkMins.setText(stepCounter.getWalkMin() + " min ");
         } else {
@@ -136,23 +138,28 @@ public class TrackerActivity extends AppCompatActivity implements SensorEventLis
             runMins.setText(stepCounter.getRunMin() / 60 + "h " + stepCounter.getRunMin() % 60 + " min ");
         }
 
+        //updates steps counting categories
         walkIn.setText(stepCounter.getStepsWalkInside() + " ");
         walkOut.setText(stepCounter.getStepsWalkOutside() + " ");
         runIn.setText(stepCounter.getStepsRunInside() + " ");
         runOut.setText(stepCounter.getStepsRunOutside() + " ");
 
+        //updates total steps counter
         total.setText(stepCounter.getSteps() + "");
 
+        //distance, burnt calories and BPI display
         kms.setText(user.getKm());
         cals.setText(user.getCals());
 
-        double progress = GeneralClass.getStepCounterObject().getIntakeDose();
+        double progress = GeneralClass.getStepCounterObject().getBPI();
         int progressInt = (int) Math.floor(progress);
         double decimals = progress - Math.floor(progress);
         exposureArc.setSuffixText(df2.format(decimals));
         exposureArc.setProgress(progressInt);
     }
 
+    //swipe right => MainActivity
+    //swipe left => SettingsActivity/LoginActivity
     @SuppressLint("ClickableViewAccessibility")
     private void addSwipe(View view) {
         view.setOnTouchListener(new OnSwipeTouchListener(TrackerActivity.this) {
@@ -167,14 +174,15 @@ public class TrackerActivity extends AppCompatActivity implements SensorEventLis
         });
     }
 
+    //creates dot slider on the bottom of the layout
     private void createDotSlider() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int width = displayMetrics.widthPixels;
-
         new DotSlider(this,width,sliderDots,2);
     }
 
+    //enters activityClass
     private void enterNewActivity(Class activityClass) {
         TrackerActivity.this.finish();
         Intent intent = new Intent(TrackerActivity.this, activityClass);
