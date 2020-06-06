@@ -216,6 +216,7 @@ public class RegisterActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 //enters MainActivity
                                 enterNewActivity(MainActivity.class);
+                                Toast.makeText(RegisterActivity.this, "Settings can be now accessed.", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

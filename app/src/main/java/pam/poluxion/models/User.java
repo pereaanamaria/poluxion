@@ -47,7 +47,7 @@ public class User {
         double calPerMin = (0.035 * weight) + (0.029 * weight * ((speed * speed) / height));
         double stepsPerMin = 100;
 
-        return (calPerMin * GeneralClass.getStepCounterObject().getSteps()) / stepsPerMin;
+        return (calPerMin * (GeneralClass.getStepCounterObject().getStepsWalkInside() + GeneralClass.getStepCounterObject().getStepsWalkOutside())) / stepsPerMin;
     }
 
     //calories burnt while running
@@ -56,7 +56,7 @@ public class User {
         double calPerMin = (0.035 * weight) + (0.029 * weight * ((speed * speed) / height));
         double stepsPerMin = 160;
 
-        return (calPerMin * GeneralClass.getStepCounterObject().getSteps()) / stepsPerMin;
+        return (calPerMin * (GeneralClass.getStepCounterObject().getStepsRunInside() + GeneralClass.getStepCounterObject().getStepsRunOutside())) / stepsPerMin;
     }
 
     //user name getter and setter

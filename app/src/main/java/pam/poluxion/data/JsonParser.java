@@ -157,10 +157,10 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
         try {
             if(GeneralClass.getStepCounterObject().isIndoor()) {
                 if (iaqiType.equals("pm25")) {
-                    iaqiValue = "8.7"; //average indoor ug/m3 concentration
+                    iaqiValue = "36"; //average indoor IAQI concentration ~ 8.7ug/m3
                 }
                 if (iaqiType.equals("no2")) {
-                    iaqiValue = "10.2"; //average indoor ug/m3 concentration
+                    iaqiValue = "5"; //average indoor IAQI concentration ~ 10.2ug/m3
                 }
             }
             if (iaqiValue != null) {

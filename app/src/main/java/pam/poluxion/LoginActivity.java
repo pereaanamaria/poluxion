@@ -126,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
                         //enters MainActivity
                         if(task.isSuccessful()) {
                             enterNewActivity(MainActivity.class);
-                            Toast.makeText(LoginActivity.this, "Logged in successfully.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Settings can be now accessed.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
