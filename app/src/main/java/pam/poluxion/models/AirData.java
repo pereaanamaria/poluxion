@@ -93,14 +93,8 @@ public class AirData {
 	}
 
     //value conversions based on unit measurements
-    private double fromPpbToUgm3(String iaqiType, double val) {return val / getConstant(iaqiType);}
-    public double fromUgm3ToPpb(String iaqiType, double val) {return val * getConstant(iaqiType);}
-
-    //creates molar constant for conversion
-    private double getConstant(String M) {
-        double molarWeight = getMolarWeight(M);
-        return (0.082057338 * (273.15 + temperature)) / molarWeight;
-    }
+    private double fromPpbToUgm3(String iaqiType, double val) {return 0.0409 * val * getMolarWeight(iaqiType);}
+    public double fromUgm3ToPpb(String iaqiType, double val) {return 24.45 * val / getMolarWeight(iaqiType);}
 
     //gets pollutant molar weight
     private double getMolarWeight(String M) {

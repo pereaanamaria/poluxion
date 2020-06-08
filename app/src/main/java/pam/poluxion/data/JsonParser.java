@@ -160,7 +160,7 @@ public class JsonParser extends AsyncTask<Void, Void, JSONObject> {
                     iaqiValue = "36"; //average indoor IAQI concentration ~ 8.7ug/m3
                 }
                 if (iaqiType.equals("no2")) {
-                    iaqiValue = "5"; //average indoor IAQI concentration ~ 10.2ug/m3
+                    iaqiValue = "10"; //average indoor IAQI concentration ~ 10.2ug/m3
                 }
             }
             if (iaqiValue != null) {

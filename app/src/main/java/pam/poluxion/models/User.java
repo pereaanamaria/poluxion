@@ -44,7 +44,8 @@ public class User {
     //calories burnt while walking
     private double getCalsWalking() {
         double speed = 1.3888;  // 5 km/h ~= 1.38 m/s
-        double calPerMin = (0.035 * weight) + (0.029 * weight * ((speed * speed) / height));
+        double localHeight = height / 100; //convert to m
+        double calPerMin = (0.035 * weight) + (0.029 * weight * ((speed * speed) / localHeight));
         double stepsPerMin = 100;
 
         return (calPerMin * (GeneralClass.getStepCounterObject().getStepsWalkInside() + GeneralClass.getStepCounterObject().getStepsWalkOutside())) / stepsPerMin;
@@ -53,7 +54,8 @@ public class User {
     //calories burnt while running
     private double getCalsRunning() {
         double speed = 6.6666;  // 24 km/h ~= 6.66 m/s
-        double calPerMin = (0.035 * weight) + (0.029 * weight * ((speed * speed) / height));
+        double localHeight = height / 100; //convert to m
+        double calPerMin = (0.035 * weight) + (0.029 * weight * ((speed * speed) / localHeight));
         double stepsPerMin = 160;
 
         return (calPerMin * (GeneralClass.getStepCounterObject().getStepsRunInside() + GeneralClass.getStepCounterObject().getStepsRunOutside())) / stepsPerMin;
