@@ -72,18 +72,7 @@ public class MainHelper extends MainActivity {
 
                             current = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                             moveCamera(current);
-                            getAddress(currentLocation.getLatitude(), currentLocation.getLongitude()); //current
-                            //getAddress(40.4450809,-3.6879313); //Madrid
-                            //getAddress(38.89378,-77.1546629); //Washington DC
-                            //getAddress(-37.818036,144.9708628); //Melbourne
-                            //getAddress(48.2083972,16.3673826); //Vienna
-                            //getAddress(28.6139, 77.2090); //New Delhi
-                            //getAddress(30.5981739,114.2393787); //Wuhan
-                            //getAddress(40.7105934,-73.8811862); //New York
-                            //getAddress(39.940618,116.3661332); //Beijing
-                            //getAddress(46.7727287,23.5921197; //Cluj-Napoca
-                            //getAddress(45.7505258,21.2188661); //Timisoara
-                            //getAddress(50.125555,8.692777); //Frankfurt
+                            getAddress(currentLocation.getLatitude(), currentLocation.getLongitude());
                         } else {
                             Log.d(TAG, "onComplete: current location is null");
                             Toast.makeText(context, "Unable to get location", Toast.LENGTH_SHORT).show();

@@ -46,10 +46,8 @@ import java.util.Objects;
 import pam.poluxion.BuildConfig;
 import pam.poluxion.R;
 import pam.poluxion.data.GeneralClass;
-import pam.poluxion.helper.FirebaseHelper;
 import pam.poluxion.helper.Splash;
 import pam.poluxion.models.StepCounter;
-import pam.poluxion.models.User;
 import pam.poluxion.steps.StepDetector;
 import pam.poluxion.steps.StepListener;
 
@@ -74,11 +72,8 @@ public class StepsService extends Service implements SensorEventListener, StepLi
     private String lastRegisteredDate;
 
     private StepDetector stepDetector;
-    private User user = GeneralClass.getUserObject();
     private StepCounter stepCounter = GeneralClass.getStepCounterObject();
-    private FirebaseHelper firebaseHelper = GeneralClass.getFirebaseHelperObject();
     private int AQI = 0;
-    private int index = 0;
 
     //broadcast receivers
     private TransitionReceiver mTransitionsReceiver = new TransitionReceiver();
@@ -262,7 +257,6 @@ public class StepsService extends Service implements SensorEventListener, StepLi
                 stepCounter.setStepsWalkOutside(sharedPreferences.getInt("stepWO", 0));
                 stepCounter.setStepsRunInside(sharedPreferences.getInt("stepRI", 0));
                 stepCounter.setStepsRunOutside(sharedPreferences.getInt("stepRO", 0));
-                index = sharedPreferences.getInt("index", 0);
             } else {
                 saveData();
             }
@@ -274,8 +268,6 @@ public class StepsService extends Service implements SensorEventListener, StepLi
 
     //save data on shared preferences
     private void saveData() {
-        index += 1;
-
         SharedPreferences sharedPreferences = getSharedPreferences("myPref", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
@@ -284,18 +276,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         editor.putInt("stepWO", stepCounter.getStepsWalkOutside());
         editor.putInt("stepRI", stepCounter.getStepsRunInside());
         editor.putInt("stepRO", stepCounter.getStepsRunOutside());
-        editor.putInt("index", index);
         editor.apply();
-
-        //save on firebase for data analysis
-        firebaseHelper.inputInt(user.getID()+"/storage/"+getCurrentDate()+"/stepWI",stepCounter.getStepsWalkInside());
-        firebaseHelper.inputInt(user.getID()+"/storage/"+getCurrentDate()+"/stepWO",stepCounter.getStepsWalkOutside());
-        firebaseHelper.inputInt(user.getID()+"/storage/"+getCurrentDate()+"/stepRI",stepCounter.getStepsRunInside());
-        firebaseHelper.inputInt(user.getID()+"/storage/"+getCurrentDate()+"/stepRO",stepCounter.getStepsRunOutside());
-        firebaseHelper.inputInt(user.getID()+"/storage/"+getCurrentDate()+"/AQI/"+index,AQI);
-        firebaseHelper.inputDouble(user.getID()+"/storage/"+getCurrentDate()+"/BPI",stepCounter.getBPI());
-        firebaseHelper.inputString(user.getID()+"/storage/"+getCurrentDate()+"/cals",user.getCals());
-        firebaseHelper.inputString(user.getID()+"/storage/"+getCurrentDate()+"/km",user.getKm());
     }
 
     //new day initiation of all attributes
@@ -305,7 +286,6 @@ public class StepsService extends Service implements SensorEventListener, StepLi
         stepCounter.setStepsWalkOutside(0);
         stepCounter.setStepsRunInside(0);
         stepCounter.setStepsRunOutside(0);
-        index = 0;
 
         saveData();
     }
@@ -416,7 +396,7 @@ public class StepsService extends Service implements SensorEventListener, StepLi
                 case DetectedActivity.TILTING: return "Tilting";
                 case DetectedActivity.RUNNING: return "Running";
                 case DetectedActivity.WALKING: return "Walking";
-                default: if((walkConfidence > runConfidence) || ((walkConfidence == runConfidence) && (walkConfidence == 0))) {
+                default: if(walkConfidence >= runConfidence) {
                     return "Walking";
                 } else {
                     return "Running";
